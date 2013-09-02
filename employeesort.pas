@@ -105,7 +105,7 @@ end;
 procedure printSummaryReport;
 begin
     writeln('Workers =', workerCount);
-    writeln('Managers = ' managerCount);
+    writeln('Managers = ', managerCount);
 end;
 
 
@@ -174,7 +174,7 @@ begin
 
         if (tempEmployee^.classification = Factory) or
         (tempEmployee^.classification = Office) then
-            workerCount := workerCount + 1;
+            workerCount := workerCount + 1
         else
             managerCount := managerCount + 1;
 
