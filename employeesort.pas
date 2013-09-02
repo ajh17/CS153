@@ -38,8 +38,8 @@ var
     tempBirthMon : array[0..1] of char;
     tempBirthDay : array[0..1] of char;
     tempStrBirthDate: String;
-    workerCount : integer; (* total number of workers *)
-    managerCount : integer; (* total number of managers *)
+    workerCount : PtrInt; (* total number of workers *)
+    managerCount : PtrInt; (* total number of managers *)
 
 
 procedure initNode (node : Nodeptr);
@@ -104,8 +104,9 @@ end;
 
 procedure printSummaryReport;
 begin
-    writeln('Workers =', workerCount);
-    writeln('Managers = ', managerCount);
+    writeln;
+    writeln('Worker count: ', workerCount:2);
+    writeln('Manager count: ', managerCount:2);
 end;
 
 
