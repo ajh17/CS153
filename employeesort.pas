@@ -188,10 +188,10 @@ end;
 
 {----MAIN----}
 begin {SortEmployees}
-readFile;
-writeln;
-writeln('EMP ID   LAST NAME INITIAL BIRTH DATE          DEPT  GENDER CLASSIFICATION');
-writeln('-------- --------- ------- ------------------- ----- ------ --------------');
-printPreorderBST(root);
-printSummaryReport();
+    readFile;
+    writeln;
+    writeln('EMP ID   LAST NAME INITIAL BIRTH DATE          DEPT  GENDER CLASSIFICATION');
+    writeln('-------- --------- ------- ------------------- ----- ------ --------------');
+    printPreorderBST(root);
+    printSummaryReport();
 end.
