@@ -38,6 +38,8 @@ var
     tempBirthMon : array[0..1] of char;
     tempBirthDay : array[0..1] of char;
     tempStrBirthDate: String;
+    Workers : set of Classification = [Factory, Office];
+    Managers : set of Classification = [Supervisor..President];
     workerCount : PtrInt; (* total number of workers *)
     managerCount : PtrInt; (* total number of managers *)
 
@@ -173,8 +175,7 @@ begin
             'P': tempEmployee^.classification := President;
         end;
 
-        if (tempEmployee^.classification = Factory) or
-        (tempEmployee^.classification = Office) then
+        if (tempEmployee^.classification in Workers) then
             workerCount := workerCount + 1
         else
             managerCount := managerCount + 1;
