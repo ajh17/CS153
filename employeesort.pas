@@ -106,6 +106,21 @@ begin
     end;
 end;
 
+procedure freePointers (root : NodePtr);
+begin
+    (* free allocated memory *)
+    if (root <> nil) then
+    begin
+        freePointers(root^.left);
+        freePointers(root^.right);
+        with root^.data^ do
+        begin
+            dispose(root^.data);
+            dispose(root);
+        end;
+    end;
+end;
+
 procedure printSummaryReport;
 begin
     writeln;
@@ -116,7 +131,6 @@ begin
     writeln('Worker count: ', workerCount:3);
     writeln('Manager count: ', managerCount:2);
 end;
-
 
 procedure readFile;
 begin
@@ -207,6 +221,5 @@ begin {SortEmployees}
     writeln('-------- --------- ------- ------------------- ----- ------ --------------');
     printInOrderBST(root);
     printSummaryReport();
-    dispose(tempEmployee);
-    dispose(newNode);
+    freePointers(root);
 end.
