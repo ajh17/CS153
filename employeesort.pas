@@ -91,7 +91,6 @@ procedure printPreorderBST (root : NodePtr);
 begin
     if (root <> nil) then
     begin
-        printPreorderBST(root^.left);
         with root^.data^ do
         begin
             FillChar(tempStrBirthDate[0],20,#32);
@@ -102,6 +101,7 @@ begin
             writeln(id:7, '  ' , lastName:8, '  ', initials:2, '      ', 
             tempStrBirthDate, ' '  , departmentCode:4, '  ' , gender:6, ' ', classification);
         end;
+        printPreorderBST(root^.left);
         printPreorderBST(root^.right);
     end;
 end;
@@ -110,7 +110,7 @@ procedure printSummaryReport;
 begin
     writeln;
     writeln('Summary':12);
-    writeln('------------------');
+    writeln('-----------------');
     writeln('Males:', maleCount:11);
     writeln('Females: ', femaleCount:8);
     writeln('Worker count: ', workerCount:3);
