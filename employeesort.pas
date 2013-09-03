@@ -207,4 +207,5 @@ begin {SortEmployees}
     writeln('-------- --------- ------- ------------------- ----- ------ --------------');
     printPreorderBST(root);
     printSummaryReport();
+    dispose(tempEmployee);
 end.
