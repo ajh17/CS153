@@ -217,8 +217,8 @@ end;
 begin {SortEmployees}
     readFile;
     writeln;
-    writeln('EMP ID   LAST NAME INITIAL BIRTH DATE          DEPT  GENDER CLASSIFICATION');
-    writeln('-------- --------- ------- ------------------- ----- ------ --------------');
+    writeln('EMP ID   LAST NAME INITIAL     BIRTH DATE      DEPT GENDER CLASSIFICATION');
+    writeln('-------- --------- ------- ------------------- ---- ------ --------------');
     printInOrderBST(root);
     printSummaryReport();
     freePointers(root);
