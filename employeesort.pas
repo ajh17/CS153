@@ -33,6 +33,7 @@ var
     inputFile : text;
     buffer : array [0..255] of char;
     root : NodePtr;
+    newNode : NodePtr;
     tempEmployee : EmployeePtr;
     error : PtrInt;
     tempBirthMon : array[0..1] of char;
@@ -75,7 +76,6 @@ begin
 end;
 
 procedure insertNode (var root : NodePtr; var newData : EmployeePtr);
-var newNode : NodePtr;
 begin
     new(newNode);
     initNode(newNode);
@@ -208,4 +208,5 @@ begin {SortEmployees}
     printPreorderBST(root);
     printSummaryReport();
     dispose(tempEmployee);
+    dispose(newNode);
 end.
