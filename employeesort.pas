@@ -42,6 +42,8 @@ var
     Managers : set of Classification = [Supervisor..President];
     workerCount : PtrInt; (* total number of workers *)
     managerCount : PtrInt; (* total number of managers *)
+    maleCount : PtrInt; (* total number of males *)
+    femaleCount : PtrInt; (* total number of females *)
 
 
 procedure initNode (node : Nodeptr);
@@ -107,7 +109,11 @@ end;
 procedure printSummaryReport;
 begin
     writeln;
-    writeln('Worker count: ', workerCount:2);
+    writeln('Summary':12);
+    writeln('------------------');
+    writeln('Males:', maleCount:11);
+    writeln('Females: ', femaleCount:8);
+    writeln('Worker count: ', workerCount:3);
     writeln('Manager count: ', managerCount:2);
 end;
 
@@ -174,6 +180,11 @@ begin
             'V': tempEmployee^.classification := VP;
             'P': tempEmployee^.classification := President;
         end;
+
+        if (tempEmployee^.gender = F) then
+            femaleCount := femaleCount + 1
+        else
+            maleCount := maleCount + 1;
 
         if (tempEmployee^.classification in Workers) then
             workerCount := workerCount + 1
