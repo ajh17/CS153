@@ -1,8 +1,9 @@
 program SortEmployees;
 
 type
-    Classification = (Factory, Office, Supervisor, VP, President);
-    Gender = (M, F);
+    Classifications = (Factory, Office, Supervisor, VP, President);
+    Genders = (M, F);
+    
         
     BirthDate = record
     	birthYear  : array [0..3] of char;
@@ -16,8 +17,8 @@ type
         initials       : array [0..1] of char;
         birthdate      : BirthDate;
         departmentCode : array[0..3] of char;
-        gender         : Gender;
-        classification : Classification;
+        gender         : Genders;
+        classification : Classifications;
     end;
 
     Node = record
