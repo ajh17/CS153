@@ -1,16 +1,9 @@
 program SortEmployees;
 
 type
-<<<<<<< HEAD
     Classifications = (Factory, Office, Supervisor, VP, President);
     Genders = (M, F);
-    
         
-=======
-    Classification = (Factory, Office, Supervisor, VP, President);
-    Gender = (M, F);
-
->>>>>>> 20339f83ec19f95f681361cbef4c2027c13841e8
     BirthDate = record
         birthYear  : array [0..3] of char;
         birthMonth : array [0..9] of char;
@@ -46,8 +39,8 @@ var
     tempBirthMon : array[0..1] of char;
     tempBirthDay : array[0..1] of char;
     tempStrBirthDate: String;
-    Workers : set of Classification = [Factory, Office];
-    Managers : set of Classification = [Supervisor..President];
+    Workers : set of Classifications = [Factory, Office];
+    Managers : set of Classifications = [Supervisor..President];
     workerCount : PtrInt; (* total number of workers *)
     managerCount : PtrInt; (* total number of managers *)
     maleCount : PtrInt; (* total number of males *)
@@ -94,41 +87,21 @@ begin
         insertSearch(root, newNode);
 end;
 
-<<<<<<< HEAD
 procedure printInorderBST (root : NodePtr);
-=======
-procedure printInOrderBST (root : NodePtr);
->>>>>>> 20339f83ec19f95f681361cbef4c2027c13841e8
 begin
     if (root <> nil) then
     begin
-        printInOrderBST(root^.left);
+        printInorderBST(root^.left);
         with root^.data^ do
         begin
-<<<<<<< HEAD
-            printInorderBST(root^.left);
-            with root^.data^ do
-                begin
-                	FillChar(tempStrBirthDate[0],20,#32);
-                	tempStrBirthDate := birthdate.birthMonth + ' ' 
-                			+ birthdate.birthDay +  ', ' + birthdate.birthYear;
-                	Setlength(tempStrBirthDate,20);
-
-                    writeln(id:7, '  ' , lastName:8, '  ', initials:2, '      ', 
-                    tempStrBirthDate, ' '  , departmentCode:4, '  ' , gender:6, ' ', classification);
-                end;
-            printInorderBST(root^.right);
-=======
             FillChar(tempStrBirthDate[0],20,#32);
             tempStrBirthDate := birthdate.birthMonth + ' ' 
             + birthdate.birthDay +  ', ' + birthdate.birthYear;
             Setlength(tempStrBirthDate,20);
-
             writeln(id:7, '  ' , lastName:8, '  ', initials:2, '      ', 
             tempStrBirthDate, ' '  , departmentCode:4, '  ' , gender:6, ' ', classification);
->>>>>>> 20339f83ec19f95f681361cbef4c2027c13841e8
         end;
-        printInOrderBST(root^.right);
+        printInorderBST(root^.right);
     end;
 end;
 
@@ -243,15 +216,9 @@ end;
 begin {SortEmployees}
     readFile;
     writeln;
-<<<<<<< HEAD
     writeln('EMP ID   LAST NAME INITIAL BIRTH DATE          DEPT  GENDER CLASSIFICATION');
     writeln('-------- --------- ------- ------------------- ----- ------ --------------');
     printInorderBST(root);
-=======
-    writeln('EMP ID   LAST NAME INITIAL     BIRTH DATE      DEPT GENDER CLASSIFICATION');
-    writeln('-------- --------- ------- ------------------- ---- ------ --------------');
-    printInOrderBST(root);
->>>>>>> 20339f83ec19f95f681361cbef4c2027c13841e8
     printSummaryReport();
     freePointers(root);
 end.
