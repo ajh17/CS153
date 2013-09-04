@@ -3,7 +3,7 @@ program SortEmployees;
 type
     Classifications = (Factory, Office, Supervisor, VP, President);
     Genders = (M, F);
-        
+
     BirthDate = record
         birthYear  : array [0..3] of char;
         birthMonth : array [0..9] of char;
@@ -45,13 +45,23 @@ var
     managerCount : PtrInt; (* total number of managers *)
     maleCount : PtrInt; (* total number of males *)
     femaleCount : PtrInt; (* total number of females *)
-
+    deptArray : array [0..99] of PtrInt;
+    i : PtrInt;
+    deptNumber : PtrInt;
+    valCode : PtrInt;
+    tempArrayVal : PtrInt;
 
 procedure initNode (node : Nodeptr);
 begin
     node^.data := nil;
     node^.left := nil;
     node^.right := nil;
+end;
+
+procedure initArray (var deptArray : array of PtrInt);
+begin
+    for i := 0 to 99 do
+        deptArray[i] := 0;
 end;
 
 function compare (first : EmployeePtr; second : EmployeePtr) : PtrInt;
@@ -129,6 +139,17 @@ begin
     writeln('Females: ', femaleCount:8);
     writeln('Worker count: ', workerCount:3);
     writeln('Manager count: ', managerCount:2);
+
+    writeln;
+    writeln('Department     Total working');
+    writeln('------------------------------');
+    for i := 0 to 99 do
+        if deptArray[i] > 0 then
+        begin
+            write(i:2);
+            write(' ');
+            writeln(deptArray[i]:20);
+        end;
 end;
 
 procedure readFile;
@@ -181,6 +202,23 @@ begin
 
         tempEmployee^.departmentCode := copy(buffer, 29, 4);
 
+        (* use the last two digits of the department code to store in array *)
+        (* convert string to integer using val procedure *)
+        (* here, if valCode = 0, conversion to integer was successful *)
+        (* deptNumber is our converted number *)
+        val(tempEmployee^.departmentCode[2..3], deptNumber, valCode);
+
+        if valCode = 0 then
+        begin
+            if deptArray[deptNumber] = 0 then
+                deptArray[deptNumber] := 1
+            else
+            begin
+                tempArrayVal := deptArray[deptNumber];
+                deptArray[deptNumber] := tempArrayVal + 1;
+            end;
+        end;
+
         case buffer[33] of 
             'F': tempEmployee^.gender := F;
             'M': tempEmployee^.gender := M;
@@ -211,9 +249,9 @@ begin
     close(inputFile);
 end;
 
-
 {----MAIN----}
-begin {SortEmployees}
+begin
+    initArray(deptArray);
     readFile;
     writeln;
     writeln(' EMP ID  LAST NAME INITIAL     BIRTH DATE      DEPT GENDER CLASSIFICATION');
