@@ -1,14 +1,20 @@
 program SortEmployees;
 
 type
+<<<<<<< HEAD
     Classifications = (Factory, Office, Supervisor, VP, President);
     Genders = (M, F);
     
         
+=======
+    Classification = (Factory, Office, Supervisor, VP, President);
+    Gender = (M, F);
+
+>>>>>>> 20339f83ec19f95f681361cbef4c2027c13841e8
     BirthDate = record
-    	birthYear  : array [0..3] of char;
-    	birthMonth : array [0..9] of char;
-    	birthDay   : array[0..1] of char;
+        birthYear  : array [0..3] of char;
+        birthMonth : array [0..9] of char;
+        birthDay   : array[0..1] of char;
     end;
 
     Employee = record
@@ -34,11 +40,18 @@ var
     inputFile : text;
     buffer : array [0..255] of char;
     root : NodePtr;
+    newNode : NodePtr;
     tempEmployee : EmployeePtr;
     error : PtrInt;
     tempBirthMon : array[0..1] of char;
-	tempBirthDay : array[0..1] of char;
-	tempStrBirthDate: String;
+    tempBirthDay : array[0..1] of char;
+    tempStrBirthDate: String;
+    Workers : set of Classification = [Factory, Office];
+    Managers : set of Classification = [Supervisor..President];
+    workerCount : PtrInt; (* total number of workers *)
+    managerCount : PtrInt; (* total number of managers *)
+    maleCount : PtrInt; (* total number of males *)
+    femaleCount : PtrInt; (* total number of females *)
 
 
 procedure initNode (node : Nodeptr);
@@ -58,19 +71,18 @@ begin
     if (root = nil) then
         insertSearch := newNode
     else if (compare(newNode^.data, root^.data) < 0) then
-        begin
-            root^.left := insertSearch(root^.left, newNode);
-            insertSearch := root;
-        end
+    begin
+        root^.left := insertSearch(root^.left, newNode);
+        insertSearch := root;
+    end
     else
-        begin
-            root^.right := insertSearch(root^.right, newNode);
-            insertSearch := root;
-        end;
+    begin
+        root^.right := insertSearch(root^.right, newNode);
+        insertSearch := root;
+    end;
 end;
 
 procedure insertNode (var root : NodePtr; var newData : EmployeePtr);
-var newNode : NodePtr;
 begin
     new(newNode);
     initNode(newNode);
@@ -82,10 +94,18 @@ begin
         insertSearch(root, newNode);
 end;
 
+<<<<<<< HEAD
 procedure printInorderBST (root : NodePtr);
+=======
+procedure printInOrderBST (root : NodePtr);
+>>>>>>> 20339f83ec19f95f681361cbef4c2027c13841e8
 begin
     if (root <> nil) then
+    begin
+        printInOrderBST(root^.left);
+        with root^.data^ do
         begin
+<<<<<<< HEAD
             printInorderBST(root^.left);
             with root^.data^ do
                 begin
@@ -98,18 +118,49 @@ begin
                     tempStrBirthDate, ' '  , departmentCode:4, '  ' , gender:6, ' ', classification);
                 end;
             printInorderBST(root^.right);
+=======
+            FillChar(tempStrBirthDate[0],20,#32);
+            tempStrBirthDate := birthdate.birthMonth + ' ' 
+            + birthdate.birthDay +  ', ' + birthdate.birthYear;
+            Setlength(tempStrBirthDate,20);
+
+            writeln(id:7, '  ' , lastName:8, '  ', initials:2, '      ', 
+            tempStrBirthDate, ' '  , departmentCode:4, '  ' , gender:6, ' ', classification);
+>>>>>>> 20339f83ec19f95f681361cbef4c2027c13841e8
         end;
+        printInOrderBST(root^.right);
+    end;
+end;
+
+procedure freePointers (root : NodePtr);
+begin
+    (* free allocated memory *)
+    if (root <> nil) then
+    begin
+        freePointers(root^.left);
+        freePointers(root^.right);
+        with root^.data^ do
+        begin
+            dispose(root^.data);
+            dispose(root);
+        end;
+    end;
 end;
 
 procedure printSummaryReport;
 begin
-	{print totals here}
+    writeln;
+    writeln('Summary':12);
+    writeln('------------------');
+    writeln('Males:', maleCount:11);
+    writeln('Females: ', femaleCount:8);
+    writeln('Worker count: ', workerCount:3);
+    writeln('Manager count: ', managerCount:2);
 end;
-
 
 procedure readFile;
 begin
-	root := nil;
+    root := nil;
     assign(inputFile, 'employees.in');
     reset(inputFile);
 
@@ -119,11 +170,11 @@ begin
         val(copy(buffer, 1, 7), tempEmployee^.id, error);
         tempEmployee^.lastName := copy(buffer, 9, 8);
         tempEmployee^.initials := copy(buffer, 17, 2);
-             
+
         tempEmployee^.birthdate.birthYear := copy(buffer, 20, 4);
-    	tempBirthMon := copy(buffer, 24, 2);
+        tempBirthMon := copy(buffer, 24, 2);
         if (tempBirthMon = '01') then
-        	tempEmployee^.birthdate.birthMonth := 'January'
+            tempEmployee^.birthdate.birthMonth := 'January'
         else if (tempBirthMon = '02') then
             tempEmployee^.birthdate.birthMonth := 'February'
         else if (tempBirthMon = '03') then
@@ -134,7 +185,7 @@ begin
             tempEmployee^.birthdate.birthMonth := 'May'
         else if (tempBirthMon = '06') then
             tempEmployee^.birthdate.birthMonth := 'June'
-     	else if (tempBirthMon = '07') then
+        else if (tempBirthMon = '07') then
             tempEmployee^.birthdate.birthMonth := 'July'
         else if (tempBirthMon = '08') then
             tempEmployee^.birthdate.birthMonth := 'August'
@@ -144,34 +195,46 @@ begin
             tempEmployee^.birthdate.birthMonth := 'October'
         else if (tempBirthMon = '11') then
             tempEmployee^.birthdate.birthMonth := 'November'
-    	else
-    		tempEmployee^.birthdate.birthMonth := 'December';
-		
-		{if the birth day starts with 0, get rid of it. ie. May 01, should be May 1}
-    	tempBirthDay := copy(buffer, 26, 1);
-    	if(tempBirthDay = '0') then
-			tempEmployee^.birthdate.birthDay := copy(buffer, 27, 1)
-			
-		else
-			tempEmployee^.birthdate.birthDay := copy(buffer, 26, 2);
-			
+        else
+            tempEmployee^.birthdate.birthMonth := 'December';
+
+      {if the birth day starts with 0, get rid of it. ie. May 01, should be May 1}
+        tempBirthDay := copy(buffer, 26, 1);
+        if(tempBirthDay = '0') then
+            tempEmployee^.birthdate.birthDay := copy(buffer, 27, 1)
+
+        else
+            tempEmployee^.birthdate.birthDay := copy(buffer, 26, 2);
+
         tempEmployee^.departmentCode := copy(buffer, 29, 4);
 
-		case buffer[33] of 
-			'F': tempEmployee^.gender := F;
-			'M': tempEmployee^.gender := M;
-		end;
-		
+        case buffer[33] of 
+            'F': tempEmployee^.gender := F;
+            'M': tempEmployee^.gender := M;
+        end;
+
         case buffer[35] of
             'F': tempEmployee^.classification := Factory;
             'O': tempEmployee^.classification := Office;
             'S': tempEmployee^.classification := Supervisor;
             'V': tempEmployee^.classification := VP;
             'P': tempEmployee^.classification := President;
-    	end;
-    	insertNode(root, tempEmployee);
+        end;
+
+        if (tempEmployee^.gender = F) then
+            femaleCount := femaleCount + 1
+        else
+            maleCount := maleCount + 1;
+
+        if (tempEmployee^.classification in Workers) then
+            workerCount := workerCount + 1
+        else
+            managerCount := managerCount + 1;
+
+        insertNode(root, tempEmployee);
+
     until eof(inputFile);
-    
+
     close(inputFile);
 end;
 
@@ -180,8 +243,15 @@ end;
 begin {SortEmployees}
     readFile;
     writeln;
+<<<<<<< HEAD
     writeln('EMP ID   LAST NAME INITIAL BIRTH DATE          DEPT  GENDER CLASSIFICATION');
     writeln('-------- --------- ------- ------------------- ----- ------ --------------');
     printInorderBST(root);
+=======
+    writeln('EMP ID   LAST NAME INITIAL     BIRTH DATE      DEPT GENDER CLASSIFICATION');
+    writeln('-------- --------- ------- ------------------- ---- ------ --------------');
+    printInOrderBST(root);
+>>>>>>> 20339f83ec19f95f681361cbef4c2027c13841e8
     printSummaryReport();
+    freePointers(root);
 end.
