@@ -1,3 +1,11 @@
+{
+    File: employeesort.pas
+    CS 153
+    Professor Ron Mak
+    Team: Wibbly Wobbles
+    (c) David Tang, Zayna Shahzad, Akshay Hegde, Minh Duong
+    Date: September 6, 2013
+}
 program SortEmployees;
 
 type
