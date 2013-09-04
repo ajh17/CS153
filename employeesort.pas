@@ -82,11 +82,11 @@ begin
         insertSearch(root, newNode);
 end;
 
-procedure printPreorderBST (root : NodePtr);
+procedure printInorderBST (root : NodePtr);
 begin
     if (root <> nil) then
         begin
-            printPreorderBST(root^.left);
+            printInorderBST(root^.left);
             with root^.data^ do
                 begin
                 	FillChar(tempStrBirthDate[0],20,#32);
@@ -97,7 +97,7 @@ begin
                     writeln(id:7, '  ' , lastName:8, '  ', initials:2, '      ', 
                     tempStrBirthDate, ' '  , departmentCode:4, '  ' , gender:6, ' ', classification);
                 end;
-            printPreorderBST(root^.right);
+            printInorderBST(root^.right);
         end;
 end;
 
@@ -182,6 +182,6 @@ begin {SortEmployees}
     writeln;
     writeln('EMP ID   LAST NAME INITIAL BIRTH DATE          DEPT  GENDER CLASSIFICATION');
     writeln('-------- --------- ------- ------------------- ----- ------ --------------');
-    printPreorderBST(root);
+    printInorderBST(root);
     printSummaryReport();
 end.
