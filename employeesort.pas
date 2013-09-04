@@ -49,7 +49,6 @@ var
     tempEmployee : EmployeePtr;
     error : PtrInt;
     tempBirthMon : array[0..1] of char;
-    tempBirthDay : array[0..1] of char;
     tempStrBirthDate: String;
     workerCount : PtrInt; (* total number of workers *)
     managerCount : PtrInt; (* total number of managers *)
@@ -61,7 +60,6 @@ var
     i : PtrInt;
     deptNumber : PtrInt;
     valCode : PtrInt;
-    tempArrayVal : PtrInt;
     deptLetters : string;
 
 procedure initNode (node : Nodeptr);
@@ -214,10 +212,8 @@ begin
             tempEmployee^.birthdate.birthMonth := 'December';
 
       {if the birth day starts with 0, get rid of it. ie. May 01, should be May 1}
-        tempBirthDay := copy(buffer, 26, 1);
-        if(tempBirthDay = '0') then
+        if(buffer[26] = '0') then
             tempEmployee^.birthdate.birthDay := copy(buffer, 27, 1)
-
         else
             tempEmployee^.birthdate.birthDay := copy(buffer, 26, 2);
 
@@ -236,8 +232,7 @@ begin
                 deptArray[deptNumber] := 1
             else
             begin
-                tempArrayVal := deptArray[deptNumber];
-                deptArray[deptNumber] := tempArrayVal + 1;
+                deptArray[deptNumber] := deptArray[deptNumber] + 1;
             end;
         end;
 
