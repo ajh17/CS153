@@ -149,12 +149,12 @@ begin
     for i := 0 to 99 do
         if deptArray[i] > 0 then
         begin
+            write('  ');
             write(deptLetters);
             if i = 0 then
                 write('00':2)
             else
                 write(i:2);
-            write(' ');
             writeln(deptArray[i]:18);
         end;
 end;
