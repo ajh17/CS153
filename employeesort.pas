@@ -141,12 +141,12 @@ begin
     writeln('Manager count: ', managerCount:2);
 
     writeln;
-    writeln('Department     Total working');
+    writeln(' Department     Total working');
     writeln('------------------------------');
     for i := 0 to 99 do
         if deptArray[i] > 0 then
         begin
-            write(i:2);
+            write(i:3);
             write(' ');
             writeln(deptArray[i]:20);
         end;
