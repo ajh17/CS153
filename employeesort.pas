@@ -29,6 +29,10 @@ type
     NodePtr = ^Node;
     EmployeePtr = ^Employee;
 
+const
+    Workers : set of Classifications = [Factory, Office];
+    Managers : set of Classifications = [Supervisor..President];
+
 var
     inputFile : text;
     buffer : array [0..255] of char;
@@ -39,8 +43,6 @@ var
     tempBirthMon : array[0..1] of char;
     tempBirthDay : array[0..1] of char;
     tempStrBirthDate: String;
-    Workers : set of Classifications = [Factory, Office];
-    Managers : set of Classifications = [Supervisor..President];
     workerCount : PtrInt; (* total number of workers *)
     managerCount : PtrInt; (* total number of managers *)
     maleCount : PtrInt; (* total number of males *)
@@ -133,19 +135,8 @@ begin
     end;
 end;
 
-procedure printSummaryReport;
+procedure calculateDepartmentTotal;
 begin
-    writeln;
-    writeln('Summary':12);
-    writeln('------------------');
-    writeln('Males:', maleCount:11);
-    writeln('Females: ', femaleCount:8);
-    writeln('Worker count: ', workerCount:3);
-    writeln('Manager count: ', managerCount:2);
-
-    writeln;
-    writeln(' Department     Total working');
-    writeln('-------------  ---------------');
     for i := 0 to 99 do
         if deptArray[i] > 0 then
         begin
@@ -157,6 +148,21 @@ begin
                 write(i:2);
             writeln(deptArray[i]:18);
         end;
+end;
+
+procedure printSummaryReport;
+begin
+    writeln;
+    writeln('Summary':12);
+    writeln('------------------');
+    writeln('Males:', maleCount:11);
+    writeln('Females: ', femaleCount:8);
+    writeln('Worker count: ', workerCount:3);
+    writeln('Manager count: ', managerCount:2);
+    writeln;
+    writeln(' Department     Total working');
+    writeln('-------------  ---------------');
+    calculateDepartmentTotal;
 end;
 
 procedure readFile;
