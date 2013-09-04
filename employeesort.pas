@@ -45,11 +45,14 @@ var
     managerCount : PtrInt; (* total number of managers *)
     maleCount : PtrInt; (* total number of males *)
     femaleCount : PtrInt; (* total number of females *)
+
+    (* variables for the department totals *)
     deptArray : array [0..99] of PtrInt;
     i : PtrInt;
     deptNumber : PtrInt;
     valCode : PtrInt;
     tempArrayVal : PtrInt;
+    deptLetters : string;
 
 procedure initNode (node : Nodeptr);
 begin
@@ -142,13 +145,17 @@ begin
 
     writeln;
     writeln(' Department     Total working');
-    writeln('------------------------------');
+    writeln('-------------  ---------------');
     for i := 0 to 99 do
         if deptArray[i] > 0 then
         begin
-            write(i:3);
+            write(deptLetters);
+            if i = 0 then
+                write('00':2)
+            else
+                write(i:2);
             write(' ');
-            writeln(deptArray[i]:20);
+            writeln(deptArray[i]:18);
         end;
 end;
 
@@ -207,6 +214,7 @@ begin
         (* here, if valCode = 0, conversion to integer was successful *)
         (* deptNumber is our converted number *)
         val(tempEmployee^.departmentCode[2..3], deptNumber, valCode);
+        deptLetters := tempEmployee^.departmentCode[0..1];
 
         if valCode = 0 then
         begin
