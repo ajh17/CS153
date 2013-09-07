@@ -2,10 +2,3 @@ employeesort
 *.o
 .DS_Store
 
-# ignore ide files
-.classpath
-.project
-.settings/
-.idea/
-*.iml
-*.iws
