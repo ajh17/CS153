@@ -2,6 +2,9 @@ package wci.frontend.java;
 
 import wci.frontend.TokenType;
 
+import java.util.HashSet;
+import java.util.Hashtable;
+
 public enum JavaTokenType implements TokenType {
 
     // Java reserved words
@@ -60,6 +63,25 @@ public enum JavaTokenType implements TokenType {
     public String getText()
     {
         return text;
+    }
+
+    public static HashSet<String> RESERVED_WORDS = new HashSet<String>();
+    static {
+        JavaTokenType values[] = JavaTokenType.values();
+        for (int i = FIRST_RESERVED_INDEX; i <= LAST_RESERVED_INDEX; ++i) {
+            RESERVED_WORDS.add(values[i].getText().toLowerCase());
+        }
+    }
+
+    // Hash table of Pascal special symbols.  Each special symbol's text
+    // is the key to its Pascal token type.
+    public static Hashtable<String, JavaTokenType> SPECIAL_SYMBOLS =
+            new Hashtable<String, JavaTokenType>();
+    static {
+        JavaTokenType values[] = JavaTokenType.values();
+        for (int i = FIRST_SPECIAL_INDEX; i <= LAST_SPECIAL_INDEX; ++i) {
+            SPECIAL_SYMBOLS.put(values[i].getText(), values[i]);
+        }
     }
 }
 
