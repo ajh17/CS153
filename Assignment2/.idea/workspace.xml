@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7a540806-90cc-415f-8425-beb37ee4b822" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wci/frontend/java/JavaErrorCode.java" afterPath="$PROJECT_DIR$/src/wci/frontend/java/JavaErrorCode.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wci/frontend/java/JavaParserTD.java" afterPath="$PROJECT_DIR$/src/wci/frontend/java/JavaParserTD.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wci/frontend/java/JavaTokenType.java" afterPath="$PROJECT_DIR$/src/wci/frontend/java/JavaTokenType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wci/frontend/java/tokens/JavaErrorToken.java" afterPath="$PROJECT_DIR$/src/wci/frontend/java/tokens/JavaErrorToken.java" />
     </list>
     <ignored path="Assignment2.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -19,7 +17,7 @@
     <file path="/JavaToken.java" changelist="7a540806-90cc-415f-8425-beb37ee4b822" time="1378581524884" ignored="false" />
     <file path="/JavaErrorHandler.java" changelist="7a540806-90cc-415f-8425-beb37ee4b822" time="1378581887709" ignored="false" />
     <file path="/FrontendFactory.java" changelist="7a540806-90cc-415f-8425-beb37ee4b822" time="1378582484891" ignored="false" />
-    <file path="/JavaErrorToken.java" changelist="7a540806-90cc-415f-8425-beb37ee4b822" time="1378584695971" ignored="false" />
+    <file path="/JavaErrorToken.java" changelist="7a540806-90cc-415f-8425-beb37ee4b822" time="1378589682155" ignored="false" />
     <file path="/JavaTokenType.java" changelist="7a540806-90cc-415f-8425-beb37ee4b822" time="1378589037136" ignored="false" />
     <file path="/JavaParserTD.java" changelist="7a540806-90cc-415f-8425-beb37ee4b822" time="1378588954212" ignored="false" />
     <file path="/JavaErrorCode.java" changelist="7a540806-90cc-415f-8425-beb37ee4b822" time="1378589163996" ignored="false" />
@@ -95,9 +93,43 @@
       <file leaf-file-name="JavaErrorToken.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/wci/frontend/java/tokens/JavaErrorToken.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="23" selection-start="668" selection-end="668" vertical-scroll-proportion="0.5021097">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PascalErrorToken.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/wci/frontend/pascal/tokens/PascalErrorToken.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="5" column="0" selection-start="91" selection-end="91" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PascalTokenType.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/wci/frontend/pascal/PascalTokenType.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="62" column="6" selection-start="1724" selection-end="1724" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="e#1911#1919#0" expanded="true" />
+                <element signature="e#2366#2391#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="JavaTokenType.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/wci/frontend/java/JavaTokenType.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="32" column="21" selection-start="1279" selection-end="1279" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#2054#2062#0" expanded="true" />
+                <element signature="e#2507#2530#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -130,11 +162,11 @@
         <option value="$PROJECT_DIR$/src/wci/frontend/FrontendFactory.java" />
         <option value="$PROJECT_DIR$/src/wci/frontend/pascal/PascalScanner.java" />
         <option value="$PROJECT_DIR$/src/wci/frontend/java/JavaScanner.java" />
-        <option value="$PROJECT_DIR$/src/wci/frontend/java/tokens/JavaErrorToken.java" />
         <option value="$PROJECT_DIR$/src/Java.java" />
         <option value="$PROJECT_DIR$/src/wci/frontend/java/JavaParserTD.java" />
         <option value="$PROJECT_DIR$/src/wci/frontend/java/JavaTokenType.java" />
         <option value="$PROJECT_DIR$/src/wci/frontend/java/JavaErrorCode.java" />
+        <option value="$PROJECT_DIR$/src/wci/frontend/java/tokens/JavaErrorToken.java" />
       </list>
     </option>
   </component>
@@ -266,6 +298,36 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="pascal" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Assignment2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Assignment2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wci" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="frontend" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pascal" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tokens" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -528,13 +590,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/wci/frontend/pascal/tokens/PascalErrorToken.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="23" selection-start="852" selection-end="852" vertical-scroll-proportion="0.6694796">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/wci/frontend/TokenType.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="10" column="17" selection-start="214" selection-end="214" vertical-scroll-proportion="0.23909986">
@@ -556,29 +611,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/wci/frontend/pascal/PascalTokenType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="4" selection-start="1063" selection-end="1063" vertical-scroll-proportion="0.11814346">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/wci/frontend/pascal/PascalParserTD.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="70" column="47" selection-start="2364" selection-end="2364" vertical-scroll-proportion="0.54571027">
           <folding>
             <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/wci/frontend/java/JavaTokenType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="21" selection-start="1279" selection-end="1279" vertical-scroll-proportion="0.76511955">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2054#2062#0" expanded="true" />
-            <element signature="e#2507#2530#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -622,9 +659,37 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/wci/frontend/java/JavaTokenType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="32" column="21" selection-start="1279" selection-end="1279" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2054#2062#0" expanded="true" />
+            <element signature="e#2507#2530#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wci/frontend/pascal/PascalTokenType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="62" column="6" selection-start="1724" selection-end="1724" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#1911#1919#0" expanded="true" />
+            <element signature="e#2366#2391#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wci/frontend/pascal/tokens/PascalErrorToken.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="0" selection-start="91" selection-end="91" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/wci/frontend/java/tokens/JavaErrorToken.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="23" selection-start="668" selection-end="668" vertical-scroll-proportion="0.5021097">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

@@ -1,8 +1,9 @@
 package wci.frontend.java.tokens;
 
-import wci.frontend.Source;
-import wci.frontend.java.JavaToken;
-import wci.frontend.java.JavaErrorCode;
+import wci.frontend.*;
+import wci.frontend.java.*;
+
+import static wci.frontend.java.JavaTokenType.*;
 
 public class JavaErrorToken extends JavaToken {
     /**
@@ -32,4 +33,4 @@ public class JavaErrorToken extends JavaToken {
     {
     }
 }
-}
+
