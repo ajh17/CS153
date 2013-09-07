@@ -31,4 +31,21 @@ public enum JavaErrorCode {
         this.status = status;
         this.message = message;
     }
+
+    /**
+     * Getter.
+     * @return the exit status.
+     */
+    public int getStatus()
+    {
+        return status;
+    }
+
+    /**
+     * @return the message.
+     */
+    public String toString()
+    {
+        return message;
+    }
 }

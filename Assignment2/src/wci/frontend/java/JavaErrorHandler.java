@@ -5,6 +5,8 @@ import wci.frontend.Token;
 import wci.message.Message;
 import static wci.frontend.java.JavaTokenType.*;
 import static wci.frontend.java.JavaErrorCode.*;
+
+
 import static wci.message.MessageType.SYNTAX_ERROR;
 
 public class JavaErrorHandler {

@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7a540806-90cc-415f-8425-beb37ee4b822" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wci/frontend/java/tokens/JavaErrorToken.java" afterPath="$PROJECT_DIR$/src/wci/frontend/java/tokens/JavaErrorToken.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wci/frontend/java/JavaErrorCode.java" afterPath="$PROJECT_DIR$/src/wci/frontend/java/JavaErrorCode.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wci/frontend/java/JavaErrorHandler.java" afterPath="$PROJECT_DIR$/src/wci/frontend/java/JavaErrorHandler.java" />
     </list>
     <ignored path="Assignment2.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -90,10 +91,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="JavaErrorToken.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/wci/frontend/java/tokens/JavaErrorToken.java">
+      <file leaf-file-name="JavaErrorHandler.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/wci/frontend/java/JavaErrorHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+            <state line="65" column="0" selection-start="1784" selection-end="1784" vertical-scroll-proportion="0.8565401">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -101,36 +102,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PascalErrorToken.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/wci/frontend/pascal/tokens/PascalErrorToken.java">
+      <file leaf-file-name="JavaErrorCode.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/wci/frontend/java/JavaErrorCode.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="0" selection-start="91" selection-end="91" vertical-scroll-proportion="0.0">
+            <state line="50" column="0" selection-start="954" selection-end="954" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PascalTokenType.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/wci/frontend/pascal/PascalTokenType.java">
+      <file leaf-file-name="PascalErrorCode.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/wci/frontend/pascal/PascalErrorCode.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="62" column="6" selection-start="1724" selection-end="1724" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#1911#1919#0" expanded="true" />
-                <element signature="e#2366#2391#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="JavaTokenType.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/wci/frontend/java/JavaTokenType.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="32" column="21" selection-start="1279" selection-end="1279" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#2054#2062#0" expanded="true" />
-                <element signature="e#2507#2530#0" expanded="true" />
-              </folding>
+            <state line="98" column="0" selection-start="3366" selection-end="3366" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -158,15 +143,15 @@
         <option value="$PROJECT_DIR$/src/wci/frontend/java/Source.java" />
         <option value="$PROJECT_DIR$/src/wci/frontend/java/JavaToken.java" />
         <option value="$PROJECT_DIR$/src/wci/frontend/pascal/PascalErrorHandler.java" />
-        <option value="$PROJECT_DIR$/src/wci/frontend/java/JavaErrorHandler.java" />
         <option value="$PROJECT_DIR$/src/wci/frontend/FrontendFactory.java" />
         <option value="$PROJECT_DIR$/src/wci/frontend/pascal/PascalScanner.java" />
         <option value="$PROJECT_DIR$/src/wci/frontend/java/JavaScanner.java" />
         <option value="$PROJECT_DIR$/src/Java.java" />
         <option value="$PROJECT_DIR$/src/wci/frontend/java/JavaParserTD.java" />
         <option value="$PROJECT_DIR$/src/wci/frontend/java/JavaTokenType.java" />
-        <option value="$PROJECT_DIR$/src/wci/frontend/java/JavaErrorCode.java" />
         <option value="$PROJECT_DIR$/src/wci/frontend/java/tokens/JavaErrorToken.java" />
+        <option value="$PROJECT_DIR$/src/wci/frontend/java/JavaErrorHandler.java" />
+        <option value="$PROJECT_DIR$/src/wci/frontend/java/JavaErrorCode.java" />
       </list>
     </option>
   </component>
@@ -569,20 +554,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/wci/frontend/Parser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="22" selection-start="400" selection-end="400" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/wci/frontend/pascal/PascalScanner.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="82" column="47" selection-start="2348" selection-end="2348" vertical-scroll-proportion="0.47819972">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/wci/frontend/Scanner.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="47" column="16" selection-start="1091" selection-end="1091" vertical-scroll-proportion="0.16315049">
@@ -629,26 +600,56 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/wci/frontend/java/JavaParserTD.java">
+    <entry file="file://$PROJECT_DIR$/src/wci/frontend/java/tokens/JavaErrorToken.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="61" column="47" selection-start="1987" selection-end="1987" vertical-scroll-proportion="0.73699015">
+        <state line="15" column="19" selection-start="459" selection-end="459" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/wci/frontend/pascal/PascalErrorCode.java">
+    <entry file="file://$PROJECT_DIR$/src/wci/frontend/pascal/tokens/PascalErrorToken.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="0" selection-start="2760" selection-end="2760" vertical-scroll-proportion="-0.1954993">
+        <state line="5" column="0" selection-start="91" selection-end="91" vertical-scroll-proportion="0.11954993">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/wci/frontend/java/JavaErrorCode.java">
+    <entry file="file://$PROJECT_DIR$/src/wci/frontend/pascal/PascalTokenType.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="42" selection-start="253" selection-end="253" vertical-scroll-proportion="0.23909986">
+        <state line="62" column="6" selection-start="1724" selection-end="1724" vertical-scroll-proportion="1.4106891">
+          <folding>
+            <element signature="e#1911#1919#0" expanded="true" />
+            <element signature="e#2366#2391#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wci/frontend/java/JavaTokenType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="40" column="35" selection-start="1601" selection-end="1601" vertical-scroll-proportion="0.21518987">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2054#2062#0" expanded="true" />
+            <element signature="e#2507#2530#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wci/frontend/java/JavaToken.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="13" selection-start="64" selection-end="64" vertical-scroll-proportion="0.07172996">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wci/frontend/java/JavaParserTD.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="61" column="47" selection-start="1987" selection-end="1987" vertical-scroll-proportion="0.5218003">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -659,37 +660,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/wci/frontend/java/JavaTokenType.java">
+    <entry file="file://$PROJECT_DIR$/src/wci/frontend/pascal/PascalErrorCode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="21" selection-start="1279" selection-end="1279" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2054#2062#0" expanded="true" />
-            <element signature="e#2507#2530#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/wci/frontend/pascal/PascalTokenType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="62" column="6" selection-start="1724" selection-end="1724" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#1911#1919#0" expanded="true" />
-            <element signature="e#2366#2391#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/wci/frontend/pascal/tokens/PascalErrorToken.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="0" selection-start="91" selection-end="91" vertical-scroll-proportion="0.0">
+        <state line="98" column="0" selection-start="3366" selection-end="3366" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/wci/frontend/java/tokens/JavaErrorToken.java">
+    <entry file="file://$PROJECT_DIR$/src/wci/frontend/java/JavaErrorCode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+        <state line="50" column="0" selection-start="954" selection-end="954" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wci/frontend/java/JavaErrorHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="65" column="0" selection-start="1784" selection-end="1784" vertical-scroll-proportion="0.8565401">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
