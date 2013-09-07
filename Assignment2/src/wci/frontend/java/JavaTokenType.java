@@ -29,7 +29,8 @@ public enum JavaTokenType implements TokenType {
     PLUS_PLUS("++"), MINUS_MINUS("--"),
     SLASH_SLAR("/*"), STAR_SLASH("*/"),
 
-    IDENTIFIER, CHARACTER, NUMBER, STRING;
+    IDENTIFIER, CHARACTER, NUMBER, STRING,
+    ERROR, END_OF_FILE;
 
     private static final int FIRST_RESERVED_INDEX = ABSTRACT.ordinal();
     private static final int LAST_RESERVED_INDEX  = WHILE.ordinal();
