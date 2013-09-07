@@ -1,6 +1,11 @@
 package wci.frontend.java;
 
 import wci.frontend.*;
+import wci.frontend.java.tokens.*;
+
+import static wci.frontend.Source.EOF;
+import static wci.frontend.java.JavaTokenType.*;
+import static wci.frontend.java.JavaErrorCode.*;
 
 public class JavaScanner extends Scanner {
 
@@ -9,6 +14,7 @@ public class JavaScanner extends Scanner {
         super(source);
     }
 
+    // TODO: complete extract token
     @Override
     protected Token extractToken() throws Exception
     {
@@ -23,7 +29,8 @@ public class JavaScanner extends Scanner {
         // bunch of else ifs here for other java tokens.
         // TODO: modify frontend JavaToken
         else {
-            token = new JavaErrorToken();
+            token = new JavaErrorToken(source, INVALID_CHARACTER,
+                                         Character.toString(currentChar));
         }
         return token;
     }
