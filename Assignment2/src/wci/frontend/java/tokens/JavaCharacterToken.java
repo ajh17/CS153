@@ -46,6 +46,7 @@ public class JavaCharacterToken extends JavaToken {
             }
         }
 
+        // Continue to parse only if an error was not caused by an invalid escape character sequence
         if (type != ERROR) {
             textBuffer.append(currentChar); // append the character between single quotes
             currentChar = nextChar();
