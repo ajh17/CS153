@@ -30,7 +30,7 @@ public class JavaSpecialSymbolToken extends JavaToken {
             // Single-character special symbols.
             case ',':  case '@': case ';':  case '\'': case '(':
             case ')': case '[':  case ']':  case '{':  case '}':
-            case '.':  case ':':  case '~': case '?':
+            case '.':  case ':':  case '~': case '?': case '"':
             {
                 nextChar();  // consume character
                 break;
