@@ -29,11 +29,11 @@ public class JavaSpecialSymbolToken extends JavaToken {
 
             // Single-character special symbols.
             // There may be more for java
-            case '+':  case '-':  case '*':  case '/':  case ',':
-            case ';':  case '\'': case '=':  case '(':  case ')':
+            case ',':  case '@':
+            case ';':  case '\'': case '(':  case ')':
             case '[':  case ']':  case '{':  case '}':  case '^':
-            case '&':  case '|':   case '.': case ':':  case '~':
-            case '?':  case '%': case '!':  case '@':
+            case '&':  case '|':  case '.':  case ':':  case '~':
+            case '?':  case '%':  case '!':
             {
                 nextChar();  // consume character
                 break;
@@ -62,7 +62,7 @@ public class JavaSpecialSymbolToken extends JavaToken {
 
             // > or >= or >> or >>=
             case '>': {
-                currentChar = nextChar();  // consume '>';
+                currentChar = nextChar();  // consume '>'
 
                 if (currentChar == '=') {
                     text += currentChar;
@@ -78,6 +78,67 @@ public class JavaSpecialSymbolToken extends JavaToken {
                 }
 
                 break;
+            }
+
+            // + or ++ or +=
+            case '+': {
+                currentChar = nextChar(); // consume '+'
+
+                if (currentChar == '+') {
+                    text += currentChar;
+                    nextChar(); // consume another '+'
+                }
+                else if (currentChar == '=') {
+                    text += currentChar;
+                    nextChar(); // consume '='
+
+                }
+            }
+
+            // - or -- or -=
+            case '-': {
+                currentChar = nextChar(); // consume '-'
+
+                if (currentChar == '-') {
+                    text += currentChar;
+                    nextChar(); // consume another '-'
+                }
+                else if (currentChar == '=') {
+                    text += currentChar;
+                    nextChar(); // consume '='
+
+                }
+            }
+
+            // * or *=
+            case '*': {
+                currentChar = nextChar(); // consume '*'
+
+                if (currentChar == '=') {
+                    text += currentChar;
+                    nextChar(); // consume '='
+                }
+            }
+
+
+            // / or /=
+            case '/': {
+                currentChar = nextChar(); // consume '/'
+
+                if (currentChar == '=') {
+                    text += currentChar;
+                    nextChar(); // consume '='
+                }
+            }
+
+            // = or ==
+            case '=': {
+                currentChar = nextChar(); // consume '='
+
+                if (currentChar == '=') {
+                    text += currentChar;
+                    nextChar(); // consume another '='
+                }
             }
 
             default: {
