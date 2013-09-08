@@ -28,7 +28,6 @@ public class JavaSpecialSymbolToken extends JavaToken {
         switch (currentChar) {
 
             // Single-character special symbols.
-            // There may be more for java
             // TODO: Some of these are actually double or triple character special symbols. Ergo, they shouldn't be here.
             case ',':  case '@':
             case ';':  case '\'': case '(':  case ')':
@@ -111,7 +110,7 @@ public class JavaSpecialSymbolToken extends JavaToken {
                 }
             }
 
-            // * or *=
+            // * or *= or */
             case '*': {
                 currentChar = nextChar(); // consume '*'
 
@@ -119,16 +118,24 @@ public class JavaSpecialSymbolToken extends JavaToken {
                     text += currentChar;
                     nextChar(); // consume '='
                 }
+                else if (currentChar == '/') {
+                    text += currentChar;
+                    nextChar(); // consume '/'
+                }
             }
 
 
-            // / or /=
+            // / or /= or /*
             case '/': {
                 currentChar = nextChar(); // consume '/'
 
                 if (currentChar == '=') {
                     text += currentChar;
                     nextChar(); // consume '='
+                }
+                else if (currentChar == '*') {
+                    text += currentChar;
+                    nextChar(); // consume '*'
                 }
             }
 
