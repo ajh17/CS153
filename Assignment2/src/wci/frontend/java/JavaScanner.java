@@ -77,11 +77,6 @@ public class JavaScanner extends Scanner
                     if (currentChar == '*')
                     {
                         currentChar = nextChar();
-
-                        if (currentChar == '/' || currentChar == '\n')
-                        {
-                            currentChar = nextChar();
-                        }
                     }
                 } // Single line comment
                 else if (currentChar == '/')
@@ -91,7 +86,6 @@ public class JavaScanner extends Scanner
                     {
                         currentChar = nextChar();
                     } while (currentChar != '\n' && currentChar != EOF);
-                    currentChar = nextChar(); // consume end of line
                 }
             } // Not a comment.
             else
