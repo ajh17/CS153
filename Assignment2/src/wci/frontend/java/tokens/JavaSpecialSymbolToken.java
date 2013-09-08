@@ -90,6 +90,7 @@ public class JavaSpecialSymbolToken extends JavaToken {
                     nextChar(); // consume '='
 
                 }
+                break;
             }
 
             // - or -- or -=
@@ -105,6 +106,7 @@ public class JavaSpecialSymbolToken extends JavaToken {
                     nextChar(); // consume '='
 
                 }
+                break;
             }
 
             // * or *= or */
@@ -119,6 +121,7 @@ public class JavaSpecialSymbolToken extends JavaToken {
                     text += currentChar;
                     nextChar(); // consume '/'
                 }
+                break;
             }
 
 
@@ -138,6 +141,7 @@ public class JavaSpecialSymbolToken extends JavaToken {
                     text += currentChar;
                     nextChar(); // consume another '/'
                 }
+                break;
             }
 
             // | or |= or ||
@@ -152,6 +156,7 @@ public class JavaSpecialSymbolToken extends JavaToken {
                     text += currentChar;
                     nextChar(); // consume another '|'
                 }
+                break;
             }
 
             // & or && or &=
@@ -166,6 +171,7 @@ public class JavaSpecialSymbolToken extends JavaToken {
                     text += currentChar;
                     nextChar(); // consume another '&'
                 }
+                break;
             }
 
             // ! or !=
@@ -176,6 +182,7 @@ public class JavaSpecialSymbolToken extends JavaToken {
                     text += currentChar;
                     nextChar(); // consume '='
                 }
+                break;
             }
 
             // ^ or ^=
@@ -186,6 +193,7 @@ public class JavaSpecialSymbolToken extends JavaToken {
                     text += currentChar;
                     nextChar(); // consume '='
                 }
+                break;
             }
 
             // % or %=
@@ -196,6 +204,7 @@ public class JavaSpecialSymbolToken extends JavaToken {
                     text += currentChar;
                     nextChar(); // consume '='
                 }
+                break;
             }
 
             // = or ==
@@ -206,6 +215,7 @@ public class JavaSpecialSymbolToken extends JavaToken {
                     text += currentChar;
                     nextChar(); // consume another '='
                 }
+                break;
             }
 
             default: {
