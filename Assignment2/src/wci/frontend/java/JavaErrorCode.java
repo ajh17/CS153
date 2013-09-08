@@ -3,11 +3,29 @@ package wci.frontend.java;
 public enum JavaErrorCode {
 
     // TODO: Add java error codes here; still incomplete list!
-    INVALID_INTEGER("Invalid integer"),
+    CASE_CONSTANT_REUSED("CASE constant reused"),
+    IDENTIFIER_REDEFINED("Redefined identifier"),
+    IDENTIFIER_UNDEFINED("Undefined identifier"),
+    INCOMPATIBLE_ASSIGNMENT("Incompatible assignment"),
+    INCOMPATIBLE_TYPES("Incompatible types"),
+    INVALID_ASSIGNMENT("Invalid assignment statement"),
     INVALID_CHARACTER("Invalid character"),
+    INVALID_CONSTANT("Invalid constant"),
+    INVALID_EXPONENT("Invalid exponent"),
+    INVALID_EXPRESSION("Invalid expression"),
+    INVALID_FIELD("Invalid field"),
+    INVALID_FRACTION("Invalid fraction"),
+    INVALID_IDENTIFIER_USAGE("Invalid identifier usage"),
+    INVALID_INDEX_TYPE("Invalid index type"),
+    INVALID_INTEGER("Invalid integer"),
+    INVALID_STATEMENT("Invalid statement"),
     RANGE_INTEGER("Integer literal out of range"),
     RANGE_REAL("Real literal out of range"),
+    STACK_OVERFLOW("Stack overflow"),
     UNEXPECTED_EOF("Unexpected end of file"),
+    WRONG_NUMBER_OF_PARMS("Wrong number of actual parameters"),
+
+    
 
     // fatal errors
     IO_ERROR(-101, "Object I/O error"),
