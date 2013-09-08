@@ -15,7 +15,6 @@ public class JavaScanner extends Scanner
         super(source);
     }
 
-    // TODO: complete extract token
     @Override
     protected Token extractToken() throws Exception
     {
