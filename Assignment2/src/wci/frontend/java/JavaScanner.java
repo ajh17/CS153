@@ -27,8 +27,20 @@ public class JavaScanner extends Scanner
         if (currentChar == EOF)
         {
             token = new EofToken(source);
-        } // bunch of else ifs here for other java tokens.
-        // TODO: modify frontend JavaToken
+        }
+        else if (Character.isLetter(currentChar)) {
+            token = new JavaWordToken(source);
+        }
+        else if (Character.isDigit(currentChar)) {
+            token = new JavaNumberToken(source);
+        }
+        else if (currentChar == '\"') {
+            token = new JavaStringToken(source);
+        }
+        else if (JavaTokenType.SPECIAL_SYMBOLS
+                .containsKey(Character.toString(currentChar))) {
+            token = new JavaSpecialSymbolToken(source);
+        }
         else
         {
             token = new JavaErrorToken(source, INVALID_CHARACTER,
@@ -62,7 +74,7 @@ public class JavaScanner extends Scanner
                         currentChar = nextChar();  // consume comment characters
                     } while ((!(currentChar == '*' && nextChar() == '/')) && (currentChar != EOF));
 
-                    // consume the */ 
+                    // consume the */
                     if (currentChar == '*')
                     {
                         currentChar = nextChar();
