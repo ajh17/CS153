@@ -7,7 +7,8 @@ public enum JavaErrorCode {
     INVALID_CHARACTER("Invalid character"),
     RANGE_INTEGER("Integer literal out of range"),
     RANGE_REAL("Real literal out of range"),
-    
+    UNEXPECTED_EOF("Unexpected end of file"),
+
     // fatal errors
     IO_ERROR(-101, "Object I/O error"),
     TOO_MANY_ERRORS(-102, "Too many syntax errors");
