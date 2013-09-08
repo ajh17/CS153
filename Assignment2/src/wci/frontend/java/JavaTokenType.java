@@ -21,7 +21,7 @@ public enum JavaTokenType implements TokenType {
     LESS_THAN("<"), LESS_EQUALS("<="), PLUS_EQUALS("+="),
     MINUS_EQUALS("-="), STAR_EQUALS("*="), SLASH_EQUALS("/="),
     QUESTION("?"), PIPE_EQUALS("|="), PERCENT_EQUALS("%="),
-    AND_EQUALS("&="), UP_ARROW_EQUALS("^="), SHIFT_LEFT__EQUALS("<<="),
+    AND_EQUALS("&="), UP_ARROW_EQUALS("^="), SHIFT_LEFT_EQUALS("<<="),
     SHIFT_RIGHT_EQUALS(">>="), GREATER_EQUALS(">="), GREATER_THAN(">"),
     LEFT_PAREN("("), RIGHT_PAREN(")"), LEFT_BRACKET("["),
     RIGHT_BRACKET("]"), LEFT_BRACE("{"), RIGHT_BRACE("}"),
