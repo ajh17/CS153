@@ -58,7 +58,6 @@ public class JavaScanner extends Scanner
     {
         char currentChar = currentChar();
 
-        // TODO: Make comments whitespace for Java
         while (Character.isWhitespace(currentChar) || (currentChar == '/'))
         {
             // Start of a Java comment?
