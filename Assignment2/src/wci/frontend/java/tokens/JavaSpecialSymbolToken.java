@@ -28,18 +28,15 @@ public class JavaSpecialSymbolToken extends JavaToken {
         switch (currentChar) {
 
             // Single-character special symbols.
-            // TODO: Some of these are actually double or triple character special symbols. Ergo, they shouldn't be here.
-            case ',':  case '@':
-            case ';':  case '\'': case '(':  case ')':
-            case '[':  case ']':  case '{':  case '}':  case '^':
-            case '&':  case '|':  case '.':  case ':':  case '~':
-            case '?':  case '%':  case '!':
+            case ',':  case '@': case ';':  case '\'': case '(':
+            case ')': case '[':  case ']':  case '{':  case '}':
+            case '.':  case ':':  case '~': case '?':
             {
                 nextChar();  // consume character
                 break;
             }
 
-            // TODO: Add support for other Java Special symbol tokens
+            // TODO: Double check that I haven't missed anything. - akshay
             // < or <= or << or <<=
             case '<': {
                 currentChar = nextChar();  // consume '<';
@@ -125,7 +122,7 @@ public class JavaSpecialSymbolToken extends JavaToken {
             }
 
 
-            // / or /= or /*
+            // / or /= or /* or //
             case '/': {
                 currentChar = nextChar(); // consume '/'
 
@@ -136,6 +133,68 @@ public class JavaSpecialSymbolToken extends JavaToken {
                 else if (currentChar == '*') {
                     text += currentChar;
                     nextChar(); // consume '*'
+                }
+                else if (currentChar == '/') {
+                    text += currentChar;
+                    nextChar(); // consume another '/'
+                }
+            }
+
+            // | or |= or ||
+            case '|': {
+                currentChar = nextChar(); // consume '|'
+
+                if (currentChar == '=') {
+                    text += currentChar;
+                    nextChar(); // consume '='
+                }
+                else if (currentChar == '|') {
+                    text += currentChar;
+                    nextChar(); // consume another '|'
+                }
+            }
+
+            // & or && or &=
+            case '&': {
+                currentChar = nextChar(); // consume '&'
+
+                if (currentChar == '=') {
+                    text += currentChar;
+                    nextChar(); // consume '='
+                }
+                else if (currentChar == '&') {
+                    text += currentChar;
+                    nextChar(); // consume another '&'
+                }
+            }
+
+            // ! or !=
+            case '!': {
+                currentChar = nextChar(); // consume '!'
+
+                if (currentChar == '=') {
+                    text += currentChar;
+                    nextChar(); // consume '='
+                }
+            }
+
+            // ^ or ^=
+            case '^': {
+                currentChar = nextChar(); // consume '^'
+
+                if (currentChar == '=') {
+                    text += currentChar;
+                    nextChar(); // consume '='
+                }
+            }
+
+            // % or %=
+            case '%': {
+                currentChar = nextChar(); // consume '%'
+
+                if (currentChar == '=') {
+                    text += currentChar;
+                    nextChar(); // consume '='
                 }
             }
 
