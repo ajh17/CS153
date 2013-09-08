@@ -36,7 +36,6 @@ public class JavaSpecialSymbolToken extends JavaToken {
                 break;
             }
 
-            // TODO: Double check that I haven't missed anything. - akshay
             // < or <= or << or <<=
             case '<': {
                 currentChar = nextChar();  // consume '<';
