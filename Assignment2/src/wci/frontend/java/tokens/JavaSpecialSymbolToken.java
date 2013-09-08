@@ -48,9 +48,13 @@ public class JavaSpecialSymbolToken extends JavaToken {
                     text += currentChar;
                     nextChar();  // consume '='
                 }
-                else if (currentChar == '>') {
+                else if (currentChar == '<') {
                     text += currentChar;
-                    nextChar();  // consume '>'
+                    nextChar();  // consume '<'
+                    if (currentChar == '=') {
+                        text += currentChar;
+                        nextChar(); // consume '='
+                    }
                 }
 
                 break;
@@ -63,6 +67,14 @@ public class JavaSpecialSymbolToken extends JavaToken {
                 if (currentChar == '=') {
                     text += currentChar;
                     nextChar();  // consume '='
+                }
+                else if (currentChar == '>') {
+                    text += currentChar;
+                    nextChar(); // consume '>'
+                    if (currentChar == '=') {
+                        text += currentChar;
+                        nextChar(); // consume '='
+                    }
                 }
 
                 break;
