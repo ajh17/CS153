@@ -53,6 +53,7 @@ public class JavaScanner extends Scanner
             // Start of a Java comment?
             if (currentChar == '/')
             {
+                currentChar = nextChar();
                 // Comment of type /* */
                 if (currentChar == '*')
                 {
@@ -64,29 +65,29 @@ public class JavaScanner extends Scanner
                     // consume the */ 
                     if (currentChar == '*')
                     {
-                        do
-                        {
-                            currentChar = nextChar();
-                        } while (Character.isWhitespace(currentChar));
+                        currentChar = nextChar();
 
-                        if (currentChar == '/')
+                        if (currentChar == '/' || currentChar == '\n')
                         {
                             currentChar = nextChar();
                         }
                     }
-                } // Comment of type //
+                } // Single line comment
                 else if (currentChar == '/')
                 {
+                    currentChar = nextChar();
                     do
                     {
                         currentChar = nextChar();
-                    } while (currentChar != EOF);
-                } // Not a comment.
-                else
-                {
-                    currentChar = nextChar();  // consume whitespace character
+                    } while (currentChar != '\n' && currentChar != EOF);
+                    currentChar = nextChar(); // consume end of line
                 }
+            } // Not a comment.
+            else
+            {
+                currentChar = nextChar();  // consume whitespace character
             }
+
         }
     }
 }
