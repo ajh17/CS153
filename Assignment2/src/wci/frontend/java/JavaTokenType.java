@@ -16,8 +16,8 @@ public enum JavaTokenType implements TokenType {
 
     // Java special symbols
     PLUS("+"), MINUS("-"), STAR("*"), SLASH("/"), DOT("."),
-    COMMA(","), SEMICOLON(";"), COLON(":"), QUOTE("'"),
-    DOUBLE_QUOTE("\"\""), EQUALS("="), NOT_EQUALS("!="),
+    COMMA(","), SEMICOLON(";"), COLON(":"), SINGLE_QUOTE("'"),
+    QUOTE("\""), EQUALS("="), NOT_EQUALS("!="),
     LESS_THAN("<"), LESS_EQUALS("<="), PLUS_EQUALS("+="),
     MINUS_EQUALS("-="), STAR_EQUALS("*="), SLASH_EQUALS("/="),
     QUESTION("?"), PIPE_EQUALS("|="), PERCENT_EQUALS("%="),
@@ -25,18 +25,19 @@ public enum JavaTokenType implements TokenType {
     SHIFT_RIGHT_EQUALS(">>="), GREATER_EQUALS(">="), GREATER_THAN(">"),
     LEFT_PAREN("("), RIGHT_PAREN(")"), LEFT_BRACKET("["),
     RIGHT_BRACKET("]"), LEFT_BRACE("{"), RIGHT_BRACE("}"),
-    UP_ARROW("^"), AND("$"), AND_AND("&&"), OR_OR("||"),
-    PLUS_PLUS("++"), MINUS_MINUS("--"),
-    SLASH_SLAR("/*"), STAR_SLASH("*/"),
+    UP_ARROW("^"), AND("&"), AND_AND("&&"), OR_OR("||"),
+    PLUS_PLUS("++"), MINUS_MINUS("--"), OR("|"), TILDE("~"),
+    SLASH_STAR("/*"), STAR_SLASH("*/"), EQUAL_EQUALS("=="), NOT("!"), AT("@"),
+    MODULO("%"), SLASH_SLASH("//"), SHIFT_LEFT("<<"), SHIFT_RIGHT(">>"),
 
-    IDENTIFIER, CHARACTER, NUMBER, STRING,
+    IDENTIFIER, CHARACTER, INTEGER, REAL, STRING,
     ERROR, END_OF_FILE;
 
     private static final int FIRST_RESERVED_INDEX = ABSTRACT.ordinal();
     private static final int LAST_RESERVED_INDEX  = WHILE.ordinal();
 
     private static final int FIRST_SPECIAL_INDEX = PLUS.ordinal();
-    private static final int LAST_SPECIAL_INDEX  = STAR_SLASH.ordinal();
+    private static final int LAST_SPECIAL_INDEX  = SHIFT_RIGHT.ordinal();
 
     private String text;  // token text
 
