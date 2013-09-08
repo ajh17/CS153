@@ -36,6 +36,9 @@ public class JavaScanner extends Scanner
         else if (currentChar == '\"') {
             token = new JavaStringToken(source);
         }
+        else if (currentChar == '\'') {
+            token = new JavaCharacterToken(source);
+        }
         else if (JavaTokenType.SPECIAL_SYMBOLS
                 .containsKey(Character.toString(currentChar))) {
             token = new JavaSpecialSymbolToken(source);
