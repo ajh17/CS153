@@ -2,11 +2,11 @@ package wci.frontend.java;
 
 public enum JavaErrorCode {
 
-    // TODO: Add java error codes here
-        INVALID_INTEGER("Invalid integer"),
-        INVALID_CHARACTER("Invalid character"),
-        RANGE_INTEGER("Integer literal out of range"),
-        RANGE_REAL("Real literal out of range"),
+    // TODO: Add java error codes here; still incomplete list!
+    INVALID_INTEGER("Invalid integer"),
+    INVALID_CHARACTER("Invalid character"),
+    RANGE_INTEGER("Integer literal out of range"),
+    RANGE_REAL("Real literal out of range"),
     
     // fatal errors
     IO_ERROR(-101, "Object I/O error"),

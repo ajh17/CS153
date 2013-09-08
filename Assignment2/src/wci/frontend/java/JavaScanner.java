@@ -7,7 +7,8 @@ import static wci.frontend.Source.EOF;
 import static wci.frontend.java.JavaTokenType.*;
 import static wci.frontend.java.JavaErrorCode.*;
 
-public class JavaScanner extends Scanner {
+public class JavaScanner extends Scanner
+{
 
     public JavaScanner(Source source)
     {
@@ -23,20 +24,22 @@ public class JavaScanner extends Scanner {
         Token token;
         char currentChar = currentChar();
 
-        if (currentChar == EOF) {
+        if (currentChar == EOF)
+        {
             token = new EofToken(source);
-        }
-        // bunch of else ifs here for other java tokens.
+        } // bunch of else ifs here for other java tokens.
         // TODO: modify frontend JavaToken
-        else {
+        else
+        {
             token = new JavaErrorToken(source, INVALID_CHARACTER,
-                                         Character.toString(currentChar));
+                    Character.toString(currentChar));
         }
         return token;
     }
 
     /**
-     * Skip whitespace characters by consuming them.  A comment is whitespace.
+     * Skip whitespace characters by consuming them. A comment is whitespace.
+     *
      * @throws Exception if an error occurred.
      */
     private void skipWhiteSpace()
@@ -45,25 +48,45 @@ public class JavaScanner extends Scanner {
         char currentChar = currentChar();
 
         // TODO: Make comments whitespace for Java
-        while (Character.isWhitespace(currentChar) || (currentChar == '/')) {
-
+        while (Character.isWhitespace(currentChar) || (currentChar == '/'))
+        {
             // Start of a Java comment?
-            if (currentChar == '/') {
-                do {
-                    currentChar = nextChar();  // consume comment characters
-                } while ((currentChar != '}') && (currentChar != EOF));
+            if (currentChar == '/')
+            {
+                // Comment of type /* */
+                if (currentChar == '*')
+                {
+                    do
+                    {
+                        currentChar = nextChar();  // consume comment characters
+                    } while ((!(currentChar == '*' && nextChar() == '/')) && (currentChar != EOF));
 
-                // Found closing '}'?
-                if (currentChar == '}') {
-                    currentChar = nextChar();  // consume the '}'
+                    // consume the */ 
+                    if (currentChar == '*')
+                    {
+                        do
+                        {
+                            currentChar = nextChar();
+                        } while (Character.isWhitespace(currentChar));
+
+                        if (currentChar == '/')
+                        {
+                            currentChar = nextChar();
+                        }
+                    }
+                } // Comment of type //
+                else if (currentChar == '/')
+                {
+                    do
+                    {
+                        currentChar = nextChar();
+                    } while (currentChar != EOF);
+                } // Not a comment.
+                else
+                {
+                    currentChar = nextChar();  // consume whitespace character
                 }
-            }
-
-            // Not a comment.
-            else {
-                currentChar = nextChar();  // consume whitespace character
             }
         }
     }
 }
-
