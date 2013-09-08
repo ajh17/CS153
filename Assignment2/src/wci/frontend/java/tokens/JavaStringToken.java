@@ -21,7 +21,7 @@ public class JavaStringToken extends JavaToken {
     }
 
     /**
-     * Extract a Pascal string token from the source.
+     * Extract a Java string token from the source.
      * @throws Exception if an error occurred.
      */
     protected void extract() throws Exception
@@ -45,11 +45,11 @@ public class JavaStringToken extends JavaToken {
                 currentChar = nextChar();  // consume character
             }
 
-            // Quote?  Each pair of adjacent quotes represents a single-quote.
+            // Quote?  Each pair of adjacent quotes represents a double-quote.
             if (currentChar == '\"') {
                 while ((currentChar == '\"') && (peekChar() == '\"')) {
                     textBuffer.append("\"\"");
-                    valueBuffer.append(currentChar); // append single-quote
+                    valueBuffer.append(currentChar); // append double-quotes
                     currentChar = nextChar();        // consume pair of quotes
                     currentChar = nextChar();
                 }
