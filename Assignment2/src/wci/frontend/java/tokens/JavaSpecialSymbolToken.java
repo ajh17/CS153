@@ -29,17 +29,18 @@ public class JavaSpecialSymbolToken extends JavaToken {
 
             // Single-character special symbols.
             // There may be more for java
-            // TODO: Add any missing single-character special symbols
             case '+':  case '-':  case '*':  case '/':  case ',':
             case ';':  case '\'': case '=':  case '(':  case ')':
             case '[':  case ']':  case '{':  case '}':  case '^':
             case '&':  case '|':   case '.': case ':':  case '~':
+            case '?':  case '%': case '!':  case '@':
             {
                 nextChar();  // consume character
                 break;
             }
 
-            // < or <= or <>
+            // TODO: Add support for other Java Special symbol tokens
+            // < or <= or << or <<=
             case '<': {
                 currentChar = nextChar();  // consume '<';
 
@@ -55,7 +56,7 @@ public class JavaSpecialSymbolToken extends JavaToken {
                 break;
             }
 
-            // > or >=
+            // > or >= or >> or >>=
             case '>': {
                 currentChar = nextChar();  // consume '>';
 
