@@ -1,4 +1,4 @@
 employeesort
 *.o
 .DS_Store
-
+out/
