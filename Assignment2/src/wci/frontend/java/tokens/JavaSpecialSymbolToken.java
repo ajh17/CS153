@@ -29,6 +29,7 @@ public class JavaSpecialSymbolToken extends JavaToken {
 
             // Single-character special symbols.
             // There may be more for java
+            // TODO: Some of these are actually double or triple character special symbols. Ergo, they shouldn't be here.
             case ',':  case '@':
             case ';':  case '\'': case '(':  case ')':
             case '[':  case ']':  case '{':  case '}':  case '^':
