@@ -33,25 +33,33 @@ public class JavaStringToken extends JavaToken {
         textBuffer.append('"');
 
         // Get string characters.
-       do
-        {
-            if (currentChar != '\\' && currentChar != '\"')
-            {
-                textBuffer.append(currentChar);
-                valueBuffer.append(currentChar);
-                currentChar = nextChar();
-            } else if (currentChar == '\\')
-            {
-                // hit an escape \" character in string
-                textBuffer.append(currentChar);
-                valueBuffer.append(currentChar);
+        do {
+            if (currentChar == '\\') { // Check '\' for escape characters
+                currentChar = nextChar();  // consume '\' character
+                textBuffer.append('\\');
+                valueBuffer.append('\\');
 
-                currentChar = nextChar();   // consume the \
+                switch (currentChar) {
+                    case '\\':
+                    case '\'':
+                    case 'n':
+                    case 't':
+                    case '"':
+                        textBuffer.append(currentChar);
+                        valueBuffer.append(currentChar);
+                        break;
+                    default: // An error if not a character in the switch statement
+                        type = ERROR;
+                        value = INVALID_CHARACTER;
+                }
+
+                currentChar = nextChar(); // consume the escape character
+            }
+            else if ((currentChar != '"') && (currentChar != EOF)) {
                 textBuffer.append(currentChar);
                 valueBuffer.append(currentChar);
-                currentChar = nextChar();   // consume the "
-            } 
-
+                currentChar = nextChar();  // consume character
+            }
         } while ((currentChar != '"') && (currentChar != EOF));
 
         if (currentChar == '"') {
