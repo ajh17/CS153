@@ -40,17 +40,12 @@ public class JavaStringToken extends JavaToken {
                 currentChar = nextChar();  // consume '\' character
 
                 switch (currentChar) {
-                    case '\n':
-                        if (position == 0) {
-                            textBuffer.append('\n');
-                            valueBuffer.append('\n');
-                        }
-                        break;
                     case '\\':
                     case '\'':
                     case 'n':
                     case 't':
                     case '"':
+                    case '\n':
                         textBuffer.append(currentChar);
                         valueBuffer.append(currentChar);
                         break;
