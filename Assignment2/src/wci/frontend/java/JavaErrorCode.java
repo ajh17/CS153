@@ -25,6 +25,7 @@ public enum JavaErrorCode {
     MISSING_IDENTIFIER("Missing identifier"),
     MISSING_LEFT_BRACE("Missing {"),
     MISSING_LEFT_BRACKET("Missing ["),
+    MISSING_LEFT_PAREN("Missing ("),
     MISSING_PERIOD("Missing ."),
     MISSING_RIGHT_BRACE("Missing }"),
     MISSING_RIGHT_BRACKET("Missing ]"),
