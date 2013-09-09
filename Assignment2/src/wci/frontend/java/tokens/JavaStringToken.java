@@ -35,11 +35,17 @@ public class JavaStringToken extends JavaToken {
         // Get string characters.
         do {
             if (currentChar == '\\') { // Check '\' for escape characters
+                textBuffer.append(currentChar);
+                valueBuffer.append(currentChar);
                 currentChar = nextChar();  // consume '\' character
-                textBuffer.append('\\');
-                valueBuffer.append('\\');
 
                 switch (currentChar) {
+                    case '\n':
+                        if (position == 0) {
+                            textBuffer.append('\n');
+                            valueBuffer.append('\n');
+                        }
+                        break;
                     case '\\':
                     case '\'':
                     case 'n':
