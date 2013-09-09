@@ -25,36 +25,54 @@ public class JavaCharacterToken extends JavaToken {
     protected void extract() throws Exception
     {
         StringBuilder textBuffer = new StringBuilder();
+        StringBuilder valueBuffer = new StringBuilder();
 
         char currentChar = nextChar();  // consume initial quote
         textBuffer.append('\'');
 
         if (currentChar == '\\') {   // check for escape character
-            currentChar = nextChar();  // consume escape character
+            currentChar = nextChar();  // consume '\' character
+            textBuffer.append('\\');
+            valueBuffer.append('\\');
 
             switch (currentChar) {
                 case '\\':
-                case '\'': textBuffer.append(currentChar); break;
-                case 'n': textBuffer.append('\n'); break;
-                case 't': textBuffer.append('\t'); break;
-
-                // An error if not a character in the switch statement
-                default:
+                case '\'':
+                case 'n':
+                case 't':
+                    textBuffer.append(currentChar);
+                    valueBuffer.append(currentChar);
+                    break;
+                default: // An error if not a character in the switch statement
                     type = ERROR;
                     value = INVALID_CHARACTER;
-                    text = String.valueOf(currentChar);
+            }
+
+            if (type != ERROR) {
+                currentChar = nextChar();  // consume escape character
+
+                if (currentChar == '\'') {
+                    textBuffer.append('\'');
+                    valueBuffer.append(currentChar);
+                    type = CHARACTER;
+                    value = valueBuffer.toString();
+                }
+                else {
+                    type = ERROR;
+                    value = UNEXPECTED_EOF;
+                }
             }
         }
 
         // Continue to parse only if an error was not caused by an invalid escape character sequence
-        if (type != ERROR) {
+        else {
             textBuffer.append(currentChar); // append the character between single quotes
-            currentChar = nextChar();
+            currentChar = nextChar(); // consume character
 
             if (currentChar == '\'') {
                 nextChar();  // consume final quote
                 textBuffer.append('\'');
-
+                valueBuffer.append('\'');
                 type = CHARACTER;
                 value = textBuffer.toString();
             }
@@ -62,8 +80,8 @@ public class JavaCharacterToken extends JavaToken {
                 type = ERROR;
                 value = UNEXPECTED_EOF;
             }
-
-            text = textBuffer.toString();
         }
+
+        text = textBuffer.toString();
     }
 }
