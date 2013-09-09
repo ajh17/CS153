@@ -4,6 +4,15 @@ public enum JavaErrorCode {
 
     // TODO: Add java error codes here; still incomplete list!
     CASE_CONSTANT_REUSED("CASE constant reused"),
+    MISSING_WHILE("while missing after do loop."),
+    MISSING_IDENTIFIER("Missing identifier"),
+    MISSING_LEFT_BRACE("Missing {"),
+    MISSING_RIGHT_BRACE("Missing }"),
+    MISSING_LEFT_BRACKET("Missing ["),
+    MISSING_RIGHT_BRACKET("Missing ]"),
+    MISSING_RIGHT_PAREN("Missing )"),
+    MISSING_SEMICOLON("Missing ;"),
+    MISSING_PERIOD("Missing ."),
     IDENTIFIER_REDEFINED("Redefined identifier"),
     IDENTIFIER_UNDEFINED("Undefined identifier"),
     INCOMPATIBLE_ASSIGNMENT("Incompatible assignment"),
@@ -24,8 +33,6 @@ public enum JavaErrorCode {
     STACK_OVERFLOW("Stack overflow"),
     UNEXPECTED_EOF("Unexpected end of file"),
     WRONG_NUMBER_OF_PARMS("Wrong number of actual parameters"),
-
-    
 
     // fatal errors
     IO_ERROR(-101, "Object I/O error"),
