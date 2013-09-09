@@ -3,9 +3,23 @@ package wci.frontend.java;
 public enum JavaErrorCode {
 
     // TODO: Add java error codes here; still incomplete list!
+    CANT_INSTANTIATE_ABSTRACT("Can’t instantiate abstract class	"),
     CASE_CONSTANT_REUSED("CASE constant reused"),
+<<<<<<< HEAD
+    MISSING_WHILE("While missing after do loop."),
+    MISSING_IDENTIFIER("Missing identifier"),
+    MISSING_LEFT_BRACE("Missing {"),
+    MISSING_RIGHT_BRACE("Missing }"),
+    MISSING_LEFT_BRACKET("Missing ["),
+    MISSING_RIGHT_BRACKET("Missing ]"),
+    MISSING_RIGHT_PAREN("Missing )"),
+    MISSING_SEMICOLON("Missing ;"),
+    MISSING_PERIOD("Missing ."),
+=======
+>>>>>>> 2d0377f9961be9f194c7c14117c79e7f18dea9b8
     IDENTIFIER_REDEFINED("Redefined identifier"),
     IDENTIFIER_UNDEFINED("Undefined identifier"),
+    ILLEGAL_ESCAPE("Illegal escape character"),
     INCOMPATIBLE_ASSIGNMENT("Incompatible assignment"),
     INCOMPATIBLE_TYPES("Incompatible types"),
     INVALID_ASSIGNMENT("Invalid assignment statement"),
@@ -18,6 +32,7 @@ public enum JavaErrorCode {
     INVALID_IDENTIFIER_USAGE("Invalid identifier usage"),
     INVALID_INDEX_TYPE("Invalid index type"),
     INVALID_INTEGER("Invalid integer"),
+    INVALID_METHOD("Method not found"),
     INVALID_STATEMENT("Invalid statement"),
     MISSING_COLON("Missing :"),
     MISSING_COMMA("Missing ,"),
