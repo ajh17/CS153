@@ -56,8 +56,8 @@ public class JavaStringToken extends JavaToken {
             }
             if (currentChar == '\\' && peekChar() == '"') {
                 textBuffer.append("\"");
+                currentChar = nextChar();  // consume backslash
                 valueBuffer.append(currentChar);
-                currentChar = nextChar();
                 currentChar = nextChar();
             }
         } while ((currentChar != '"') && (currentChar != EOF));
