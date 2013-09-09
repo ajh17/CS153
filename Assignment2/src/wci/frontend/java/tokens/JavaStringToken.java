@@ -33,47 +33,37 @@ public class JavaStringToken extends JavaToken {
         textBuffer.append('"');
 
         // Get string characters.
-        do {
-            if (currentChar == '\\') { // Check '\' for escape characters
-                currentChar = nextChar();  // consume '\' character
-                textBuffer.append('\\');
-                valueBuffer.append('\\');
-
-                switch (currentChar) {
-                    case '\\':
-                    case '\'':
-                    case 'n':
-                    case 't':
-                    case '"':
-                        textBuffer.append(currentChar);
-                        valueBuffer.append(currentChar);
-                        break;
-                    default: // An error if not a character in the switch statement
-                        type = ERROR;
-                        value = INVALID_CHARACTER;
-                }
-
-                currentChar = nextChar(); // consume the escape character, valid it or not
-            }
-            else if (type != ERROR && (currentChar != '"') && (currentChar != EOF)) {
+       do
+        {
+            if (currentChar != '\\' && currentChar != '\"')
+            {
                 textBuffer.append(currentChar);
                 valueBuffer.append(currentChar);
-                currentChar = nextChar();  // consume character
-            }
-        } while (type != ERROR && (currentChar != '"') && (currentChar != EOF));
+                currentChar = nextChar();
+            } else if (currentChar == '\\')
+            {
+                // hit an escape \" character in string
+                textBuffer.append(currentChar);
+                valueBuffer.append(currentChar);
 
-        if (type != ERROR) {
-            if (currentChar == '"') {
-                nextChar();  // consume final quote
-                textBuffer.append('"');
+                currentChar = nextChar();   // consume the \
+                textBuffer.append(currentChar);
+                valueBuffer.append(currentChar);
+                currentChar = nextChar();   // consume the "
+            } 
 
-                type = STRING;
-                value = valueBuffer.toString();
-            }
-            else {
-                type = ERROR;
-                value = UNEXPECTED_EOF;
-            }
+        } while ((currentChar != '"') && (currentChar != EOF));
+
+        if (currentChar == '"') {
+            nextChar();  // consume final quote
+            textBuffer.append('"');
+
+            type = STRING;
+            value = valueBuffer.toString();
+        }
+        else {
+            type = ERROR;
+            value = UNEXPECTED_EOF;
         }
 
         text = textBuffer.toString();
