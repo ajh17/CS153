@@ -53,25 +53,27 @@ public class JavaStringToken extends JavaToken {
                         value = INVALID_CHARACTER;
                 }
 
-                currentChar = nextChar(); // consume the escape character
+                currentChar = nextChar(); // consume the escape character, valid it or not
             }
-            else if ((currentChar != '"') && (currentChar != EOF)) {
+            else if (type != ERROR && (currentChar != '"') && (currentChar != EOF)) {
                 textBuffer.append(currentChar);
                 valueBuffer.append(currentChar);
                 currentChar = nextChar();  // consume character
             }
-        } while ((currentChar != '"') && (currentChar != EOF));
+        } while (type != ERROR && (currentChar != '"') && (currentChar != EOF));
 
-        if (currentChar == '"') {
-            nextChar();  // consume final quote
-            textBuffer.append('"');
+        if (type != ERROR) {
+            if (currentChar == '"') {
+                nextChar();  // consume final quote
+                textBuffer.append('"');
 
-            type = STRING;
-            value = valueBuffer.toString();
-        }
-        else {
-            type = ERROR;
-            value = UNEXPECTED_EOF;
+                type = STRING;
+                value = valueBuffer.toString();
+            }
+            else {
+                type = ERROR;
+                value = UNEXPECTED_EOF;
+            }
         }
 
         text = textBuffer.toString();
