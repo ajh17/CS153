@@ -29,6 +29,7 @@ public class JavaCharacterToken extends JavaToken {
 
         char currentChar = nextChar();  // consume initial quote
         textBuffer.append('\'');
+        valueBuffer.append('\'');
 
         if (currentChar == '\\') {   // check for escape character
             currentChar = nextChar();  // consume '\' character
@@ -54,6 +55,7 @@ public class JavaCharacterToken extends JavaToken {
                 if (currentChar == '\'') {
                     textBuffer.append('\'');
                     valueBuffer.append(currentChar);
+                    nextChar(); // consume final quote
                     type = CHARACTER;
                     value = valueBuffer.toString();
                 }
