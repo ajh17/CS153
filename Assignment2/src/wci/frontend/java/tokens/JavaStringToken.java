@@ -54,6 +54,7 @@ public class JavaStringToken extends JavaToken {
                     currentChar = nextChar();
                 }
             }
+            // TODO: Still has a bug somewhere. Does not recognize \n in strings yet
             if (currentChar == '\\' && peekChar() == '"') {
                 textBuffer.append("\"");
                 currentChar = nextChar();  // consume backslash
