@@ -54,6 +54,12 @@ public class JavaStringToken extends JavaToken {
                     currentChar = nextChar();
                 }
             }
+            if (currentChar == '\\' && peekChar() == '"') {
+                textBuffer.append("\"");
+                valueBuffer.append(currentChar);
+                currentChar = nextChar();
+                currentChar = nextChar();
+            }
         } while ((currentChar != '"') && (currentChar != EOF));
 
         if (currentChar == '"') {
