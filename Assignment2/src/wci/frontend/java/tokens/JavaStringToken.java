@@ -33,34 +33,25 @@ public class JavaStringToken extends JavaToken {
         textBuffer.append('"');
 
         // Get string characters.
-        do {
-            // Replace any whitespace character with a blank.
-            if (Character.isWhitespace(currentChar)) {
-                currentChar = ' ';
-            }
-
-            if ((currentChar != '"') && (currentChar != EOF)) {
+       do
+        {
+            if (currentChar != '\\' && currentChar != '\"')
+            {
                 textBuffer.append(currentChar);
                 valueBuffer.append(currentChar);
-                currentChar = nextChar();  // consume character
-            }
-
-            // Quote?  Each pair of adjacent quotes represents a double-quote.
-            if (currentChar == '"') {
-                while ((currentChar == '"') && (peekChar() == '"')) {
-                    textBuffer.append("\"\"");
-                    valueBuffer.append(currentChar); // append double-quotes
-                    currentChar = nextChar();        // consume pair of quotes
-                    currentChar = nextChar();
-                }
-            }
-            // TODO: Still has a bug somewhere. Does not recognize \n in strings yet
-            if (currentChar == '\\' && peekChar() == '"') {
-                textBuffer.append("\"");
-                currentChar = nextChar();  // consume backslash
-                valueBuffer.append(currentChar);
                 currentChar = nextChar();
-            }
+            } else if (currentChar == '\\')
+            {
+                // hit an escape \" character in string
+                textBuffer.append(currentChar);
+                valueBuffer.append(currentChar);
+
+                currentChar = nextChar();   // consume the \
+                textBuffer.append(currentChar);
+                valueBuffer.append(currentChar);
+                currentChar = nextChar();   // consume the "
+            } 
+
         } while ((currentChar != '"') && (currentChar != EOF));
 
         if (currentChar == '"') {
