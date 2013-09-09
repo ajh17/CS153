@@ -35,6 +35,7 @@ public enum JavaErrorCode {
     MISSING_SEMICOLON("Missing ;"),
     MISSING_TYPE("Missing identifier type"),
     MISSING_WHILE("while missing after do loop."),
+    MISSING_DO("do missing before bracket"),
     RANGE_INTEGER("Integer literal out of range"),
     RANGE_REAL("Real literal out of range"),
     STACK_OVERFLOW("Stack overflow"),
