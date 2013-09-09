@@ -25,16 +25,13 @@ public class JavaCharacterToken extends JavaToken {
     protected void extract() throws Exception
     {
         StringBuilder textBuffer = new StringBuilder();
-        StringBuilder valueBuffer = new StringBuilder();
 
         char currentChar = nextChar();  // consume initial quote
         textBuffer.append('\'');
-        valueBuffer.append('\'');
 
         if (currentChar == '\\') {   // check for escape character
             currentChar = nextChar();  // consume '\' character
             textBuffer.append('\\');
-            valueBuffer.append('\\');
 
             switch (currentChar) {
                 case '\\':
@@ -42,7 +39,6 @@ public class JavaCharacterToken extends JavaToken {
                 case 'n':
                 case 't':
                     textBuffer.append(currentChar);
-                    valueBuffer.append(currentChar);
                     break;
                 default: // An error if not a character in the switch statement
                     type = ERROR;
@@ -54,10 +50,9 @@ public class JavaCharacterToken extends JavaToken {
 
                 if (currentChar == '\'') {
                     textBuffer.append('\'');
-                    valueBuffer.append(currentChar);
                     nextChar(); // consume final quote
                     type = CHARACTER;
-                    value = valueBuffer.toString();
+                    value = textBuffer.toString();
                 }
                 else {
                     type = ERROR;
@@ -72,7 +67,6 @@ public class JavaCharacterToken extends JavaToken {
             if (currentChar == '\'') {
                 nextChar();  // consume final quote
                 textBuffer.append('\'');
-                valueBuffer.append('\'');
                 type = CHARACTER;
                 value = textBuffer.toString();
             }
