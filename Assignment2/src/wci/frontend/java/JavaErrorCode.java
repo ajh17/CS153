@@ -5,15 +5,6 @@ public enum JavaErrorCode {
     // TODO: Add java error codes here; still incomplete list!
     CANT_INSTANTIATE_ABSTRACT("Can’t instantiate abstract class	"),
     CASE_CONSTANT_REUSED("CASE constant reused"),
-    MISSING_WHILE("While missing after do loop."),
-    MISSING_IDENTIFIER("Missing identifier"),
-    MISSING_LEFT_BRACE("Missing {"),
-    MISSING_RIGHT_BRACE("Missing }"),
-    MISSING_LEFT_BRACKET("Missing ["),
-    MISSING_RIGHT_BRACKET("Missing ]"),
-    MISSING_RIGHT_PAREN("Missing )"),
-    MISSING_SEMICOLON("Missing ;"),
-    MISSING_PERIOD("Missing ."),
     IDENTIFIER_REDEFINED("Redefined identifier"),
     IDENTIFIER_UNDEFINED("Undefined identifier"),
     ILLEGAL_ESCAPE("Illegal escape character"),
@@ -31,8 +22,6 @@ public enum JavaErrorCode {
     INVALID_INTEGER("Invalid integer"),
     INVALID_METHOD("Method not found"),
     INVALID_STATEMENT("Invalid statement"),
-<<<<<<< HEAD
-=======
     MISSING_COLON("Missing :"),
     MISSING_COMMA("Missing ,"),
     MISSING_FOR_CONTROL("Invalid for control variable"),
@@ -47,7 +36,6 @@ public enum JavaErrorCode {
     MISSING_SEMICOLON("Missing ;"),
     MISSING_TYPE("Missing identifier type"),
     MISSING_WHILE("while missing after do loop."),
->>>>>>> 3bfcd34df8a016d80c8c47fbccd388d1c2c22ddc
     RANGE_INTEGER("Integer literal out of range"),
     RANGE_REAL("Real literal out of range"),
     STACK_OVERFLOW("Stack overflow"),
