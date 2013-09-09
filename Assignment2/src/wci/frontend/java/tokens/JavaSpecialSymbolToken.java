@@ -3,7 +3,7 @@ package wci.frontend.java.tokens;
 import wci.frontend.Source;
 import wci.frontend.java.JavaToken;
 import static wci.frontend.java.JavaErrorCode.*;
-import static wci.frontend.pascal.PascalTokenType.*;
+import static wci.frontend.java.JavaTokenType.*;
 
 public class JavaSpecialSymbolToken extends JavaToken {
 

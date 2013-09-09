@@ -2,8 +2,6 @@ package wci.frontend.java;
 
 public enum JavaErrorCode {
 
-    // IntelliJ Github test
-    // TODO: Add java error codes here; still incomplete list!
     CANT_INSTANTIATE_ABSTRACT("Can’t instantiate abstract class	"),
     CASE_CONSTANT_REUSED("CASE constant reused"),
     IDENTIFIER_REDEFINED("Redefined identifier"),
