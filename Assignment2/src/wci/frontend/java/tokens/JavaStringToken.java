@@ -45,9 +45,12 @@ public class JavaStringToken extends JavaToken {
                     case 'n':
                     case 't':
                     case '"':
-                    case '\n':
                         textBuffer.append(currentChar);
                         valueBuffer.append(currentChar);
+                        break;
+                    case '\n':
+                        textBuffer.append(currentChar);
+                        valueBuffer.deleteCharAt(valueBuffer.length() - 1);
                         break;
                     default: // An error if not a character in the switch statement
                         type = ERROR;
