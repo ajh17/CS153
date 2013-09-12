@@ -2,6 +2,7 @@ package wci.frontend.java;
 
 public enum JavaErrorCode {
     ARRAY_NOT_INITIALIZED("Array not initialized"),
+    CANT_CHANGE_FINAL_VAR("Cannot change the value of a constant variable"),
     CANT_INSTANTIATE_ABSTRACT("Can’t instantiate abstract class	"),
     CASE_CONSTANT_REUSED("CASE constant reused"),
     CLASS_NOT_PUBLIC("Class is not public"),
