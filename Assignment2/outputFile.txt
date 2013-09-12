@@ -1,0 +1,127 @@
+001 /* This is a comment. */
+002 // So is this.
+003 
+004 /* Here's a comment
+005    that spans several
+006    source lines. */
+007 
+008 Two/*comments in*//***a row***/ here.
+>>> IDENTIFIER      line=008, pos= 0, text="Two"
+>>> IDENTIFIER      line=008, pos=32, text="here"
+>>> DOT             line=008, pos=36, text="."
+009 /* This is /* not a nested comment. */
+010 // Nor is /* this */ one.
+011 
+012 { Not a comment. }
+>>> LEFT_BRACE      line=012, pos= 0, text="{"
+>>> IDENTIFIER      line=012, pos= 2, text="Not"
+>>> IDENTIFIER      line=012, pos= 6, text="a"
+>>> IDENTIFIER      line=012, pos= 8, text="comment"
+>>> DOT             line=012, pos=15, text="."
+>>> RIGHT_BRACE     line=012, pos=17, text="}"
+013 
+014 // Word tokens
+015 Hello world
+>>> IDENTIFIER      line=015, pos= 0, text="Hello"
+>>> IDENTIFIER      line=015, pos= 6, text="world"
+016 Abstract abstract ABSTRACT aBsTrAcT
+>>> IDENTIFIER      line=016, pos= 0, text="Abstract"
+>>> ABSTRACT        line=016, pos= 9, text="abstract"
+>>> IDENTIFIER      line=016, pos=18, text="ABSTRACT"
+>>> IDENTIFIER      line=016, pos=27, text="aBsTrAcT"
+017 What?
+>>> IDENTIFIER      line=017, pos= 0, text="What"
+>>> QUESTION        line=017, pos= 4, text="?"
+018 
+019 // Character tokens
+020 'x' 'A' '\'' 'a' '\n' '\t' '\\'
+>>> CHARACTER       line=020, pos= 0, text="'x'"
+>>>                 value='x'
+>>> CHARACTER       line=020, pos= 4, text="'A'"
+>>>                 value='A'
+>>> CHARACTER       line=020, pos= 8, text="'\''"
+>>>                 value='\''
+>>> CHARACTER       line=020, pos=13, text="'a'"
+>>>                 value='a'
+>>> CHARACTER       line=020, pos=17, text="'\n'"
+>>>                 value='\n'
+>>> CHARACTER       line=020, pos=22, text="'\t'"
+>>>                 value='\t'
+>>> CHARACTER       line=020, pos=27, text="'\\'"
+>>>                 value='\\'
+021 
+022 // String tokens
+023 "Hello, world."
+>>> STRING          line=023, pos= 0, text=""Hello, world.""
+>>>                 value="Hello, world."
+024 "Hello,\tworld!"
+>>> STRING          line=024, pos= 0, text=""Hello,\tworld!""
+>>>                 value="Hello,\tworld!"
+025 "Hello,\n\"world!\""
+>>> STRING          line=025, pos= 0, text=""Hello,\n\"world!\"""
+>>>                 value="Hello,\n\"world!\""
+026 "It's Friday!"
+>>> STRING          line=026, pos= 0, text=""It's Friday!""
+>>>                 value="It's Friday!"
+027 ""  "\""
+>>> STRING          line=027, pos= 0, text=""""
+>>>                 value=""
+>>> STRING          line=027, pos= 4, text=""\"""
+>>>                 value="\""
+028 "This string \
+029 spans \
+030 several lines."
+>>> STRING          line=028, pos= 0, text=""This string \
+spans \
+several lines.""
+>>>                 value="This string \
+spans \
+several lines."
+031 
+032 // Special symbol tokens
+033 + - * / := . , ; : = <> < <= >= > ( ) [ ] { } } ^ ..
+>>> PLUS            line=033, pos= 0, text="+"
+>>> MINUS           line=033, pos= 2, text="-"
+>>> STAR            line=033, pos= 4, text="*"
+>>> COLON           line=033, pos= 8, text=":"
+>>> EQUALS          line=033, pos= 9, text="="
+>>> DOT             line=033, pos=11, text="."
+>>> COMMA           line=033, pos=13, text=","
+>>> SEMICOLON       line=033, pos=15, text=";"
+>>> COLON           line=033, pos=17, text=":"
+>>> EQUALS          line=033, pos=19, text="="
+>>> LESS_THAN       line=033, pos=21, text="<"
+>>> GREATER_THAN    line=033, pos=22, text=">"
+>>> LESS_THAN       line=033, pos=24, text="<"
+>>> LESS_THAN_EQUALS line=033, pos=26, text="<="
+>>> GREATER_THAN_EQUALS line=033, pos=29, text=">="
+>>> GREATER_THAN    line=033, pos=32, text=">"
+>>> LEFT_PAREN      line=033, pos=34, text="("
+>>> RIGHT_PAREN     line=033, pos=36, text=")"
+>>> LEFT_BRACKET    line=033, pos=38, text="["
+>>> RIGHT_BRACKET   line=033, pos=40, text="]"
+>>> LEFT_BRACE      line=033, pos=42, text="{"
+>>> RIGHT_BRACE     line=033, pos=44, text="}"
+>>> RIGHT_BRACE     line=033, pos=46, text="}"
+>>> UP_ARROW        line=033, pos=48, text="^"
+>>> DOT             line=033, pos=50, text="."
+>>> DOT             line=033, pos=51, text="."
+034 <<=  >>=
+>>> SHIFT_LEFT_EQUALS line=034, pos= 0, text="<<="
+>>> SHIFT_RIGHT_EQUALS line=034, pos= 5, text=">>="
+035 :=<>=<==>>===
+>>> COLON           line=035, pos= 0, text=":"
+>>> EQUALS          line=035, pos= 1, text="="
+>>> LESS_THAN       line=035, pos= 2, text="<"
+>>> GREATER_THAN_EQUALS line=035, pos= 3, text=">="
+>>> LESS_THAN_EQUALS line=035, pos= 5, text="<="
+>>> EQUALS          line=035, pos= 7, text="="
+>>> SHIFT_RIGHT_EQUALS line=035, pos= 8, text=">>="
+>>> EQUAL_EQUAL     line=035, pos=11, text="=="
+
+                  35 source lines.
+                   0 syntax errors.
+                0.10 seconds total parsing time.
+
+                   0 instructions generated.
+                0.00 seconds total code generation time.
