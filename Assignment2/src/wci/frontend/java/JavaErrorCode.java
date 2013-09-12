@@ -1,7 +1,7 @@
 package wci.frontend.java;
 
 public enum JavaErrorCode {
-
+    ARRAY_NOT_INITIALIZED("Array not initialized"),
     CANT_INSTANTIATE_ABSTRACT("Can’t instantiate abstract class	"),
     CASE_CONSTANT_REUSED("CASE constant reused"),
     CLASS_NOT_PUBLIC("Class is not public"),
@@ -36,14 +36,16 @@ public enum JavaErrorCode {
     MISSING_RIGHT_PAREN("Missing )"),
     MISSING_SEMICOLON("Missing ;"),
     MISSING_TYPE("Missing identifier type"),
-    MISSING_WHILE("while missing after do loop."),
+    MISSING_WHILE("While missing after do loop."),
     MISSING_DO("do missing before bracket"),
     RANGE_INTEGER("Integer literal out of range"),
     RANGE_REAL("Real literal out of range"),
     RETURN_NOT_FOUND("Method did not return a value"),
     STACK_OVERFLOW("Stack overflow"),
+    STATEMENT_EXPECTED("Statement expected"),
     UNEXPECTED_EOF("Unexpected end of file"),
     WRONG_NUMBER_OF_PARMS("Wrong number of actual parameters"),
+    VARIABLE_NOT_INIT("Variable not initialized"),
     VOID_METHOD("Method of void type; Cannot return a value"),
 
     // fatal errors
