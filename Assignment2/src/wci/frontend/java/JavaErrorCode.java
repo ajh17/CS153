@@ -4,6 +4,8 @@ public enum JavaErrorCode {
 
     CANT_INSTANTIATE_ABSTRACT("Can’t instantiate abstract class	"),
     CASE_CONSTANT_REUSED("CASE constant reused"),
+    CLASS_NOT_PUBLIC("Class is not public"),
+    CANNOT_DIVIDE_ZERO("Cannot divide by zero!"),
     IDENTIFIER_REDEFINED("Redefined identifier"),
     IDENTIFIER_UNDEFINED("Undefined identifier"),
     ILLEGAL_ESCAPE("Illegal escape character"),
@@ -38,9 +40,11 @@ public enum JavaErrorCode {
     MISSING_DO("do missing before bracket"),
     RANGE_INTEGER("Integer literal out of range"),
     RANGE_REAL("Real literal out of range"),
+    RETURN_NOT_FOUND("Method did not return a value"),
     STACK_OVERFLOW("Stack overflow"),
     UNEXPECTED_EOF("Unexpected end of file"),
     WRONG_NUMBER_OF_PARMS("Wrong number of actual parameters"),
+    VOID_METHOD("Method of void type; Cannot return a value"),
 
     // fatal errors
     IO_ERROR(-101, "Object I/O error"),
