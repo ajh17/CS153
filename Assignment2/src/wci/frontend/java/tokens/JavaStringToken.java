@@ -97,6 +97,8 @@ public class JavaStringToken extends JavaToken
                 type = ERROR;
                 value = UNEXPECTED_EOF;
             }
+        }else{
+            currentChar = nextChar();
         }
 
         text = textBuffer.toString();
