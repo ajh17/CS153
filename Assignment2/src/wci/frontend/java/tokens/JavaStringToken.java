@@ -44,14 +44,6 @@ public class JavaStringToken extends JavaToken
 
                 switch (currentChar)
                 {
-                    case '\\':
-                        textBuffer.append(currentChar);
-                        valueBuffer.append(currentChar);
-                        break;
-                    case '\'':
-                        textBuffer.append(currentChar);
-                        valueBuffer.append(currentChar);
-                        break;
                     case 'n':
                         textBuffer.append("\\n");
                         valueBuffer.append("\n");
@@ -62,6 +54,11 @@ public class JavaStringToken extends JavaToken
                         break;
                     case '"':
                         textBuffer.append("\\\"");
+                        valueBuffer.append(currentChar);
+                        break;
+                   case '\\':
+                    case '\'':
+                        textBuffer.append(currentChar);
                         valueBuffer.append(currentChar);
                         break;
                     case '\n':
