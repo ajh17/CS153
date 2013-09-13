@@ -56,10 +56,11 @@
 >>>                 value="Hello, world."
 024 "Hello,\tworld!"
 >>> STRING          line=024, pos= 0, text=""Hello,\tworld!""
->>>                 value="Hello,\tworld!"
+>>>                 value="Hello,	world!"
 025 "Hello,\n\"world!\""
 >>> STRING          line=025, pos= 0, text=""Hello,\n\"world!\"""
->>>                 value="Hello,\n\"world!\""
+>>>                 value="Hello,
+"world!""
 026 "It's Friday!"
 >>> STRING          line=026, pos= 0, text=""It's Friday!""
 >>>                 value="It's Friday!"
@@ -67,13 +68,11 @@
 >>> STRING          line=027, pos= 0, text=""""
 >>>                 value=""
 >>> STRING          line=027, pos= 4, text=""\"""
->>>                 value="\""
+>>>                 value="""
 028 "This string \
 029 spans \
 030 several lines."
->>> STRING          line=028, pos= 0, text=""This string \
-spans \
-several lines.""
+>>> STRING          line=028, pos= 0, text=""This string spans several lines.""
 >>>                 value="This string spans several lines."
 031 
 032 // Special symbol tokens
@@ -119,8 +118,7 @@ several lines.""
 
                   35 source lines.
                    0 syntax errors.
-                0.13 seconds total parsing time.
+                0.05 seconds total parsing time.
 
                    0 instructions generated.
                 0.00 seconds total code generation time.
-
