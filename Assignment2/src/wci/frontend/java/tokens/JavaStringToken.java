@@ -59,6 +59,10 @@ public class JavaStringToken extends JavaToken {
 
                 currentChar = nextChar(); // consume the escape character, valid it or not
             }
+            else if (currentChar == EOL) {
+                type = ERROR;
+                value = INVALID_STRING;
+            }
             else if (type != ERROR && (currentChar != '"') && (currentChar != EOF)) {
                 textBuffer.append(currentChar);
                 valueBuffer.append(currentChar);
