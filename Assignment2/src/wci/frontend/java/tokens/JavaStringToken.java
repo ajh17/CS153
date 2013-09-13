@@ -7,10 +7,12 @@ import static wci.frontend.Source.EOF;
 import static wci.frontend.java.JavaTokenType.*;
 import static wci.frontend.java.JavaErrorCode.*;
 
-public class JavaStringToken extends JavaToken {
+public class JavaStringToken extends JavaToken
+{
 
     /**
      * Constructor.
+     *
      * @param source the source from where to fetch the token's characters.
      * @throws Exception if an error occurred.
      */
@@ -22,6 +24,7 @@ public class JavaStringToken extends JavaToken {
 
     /**
      * Extract a Java string token from the source.
+     *
      * @throws Exception if an error occurred.
      */
     protected void extract() throws Exception
@@ -33,23 +36,36 @@ public class JavaStringToken extends JavaToken {
         textBuffer.append('"');
 
         // Get string characters.
-        do {
-            if (currentChar == '\\') { // Check '\' for escape characters
-                textBuffer.append(currentChar);
-                valueBuffer.append(currentChar);
+        do
+        {
+            if (currentChar == '\\')
+            { // Check '\' for escape characters
                 currentChar = nextChar();  // consume '\' character
 
-                switch (currentChar) {
+                switch (currentChar)
+                {
                     case '\\':
-                    case '\'':
-                    case 'n':
-                    case 't':
-                    case '"':
                         textBuffer.append(currentChar);
                         valueBuffer.append(currentChar);
                         break;
-                    case '\n':
+                    case '\'':
                         textBuffer.append(currentChar);
+                        valueBuffer.append(currentChar);
+                        break;
+                    case 'n':
+                        textBuffer.append("\\n");
+                        valueBuffer.append("\n");
+                        break;
+                    case 't':
+                        textBuffer.append("\\t");
+                        valueBuffer.append("\t");
+                        break;
+                    case '"':
+                        textBuffer.append("\\\"");
+                        valueBuffer.append(currentChar);
+                        break;
+                    case '\n':
+                        valueBuffer.append(currentChar);
                         valueBuffer.deleteCharAt(valueBuffer.length() - 1);
                         break;
                     default: // An error if not a character in the switch statement
@@ -58,27 +74,29 @@ public class JavaStringToken extends JavaToken {
                 }
 
                 currentChar = nextChar(); // consume the escape character, valid it or not
-            }
-            else if (currentChar == EOL) {
+            } else if (currentChar == EOL)
+            {
                 type = ERROR;
                 value = INVALID_STRING;
-            }
-            else if (type != ERROR && (currentChar != '"') && (currentChar != EOF)) {
+            } else if (type != ERROR && (currentChar != '"') && (currentChar != EOF))
+            {
                 textBuffer.append(currentChar);
                 valueBuffer.append(currentChar);
                 currentChar = nextChar();  // consume character
             }
         } while (type != ERROR && (currentChar != '"') && (currentChar != EOF));
 
-        if (type != ERROR) {
-            if (currentChar == '"') {
+        if (type != ERROR)
+        {
+            if (currentChar == '"')
+            {
                 nextChar();  // consume final quote
                 textBuffer.append('"');
 
                 type = STRING;
                 value = valueBuffer.toString();
-            }
-            else {
+            } else
+            {
                 type = ERROR;
                 value = UNEXPECTED_EOF;
             }
