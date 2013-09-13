@@ -24,6 +24,7 @@ public enum JavaErrorCode {
     INVALID_INTEGER("Invalid integer"),
     INVALID_METHOD("Method not found"),
     INVALID_STATEMENT("Invalid statement"),
+    INVALID_STRING("Invalid string"),
     MISSING_COLON("Missing :"),
     MISSING_COMMA("Missing ,"),
     MISSING_FOR_CONTROL("Invalid for control variable"),
