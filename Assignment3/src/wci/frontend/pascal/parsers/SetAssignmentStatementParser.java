@@ -53,13 +53,13 @@ public class SetAssignmentStatementParser extends AssignmentStatementParser {
 
         assignNode.addChild(variableNode);
 
-        // Synchronization set for the = token.
-        token = synchronize(EQUALS_SET);
-        if (token.getType() == EQUALS) {
+        // Synchronization set for the := token.
+        token = synchronize(COLON_EQUALS_SET);
+        if (token.getType() == COLON_EQUALS) {
             token = nextToken(); // consume the =
         }
         else {
-            errorHandler.flag(token, MISSING_EQUALS, this);
+            errorHandler.flag(token, MISSING_COLON_EQUALS, this);
         }
 
         AssignmentStatementParser assignmentParser = new AssignmentStatementParser(this);
