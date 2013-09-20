@@ -13,11 +13,11 @@ import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 
 public class SetAssignmentStatementParser extends AssignmentStatementParser {
 
-    private static final EnumSet<PascalTokenType> EQUALS_SET = ExpressionParser.EXPR_START_SET.clone();
+    private static final EnumSet<PascalTokenType> COLON_EQUALS_SET = ExpressionParser.EXPR_START_SET.clone();
 
     static {
-        EQUALS_SET.add(EQUALS);
-        EQUALS_SET.addAll(AssignmentStatementParser.STMT_FOLLOW_SET);
+        COLON_EQUALS_SET.add(EQUALS);
+        COLON_EQUALS_SET.addAll(AssignmentStatementParser.STMT_FOLLOW_SET);
     }
 
     public SetAssignmentStatementParser(PascalParserTD parent)
