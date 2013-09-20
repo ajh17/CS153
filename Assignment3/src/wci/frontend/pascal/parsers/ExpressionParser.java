@@ -324,17 +324,17 @@ public class ExpressionParser extends StatementParser
                 break;
             }
 
-            default: {
-                errorHandler.flag(token, UNEXPECTED_TOKEN, this);
-                break;
-            }
-
             case SET: {
                 token = nextToken();      // consume the SET
             }
 
             case LEFT_BRACKET: {
                 token = nextToken();      // consume the SET
+            }
+
+            default: {
+                errorHandler.flag(token, UNEXPECTED_TOKEN, this);
+                break;
             }
         }
 
