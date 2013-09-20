@@ -2,6 +2,7 @@ package wci.frontend.pascal.parsers;
 
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import wci.frontend.*;
 import wci.frontend.pascal.*;
@@ -13,6 +14,7 @@ import static wci.frontend.pascal.PascalTokenType.NOT;
 import static wci.frontend.pascal.PascalErrorCode.*;
 import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
+import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.SET;
 
 /**
  * <h1>ExpressionParser</h1>
@@ -325,7 +327,34 @@ public class ExpressionParser extends StatementParser
             }
 
             case LEFT_BRACKET: {
-                token = nextToken();      // consume the [
+                token = nextToken(); // Consume the [
+
+                rootNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.SET); // This SET is different from PascalTokenType
+                HashSet<Integer> values = new HashSet<Integer>();
+
+                // NOT SURE IF THIS IS CORRECT. SHOULD WE ADD MULTIPLE CHILDREN WITH CONSTANT INTEGERS?
+                rootNode.setAttribute(VALUE, values);
+
+                // Crude way of extracting the set of numbers
+                do {
+                    if (token.getType() == INTEGER) {
+                        Integer number = (Integer) token.getValue(); // getValue() returns Object type. Need to recast.
+
+                        if (number >= 0 && number <= 50) {
+                            values.add(number);
+                        }
+                        else {
+                            errorHandler.flag(token, RANGE_INTEGER, this); // Report integer being out of range
+                        }
+                    }
+                } while (token.getType() != RIGHT_BRACKET && token.getType() != ERROR);
+
+                if (token.getType() == ERROR) {
+                    errorHandler.flag(token, UNEXPECTED_EOF, this);
+                }
+                else if (token.getType() != RIGHT_BRACKET) {
+                    errorHandler.flag(token, MISSING_RIGHT_BRACKET, this);
+                }
             }
 
             default: {
