@@ -352,9 +352,6 @@ public class ExpressionParser extends StatementParser
                 if (token.getType() == ERROR) {
                     errorHandler.flag(token, UNEXPECTED_EOF, this);
                 }
-                else if (token.getType() != RIGHT_BRACKET) {
-                    errorHandler.flag(token, MISSING_RIGHT_BRACKET, this);
-                }
             }
 
             default: {
