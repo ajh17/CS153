@@ -11,7 +11,7 @@ import static wci.frontend.pascal.PascalErrorCode.*;
 import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 
-public class SetAssignmentStatement extends AssignmentStatementParser {
+public class SetAssignmentStatementParser extends AssignmentStatementParser {
 
     private static final EnumSet<PascalTokenType> EQUALS_SET = ExpressionParser.EXPR_START_SET.clone();
 
@@ -20,7 +20,7 @@ public class SetAssignmentStatement extends AssignmentStatementParser {
         EQUALS_SET.addAll(AssignmentStatementParser.STMT_FOLLOW_SET);
     }
 
-    public SetAssignmentStatement(PascalParserTD parent)
+    public SetAssignmentStatementParser(PascalParserTD parent)
     {
         super(parent);
     }
