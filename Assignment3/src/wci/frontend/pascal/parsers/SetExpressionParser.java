@@ -11,6 +11,6 @@ public class SetExpressionParser extends ExpressionParser {
     }
 
     public ICodeNode parse(Token token) throws Exception {
-
+        return null; // Added so build doesn't give error
     }
 }

@@ -36,7 +36,7 @@ public class ExpressionParser extends StatementParser
     // Synchronization set for starting an expression.
     static final EnumSet<PascalTokenType> EXPR_START_SET =
         EnumSet.of(PLUS, MINUS, IDENTIFIER, INTEGER, REAL, STRING,
-                   PascalTokenType.NOT, LEFT_PAREN);
+                   PascalTokenType.NOT, LEFT_PAREN, SET, LEFT_BRACKET);
 
     /**
      * Parse an expression.
@@ -327,6 +327,14 @@ public class ExpressionParser extends StatementParser
             default: {
                 errorHandler.flag(token, UNEXPECTED_TOKEN, this);
                 break;
+            }
+
+            case SET: {
+                token = nextToken();      // consume the SET
+            }
+
+            case LEFT_BRACKET: {
+                token = nextToken();      // consume the SET
             }
         }
 
