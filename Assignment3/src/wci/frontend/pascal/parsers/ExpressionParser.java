@@ -329,7 +329,7 @@ public class ExpressionParser extends StatementParser
             }
 
             case LEFT_BRACKET: {
-                token = nextToken();      // consume the SET
+                token = nextToken();      // consume the [
             }
 
             default: {
