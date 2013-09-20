@@ -16,7 +16,7 @@ public class SetAssignmentStatementParser extends AssignmentStatementParser {
     private static final EnumSet<PascalTokenType> COLON_EQUALS_SET = ExpressionParser.EXPR_START_SET.clone();
 
     static {
-        COLON_EQUALS_SET.add(EQUALS);
+        COLON_EQUALS_SET.add(COLON_EQUALS);
         COLON_EQUALS_SET.addAll(AssignmentStatementParser.STMT_FOLLOW_SET);
     }
 
