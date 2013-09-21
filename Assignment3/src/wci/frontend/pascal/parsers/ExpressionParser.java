@@ -353,6 +353,17 @@ public class ExpressionParser extends StatementParser
                 if (token.getType() == ERROR) {
                     errorHandler.flag(token, UNEXPECTED_EOF, this);
                 }
+
+                // Look for the matching ] token.
+                token = currentToken();
+                if (token.getType() == RIGHT_PAREN) {
+                    token = nextToken();  // consume the ]
+                }
+                else {
+                    errorHandler.flag(token, MISSING_RIGHT_BRACKET, this);
+                }
+
+                break;
             }
 
             default: {
