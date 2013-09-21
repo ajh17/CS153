@@ -20,10 +20,11 @@ public class SetExpressionParser extends ExpressionParser {
     public ICodeNode parse(Token token)
             throws Exception
     {
-        ICodeNode rootNode = null;
         token = nextToken(); // Consume the [
 
-        rootNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.SET); // This SET is different from PascalTokenType
+         // This SET is different from PascalTokenType
+        ICodeNode rootNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.SET);
+
         HashSet<Integer> values = new HashSet<Integer>();
 
         // Note: NOT SURE IF THIS IS CORRECT. SHOULD WE ADD MULTIPLE CHILDREN WITH CONSTANT INTEGERS?
@@ -41,14 +42,14 @@ public class SetExpressionParser extends ExpressionParser {
                     errorHandler.flag(token, RANGE_INTEGER, this); // Report integer being out of range
                 }
             }
-
             token = nextToken();
+
         } while (token.getType() != RIGHT_BRACKET && token.getType() != ERROR);
 
         if (token.getType() == ERROR) {
             errorHandler.flag(token, UNEXPECTED_EOF, this);
         }
-        else if (token.getType() == RIGHT_PAREN) {
+        else if (token.getType() == RIGHT_BRACKET) {
             token = nextToken();  // consume the ]
         }
         else {
