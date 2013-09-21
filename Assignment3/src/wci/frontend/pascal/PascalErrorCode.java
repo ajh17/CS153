@@ -12,6 +12,7 @@ public enum PascalErrorCode
 {
     ALREADY_FORWARDED("Already specified in FORWARD"),
     CASE_CONSTANT_REUSED("CASE constant reused"),
+    EXTRA_COMMAS("Extra commas"),
     IDENTIFIER_REDEFINED("Redefined identifier"),
     IDENTIFIER_UNDEFINED("Undefined identifier"),
     INCOMPATIBLE_ASSIGNMENT("Incompatible assignment"),
@@ -26,6 +27,7 @@ public enum PascalErrorCode
     INVALID_IDENTIFIER_USAGE("Invalid identifier usage"),
     INVALID_INDEX_TYPE("Invalid index type"),
     INVALID_NUMBER("Invalid number"),
+    INVALID_OPERATOR("Invalid operator"),
     INVALID_STATEMENT("Invalid statement"),
     INVALID_SUBRANGE_TYPE("Invalid subrange type"),
     INVALID_TARGET("Invalid assignment target"),
@@ -54,6 +56,7 @@ public enum PascalErrorCode
     MISSING_TO_DOWNTO("Missing TO or DOWNTO"),
     MISSING_UNTIL("Missing UNTIL"),
     MISSING_VARIABLE("Missing variable"),
+    NON_UNIQUE_MEMBERS("Non-unique members"),
     NOT_CONSTANT_IDENTIFIER("Not a constant identifier"),
     NOT_RECORD_VARIABLE("Not a record variable"),
     NOT_TYPE_IDENTIFIER("Not a type identifier"),
