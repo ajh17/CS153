@@ -22,7 +22,7 @@ public class SetExpressionParser extends ExpressionParser {
     {
         token = nextToken(); // Consume the [
 
-         // This SET is different from PascalTokenType
+        // This SET is different from PascalTokenType
         ICodeNode rootNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.SET);
         HashSet<Integer> values = new HashSet<Integer>();
 
@@ -45,9 +45,29 @@ public class SetExpressionParser extends ExpressionParser {
                         errorHandler.flag(token, RANGE_INTEGER, this); // Report integer being out of range
                     }
                     token = nextToken();
+
+                    // TODO: Should we be checking for subranges here? Because they always follow an integer
+                    // TODO: (since we're not doing any other type)
+                    if (token.getType() == DOT_DOT) {
+                        token = nextToken();
+                        if (token.getType() == INTEGER) {
+                            Integer upto = (Integer) token.getValue();
+
+                            if (upto >= 0 && upto <= 50) {
+                                values.add(upto);
+                            }
+                            else {
+                                errorHandler.flag(token, RANGE_INTEGER, this);
+                            }
+                        }
+                        else {
+                            errorHandler.flag(token, UNEXPECTED_TOKEN, this);
+                        }
+                    }
+                    token = nextToken();
                     break;
                 default:
-                     // Found an unexpected token in set expression.
+                    // Found an unexpected token in set expression.
                     errorHandler.flag(token, UNEXPECTED_TOKEN, this);
                     break;
             }
