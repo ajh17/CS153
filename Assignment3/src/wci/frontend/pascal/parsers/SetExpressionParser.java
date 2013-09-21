@@ -18,7 +18,7 @@ public class SetExpressionParser extends ExpressionParser {
     }
 
     public ICodeNode parse(Token token)
-            throws Exception
+        throws Exception
     {
         token = nextToken(); // Consume the [
 
@@ -61,6 +61,11 @@ public class SetExpressionParser extends ExpressionParser {
 
                                 if (token.getType() == COMMA) {
                                     token = nextToken(); // Consume the , to prepare next iteration of loop
+                                    // Not sure if there is a better way to do the
+                                    // following instead of checking for every case.
+                                    if (token.getType() == COMMA) {
+                                        errorHandler.flag(token, EXTRA_COMMAS, this);
+                                    }
                                 }
                                 else if (token.getType() == RIGHT_BRACKET) {
                                     // Empty. Is there a better way to do this?
@@ -87,6 +92,9 @@ public class SetExpressionParser extends ExpressionParser {
                         }
                         else {
                             errorHandler.flag(token, RANGE_INTEGER, this); // Report integer being out of range
+                        }
+                        if (token.getType() == COMMA) {
+                            errorHandler.flag(token, EXTRA_COMMAS, this);
                         }
                     }
                     break;
