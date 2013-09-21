@@ -32,9 +32,6 @@ public class SetExpressionParser extends ExpressionParser {
         // Crude way of extracting the set of numbers
         do {
             switch ((PascalTokenType) (token.getType())) {
-                case COMMA:
-                    token = nextToken();
-                    break;
                 case INTEGER:
                     Integer number = (Integer) token.getValue(); // getValue() returns Object type. Need to recast.
 
