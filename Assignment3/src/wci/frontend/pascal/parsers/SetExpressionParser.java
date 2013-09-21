@@ -32,6 +32,9 @@ public class SetExpressionParser extends ExpressionParser {
         // Crude way of extracting the set of numbers
         do {
             switch ((PascalTokenType) (token.getType())) {
+                case COMMA:
+                    token = nextToken();
+                    break;
                 case INTEGER:
                     Integer number = (Integer) token.getValue(); // getValue() returns Object type. Need to recast.
 
@@ -41,14 +44,14 @@ public class SetExpressionParser extends ExpressionParser {
                     else {
                         errorHandler.flag(token, RANGE_INTEGER, this); // Report integer being out of range
                     }
-
+                    token = nextToken();
                     break;
                 default:
                      // Found an unexpected token in set expression.
                     errorHandler.flag(token, UNEXPECTED_TOKEN, this);
                     break;
             }
-            token = nextToken();
+
 
         } while (token.getType() != RIGHT_BRACKET && token.getType() != ERROR);
 
