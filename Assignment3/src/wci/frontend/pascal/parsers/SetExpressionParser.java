@@ -7,6 +7,10 @@ import wci.intermediate.icodeimpl.ICodeNodeTypeImpl;
 
 import java.util.HashSet;
 
+import static wci.frontend.pascal.PascalTokenType.*;
+import static wci.frontend.pascal.PascalErrorCode.*;
+import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
+
 public class SetExpressionParser extends ExpressionParser {
 
     public SetExpressionParser(PascalParserTD parent) {
