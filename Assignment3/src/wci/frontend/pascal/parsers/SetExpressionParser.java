@@ -62,6 +62,9 @@ public class SetExpressionParser extends ExpressionParser {
                                 if (token.getType() == COMMA) {
                                     token = nextToken(); // Consume the , to prepare next iteration of loop
                                 }
+                                else if (token.getType() == RIGHT_BRACKET) {
+                                    // Empty. Is there a better way to do this?
+                                }
                                 else {
                                     errorHandler.flag(token, UNEXPECTED_TOKEN, this);
                                 }
