@@ -84,9 +84,10 @@ public class SetExpressionParser extends ExpressionParser {
                             break;
                     }
                     if (token.getType() == COMMA) {  // Add as a single number only if succeeding token is a comma
+                        token = nextToken(); // Consume the ,
                         if (leftRange >= 0 && leftRange <= 50) {
-                            token = nextToken(); // Consume the ,
-                            if (!values.add(leftRange++)) {
+
+                            if (!values.add(leftRange)) {
                                 errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
                             }
                         }
