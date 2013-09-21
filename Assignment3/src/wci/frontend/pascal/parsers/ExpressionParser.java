@@ -348,15 +348,14 @@ public class ExpressionParser extends StatementParser
                             errorHandler.flag(token, RANGE_INTEGER, this); // Report integer being out of range
                         }
                     }
+
+                    token = nextToken();
                 } while (token.getType() != RIGHT_BRACKET && token.getType() != ERROR);
 
                 if (token.getType() == ERROR) {
                     errorHandler.flag(token, UNEXPECTED_EOF, this);
                 }
-
-                // Look for the matching ] token.
-                token = currentToken();
-                if (token.getType() == RIGHT_PAREN) {
+                else if (token.getType() == RIGHT_PAREN) {
                     token = nextToken();  // consume the ]
                 }
                 else {
