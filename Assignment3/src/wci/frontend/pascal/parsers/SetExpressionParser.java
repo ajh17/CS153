@@ -50,7 +50,12 @@ public class SetExpressionParser extends ExpressionParser {
 
                                 if (upto >= 0 && upto <= 50 && upto >= leftRange) {
                                     while (leftRange < upto) {  // Add the range of numbers
-                                        values.add(leftRange++);
+                                        if (values.contains(leftRange)) {
+                                            errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
+                                        }
+                                        else {
+                                            values.add(leftRange++);
+                                        }
                                     }
                                 }
                                 else {
@@ -76,7 +81,12 @@ public class SetExpressionParser extends ExpressionParser {
                     if (token.getType() == COMMA) {  // Add as a single number only if succeeding token is a comma
                         if (leftRange >= 0 && leftRange <= 50) {
                             token = nextToken(); // Consume the ,
-                            values.add(leftRange);
+                            if (values.contains(leftRange)) {
+                                errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
+                            }
+                            else {
+                                values.add(leftRange++);
+                            }
                         }
                         else {
                             errorHandler.flag(token, RANGE_INTEGER, this); // Report integer being out of range
