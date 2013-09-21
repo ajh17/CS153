@@ -32,44 +32,62 @@ public class SetExpressionParser extends ExpressionParser {
         // Crude way of extracting the set of numbers
         do {
             switch ((PascalTokenType) (token.getType())) {
+                // Identifiers and Integers should be treated the same
+                case IDENTIFIER: // DID NOT CHECK FOR ERRORS WHEN IDENTIFIER IS NOT ACTUALLY AN INTEGER TYPE
                 case INTEGER:
-                    Integer number = (Integer) token.getValue(); // getValue() returns Object type. Need to recast.
+                    Integer leftRange = (Integer) token.getValue(); // getValue() returns Object type. Need to recast.
+                    token = nextToken(); // Consume the number or left side subrange
 
-                    if (number >= 0 && number <= 50) {
-                        values.add(number);
-                    }
-                    else {
-                        errorHandler.flag(token, RANGE_INTEGER, this); // Report integer being out of range
-                    }
-                    token = nextToken();
+                    switch ((PascalTokenType) (token.getType())) {
+                        case COMMA: // The comma should be consumed in the outside switch statement
+                        case RIGHT_BRACKET: // The right bracket should be consumed outside the do-while loop
+                            break;
+                        case DOT_DOT:
+                            token = nextToken(); // Consume the ..
+                            if (token.getType() == INTEGER || token.getType() == IDENTIFIER) {
+                                Integer upto = (Integer) token.getValue();
+                                token = nextToken(); // Consume the right subrange
 
-                    // TODO: Should we be checking for subranges here? Because they always follow an integer
-                    // TODO: (since we're not doing any other type)
-                    if (token.getType() == DOT_DOT) {
-                        token = nextToken();
-                        if (token.getType() == INTEGER) {
-                            Integer upto = (Integer) token.getValue();
+                                if (upto >= 0 && upto <= 50 && upto >= leftRange) {
+                                    while (leftRange < upto) {  // Add the range of numbers
+                                        values.add(leftRange++);
+                                    }
+                                }
+                                else {
+                                    errorHandler.flag(token, RANGE_INTEGER, this);
+                                }
 
-                            if (upto >= 0 && upto <= 50) {
-                                values.add(upto);
+                                if (token.getType() == COMMA) {
+                                    token = nextToken(); // Consume the , to prepare next iteration of loop
+                                }
+                                else {
+                                    errorHandler.flag(token, UNEXPECTED_TOKEN, this);
+                                }
                             }
                             else {
-                                errorHandler.flag(token, RANGE_INTEGER, this);
+                                errorHandler.flag(token, UNEXPECTED_TOKEN, this);
                             }
+                            break;
+                        default:
+                            // Found an unexpected token in set expression.
+                            errorHandler.flag(token, UNEXPECTED_TOKEN, this);
+                            break;
+                    }
+                    if (token.getType() == COMMA) {  // Add as a single number only if succeeding token is a comma
+                        if (leftRange >= 0 && leftRange <= 50) {
+                            token = nextToken(); // Consume the ,
+                            values.add(leftRange);
                         }
                         else {
-                            errorHandler.flag(token, UNEXPECTED_TOKEN, this);
+                            errorHandler.flag(token, RANGE_INTEGER, this); // Report integer being out of range
                         }
                     }
-                    token = nextToken();
                     break;
                 default:
                     // Found an unexpected token in set expression.
                     errorHandler.flag(token, UNEXPECTED_TOKEN, this);
                     break;
             }
-
-
         } while (token.getType() != RIGHT_BRACKET && token.getType() != ERROR);
 
         if (token.getType() == ERROR) {
