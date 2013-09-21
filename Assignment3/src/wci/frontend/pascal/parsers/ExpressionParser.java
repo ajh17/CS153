@@ -326,6 +326,7 @@ public class ExpressionParser extends StatementParser
                 break;
             }
 
+            // Case statement for set expressions
             case LEFT_BRACKET: {
                 token = nextToken(); // Consume the [
 
