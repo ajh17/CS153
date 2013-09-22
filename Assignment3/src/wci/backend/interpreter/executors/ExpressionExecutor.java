@@ -105,13 +105,6 @@ public class ExpressionExecutor extends StatementExecutor
     private static final EnumSet<ICodeNodeTypeImpl> ARITH_OPS =
         EnumSet.of(ADD, SUBTRACT, MULTIPLY, FLOAT_DIVIDE, INTEGER_DIVIDE, MOD);
 
-    // Set of set operator node types.
-    private static final EnumSet<ICodeNodeTypeImpl> SET_OPS =
-        EnumSet.of (
-            SET_UNION, SET_DIFFERENCE, SET_INTERSECT, SET_SUBSET, SET_SUPERSET,
-            SET_EQUAL, SET_NOT_EQUAL
-        );
-
     /**
      * Execute a binary operator.
      * @param node the root node of the expression.
