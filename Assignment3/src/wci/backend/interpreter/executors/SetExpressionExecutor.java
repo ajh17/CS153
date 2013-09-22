@@ -55,9 +55,9 @@ public class SetExpressionExecutor extends ExpressionExecutor {
             case SET_SUPERSET:
                 return operand1.containsAll(operand2);
             case SET_EQUAL:
-                return operand1 == operand2;
+                return (operand1.containsAll(operand2) && operand2.containsAll(operand1));
             case SET_NOT_EQUAL:
-                return operand1 == operand2;
+                return (!operand1.containsAll(operand2) || !operand2.containsAll(operand1));
         }
         return 0;  // should never get here
     }
