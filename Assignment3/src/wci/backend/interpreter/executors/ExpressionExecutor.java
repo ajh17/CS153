@@ -104,6 +104,13 @@ public class ExpressionExecutor extends StatementExecutor
     private static final EnumSet<ICodeNodeTypeImpl> ARITH_OPS =
         EnumSet.of(ADD, SUBTRACT, MULTIPLY, FLOAT_DIVIDE, INTEGER_DIVIDE, MOD);
 
+    // Set of set operator node types.
+    private static final EnumSet<ICodeNodeTypeImpl> SET_OPS =
+        EnumSet.of (
+            SET_UNION, SET_DIFFERENCE, SET_INTERSECT, SET_SUBSET, SET_SUPERSET,
+            SET_EQUAL, SET_NOT_EQUAL
+        );
+
     /**
      * Execute a binary operator.
      * @param node the root node of the expression.
@@ -123,7 +130,7 @@ public class ExpressionExecutor extends StatementExecutor
         Object operand2 = execute(operandNode2);
 
         boolean integerMode = (operand1 instanceof Integer) &&
-                              (operand2 instanceof Integer);
+            (operand2 instanceof Integer);
 
         // ====================
         // Arithmetic operators
@@ -179,9 +186,9 @@ public class ExpressionExecutor extends StatementExecutor
             }
             else {
                 float value1 = operand1 instanceof Integer
-                                   ? (Integer) operand1 : (Float) operand1;
+                    ? (Integer) operand1 : (Float) operand1;
                 float value2 = operand2 instanceof Integer
-                                   ? (Integer) operand2 : (Float) operand2;
+                    ? (Integer) operand2 : (Float) operand2;
 
                 // Float operations.
                 switch (nodeType) {
@@ -238,9 +245,9 @@ public class ExpressionExecutor extends StatementExecutor
         }
         else {
             float value1 = operand1 instanceof Integer
-                               ? (Integer) operand1 : (Float) operand1;
+                ? (Integer) operand1 : (Float) operand1;
             float value2 = operand2 instanceof Integer
-                               ? (Integer) operand2 : (Float) operand2;
+                ? (Integer) operand2 : (Float) operand2;
 
             // Float operands.
             switch (nodeType) {
