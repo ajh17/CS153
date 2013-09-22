@@ -55,9 +55,10 @@ public class SetExpressionExecutor extends ExpressionExecutor {
             case SET_SUPERSET:
                 break;
             case SET_EQUAL:
-                break;
+                // Eh, don't know if this is right or if we should check the node's type.
+                return operand1 == operand2;
             case SET_NOT_EQUAL:
-                break;
+                return operand1 == operand2;
         }
         return 0;  // should never get here
     }
