@@ -47,21 +47,21 @@ public class SetExpressionExecutor extends ExpressionExecutor {
                 int value = (Integer) execute(children.get(0));
                 return operand2.contains(value);
             case SET_UNION:
-                return ((HashSet<Integer) operand1).addAll(operand2);
+                return ((HashSet<Integer>) operand1).addAll(operand2);
             case SET_DIFFERENCE:
-                return ((HashSet<Integer) operand1).removeAll(operand2);
+                return ((HashSet<Integer>) operand1).removeAll(operand2);
             case SET_INTERSECT:
-                return ((HashSet<Integer) operand1).retainAll(operand2);
+                return ((HashSet<Integer>) operand1).retainAll(operand2);
             case SET_SUBSET:
-                return operand2.containsAll(((HashSet<Integer) operand1));
+                return operand2.containsAll(((HashSet<Integer>) operand1));
             case SET_SUPERSET:
-                return ((HashSet<Integer) operand1).containsAll(operand2);
+                return ((HashSet<Integer>) operand1).containsAll(operand2);
             case SET_EQUAL:
-                return (((HashSet<Integer) operand1).containsAll(operand2)
-                        && operand2.containsAll(((HashSet<Integer) operand1)));
+                return (((HashSet<Integer>) operand1).containsAll(operand2)
+                        && operand2.containsAll(((HashSet<Integer>) operand1)));
             case SET_NOT_EQUAL:
-                return (!((HashSet<Integer) operand1).containsAll(operand2)
-                        || !operand2.containsAll(((HashSet<Integer) operand1)));
+                return (!((HashSet<Integer>) operand1).containsAll(operand2)
+                        || !operand2.containsAll(((HashSet<Integer>) operand1)));
             case CONTAINED_IN_SET:
                 return operand2.contains((Integer) operand1);
         }
