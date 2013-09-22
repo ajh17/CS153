@@ -3,6 +3,7 @@ package wci.backend.interpreter.executors;
 import wci.backend.interpreter.*;
 import wci.intermediate.*;
 import wci.intermediate.icodeimpl.*;
+import wci.intermediate.symtabimpl.SymTabKeyImpl;
 
 import java.util.*;
 
@@ -10,6 +11,8 @@ import static wci.backend.interpreter.RuntimeErrorCode.*;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
+import static wci.intermediate.symtabimpl.SymTabKeyImpl.DATA_TYPE;
+
 /**
  * <h1>ExpressionExecutor</h1>
  *
@@ -37,12 +40,16 @@ public class ExpressionExecutor extends StatementExecutor
     public Object execute(ICodeNode node)
     {
         ICodeNodeTypeImpl nodeType = (ICodeNodeTypeImpl) node.getType();
+        SetExpressionExecutor setExprExecutor = new SetExpressionExecutor(this);
 
         switch (nodeType) {
-            case SET: {
-                SetExpressionExecutor setExprExecutor = new SetExpressionExecutor(this);
+            case SET:
                 return setExprExecutor.execute(node);
-            }
+            case MULTIPLY:
+                if (node.getChildren().get(1).getAttribute(ICodeKeyImpl.DATA_TYPE) == ICodeNodeTypeImpl.SET) {
+                    return setExprExecutor.execute(node);
+                }
+                return executeBinaryOperator(node, nodeType);
 
             case VARIABLE: {
 

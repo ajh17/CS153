@@ -12,5 +12,5 @@ import wci.intermediate.ICodeKey;
  */
 public enum ICodeKeyImpl implements ICodeKey
 {
-    LINE, ID, VALUE;
+    LINE, ID, VALUE, DATA_TYPE
 }

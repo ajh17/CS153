@@ -28,10 +28,14 @@ public class SetExpressionExecutor extends ExpressionExecutor {
         ICodeNodeTypeImpl nodeType = (ICodeNodeTypeImpl) node.getType();
 
         switch (nodeType) {
-            case SET: {
+            case SET:
                 return node.getAttribute(VALUE);
-            }
-            default: return executeBinaryOperator(node, nodeType);
+            case INTEGER_CONSTANT:
+                return super.execute(node);
+            case VARIABLE:
+                return super.execute(node);
+            default:
+                return executeBinaryOperator(node, nodeType);
         }
     }
 

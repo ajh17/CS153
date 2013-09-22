@@ -1,15 +1,19 @@
 package wci.frontend.pascal.parsers;
 
 import java.util.EnumSet;
+import java.util.HashSet;
 
 import wci.frontend.*;
 import wci.frontend.pascal.*;
 import wci.intermediate.*;
+import wci.intermediate.icodeimpl.ICodeNodeTypeImpl;
+import wci.intermediate.symtabimpl.SymTabKeyImpl;
 
 import static wci.frontend.pascal.PascalTokenType.*;
 import static wci.frontend.pascal.PascalErrorCode.*;
 import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
+import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.SET;
 
 /**
  * <h1>AssignmentStatementParser</h1>
@@ -80,7 +84,12 @@ public class AssignmentStatementParser extends StatementParser
         // Parse the expression.  The ASSIGN node adopts the expression's
         // node as its second child.
         ExpressionParser expressionParser = new ExpressionParser(this);
-        assignNode.addChild(expressionParser.parse(token));
+        ICodeNode expressionNode = expressionParser.parse(token);
+        assignNode.addChild(expressionNode);
+
+        if (expressionNode.getAttribute(VALUE) != null && expressionNode.getAttribute(VALUE).getClass() == HashSet.class) {
+            targetId.setAttribute(SymTabKeyImpl.DATA_TYPE, ICodeNodeTypeImpl.SET);
+        }
 
         return assignNode;
     }

@@ -8,7 +8,9 @@ import wci.intermediate.ICodeFactory;
 import wci.intermediate.ICodeNode;
 import wci.intermediate.ICodeNodeType;
 import wci.intermediate.SymTabEntry;
+import wci.intermediate.icodeimpl.ICodeKeyImpl;
 import wci.intermediate.icodeimpl.ICodeNodeTypeImpl;
+import wci.intermediate.symtabimpl.SymTabKeyImpl;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -195,6 +197,13 @@ public class ExpressionParser extends StatementParser
         MULT_OPS_OPS_MAP.put(DIV, INTEGER_DIVIDE);
         MULT_OPS_OPS_MAP.put(PascalTokenType.MOD, ICodeNodeTypeImpl.MOD);
         MULT_OPS_OPS_MAP.put(PascalTokenType.AND, ICodeNodeTypeImpl.AND);
+        MULT_OPS_OPS_MAP.put(PLUS, SET_UNION);
+        MULT_OPS_OPS_MAP.put(MINUS, SET_DIFFERENCE);
+        MULT_OPS_OPS_MAP.put(LESS_EQUALS, SET_SUBSET);
+        MULT_OPS_OPS_MAP.put(GREATER_EQUALS, SET_SUPERSET);
+        MULT_OPS_OPS_MAP.put(NOT_EQUALS, SET_NOT_EQUAL);
+        MULT_OPS_OPS_MAP.put(EQUALS, SET_EQUAL);
+        MULT_OPS_OPS_MAP.put(IN, CONTAINED_IN_SET);
     };
 
     /**
@@ -260,8 +269,14 @@ public class ExpressionParser extends StatementParser
                     errorHandler.flag(token, IDENTIFIER_UNDEFINED, this);
                     id = symTabStack.enterLocal(name);
                 }
+                else if (id.getAttribute(SymTabKeyImpl.DATA_TYPE) == ICodeNodeTypeImpl.SET) {
+                    rootNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.SET);
+                    rootNode.setAttribute(ICodeKeyImpl.DATA_TYPE, ICodeNodeTypeImpl.SET);
+                }
+                else {
+                    rootNode = ICodeFactory.createICodeNode(VARIABLE);
+                }
 
-                rootNode = ICodeFactory.createICodeNode(VARIABLE);
                 rootNode.setAttribute(ID, id);
                 id.appendLineNumber(token.getLineNumber());
 
