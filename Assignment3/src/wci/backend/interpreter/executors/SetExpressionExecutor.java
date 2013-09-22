@@ -43,21 +43,21 @@ public class SetExpressionExecutor extends ExpressionExecutor {
         HashSet<Integer> operand2 = (HashSet<Integer>) execute(children.get(1));
 
         switch (nodeType) {
-            case SET_UNION:
+            case SET_UNION: // S1 + S2
                 return operand1.addAll(operand2);
-            case SET_DIFFERENCE:
+            case SET_DIFFERENCE: // S1 - S2
                 return operand1.removeAll(operand2);
-            case SET_INTERSECT:
+            case SET_INTERSECT:  // S1 * S2
                 return operand1.retainAll(operand2);
-            case SET_SUBSET:
+            case SET_SUBSET:  // S1 <= S2
                 return operand2.containsAll(operand1);
-            case SET_SUPERSET:
+            case SET_SUPERSET:  // S1 >= S2
                 return operand1.containsAll(operand2);
-            case SET_EQUAL:
+            case SET_EQUAL: // S1 = S2
                 return (operand1.containsAll(operand2) && operand2.containsAll(operand1));
-            case SET_NOT_EQUAL:
+            case SET_NOT_EQUAL:  // S1 <> S2
                 return (!operand1.containsAll(operand2) || !operand2.containsAll(operand1));
-            case CONTAINED_IN_SET:
+            case CONTAINED_IN_SET:  // s in S1
                 int value = (Integer) execute(children.get(0));
                 return operand2.contains(value);
         }
