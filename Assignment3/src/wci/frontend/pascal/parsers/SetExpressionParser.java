@@ -53,6 +53,7 @@ public class SetExpressionParser extends ExpressionParser
 
                     switch ((PascalTokenType) (token.getType())) {
                         case COMMA: // The comma should be consumed in the outside switch statement
+                            break;
                         case RIGHT_BRACKET: // The right bracket should be consumed outside the do-while loop
                             break;
                         case DOT_DOT:
