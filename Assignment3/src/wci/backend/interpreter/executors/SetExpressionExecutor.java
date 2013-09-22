@@ -18,10 +18,10 @@ public class SetExpressionExecutor extends ExpressionExecutor {
 
     // Set of set operator node types.
     private static final EnumSet<ICodeNodeTypeImpl> SET_OPS =
-            EnumSet.of (
-                    SET_UNION, SET_DIFFERENCE, SET_INTERSECT, SET_SUBSET, SET_SUPERSET,
-                    SET_EQUAL, SET_NOT_EQUAL
-            );
+        EnumSet.of (
+            SET_UNION, SET_DIFFERENCE, SET_INTERSECT, SET_SUBSET, SET_SUPERSET,
+            SET_EQUAL, SET_NOT_EQUAL
+        );
 
     public Object execute(ICodeNode node)
     {
@@ -36,7 +36,7 @@ public class SetExpressionExecutor extends ExpressionExecutor {
     }
 
     private Object executeBinaryOperator(ICodeNode node,
-        ICodeNodeTypeImpl nodeType)
+                                         ICodeNodeTypeImpl nodeType)
     {
         // Get the two operand children
         ArrayList<ICodeNode> children = node.getChildren();
@@ -55,7 +55,6 @@ public class SetExpressionExecutor extends ExpressionExecutor {
             case SET_SUPERSET:
                 return operand1.containsAll(operand2);
             case SET_EQUAL:
-                // Eh, don't know if this is right or if we should check the node's type.
                 return operand1 == operand2;
             case SET_NOT_EQUAL:
                 return operand1 == operand2;
