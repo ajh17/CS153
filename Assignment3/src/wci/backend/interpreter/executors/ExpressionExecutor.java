@@ -40,7 +40,8 @@ public class ExpressionExecutor extends StatementExecutor
 
         switch (nodeType) {
             case SET: {
-                return node.getAttribute(VALUE);
+                SetExpressionExecutor setExprExecutor = new SetExpressionExecutor(this);
+                return setExprExecutor.execute(node);
             }
 
             case VARIABLE: {
