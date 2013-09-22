@@ -6,7 +6,6 @@ import wci.intermediate.*;
 import wci.intermediate.icodeimpl.ICodeNodeTypeImpl;
 
 import java.util.HashSet;
-import java.util.Iterator;
 
 import static wci.frontend.pascal.PascalTokenType.*;
 import static wci.frontend.pascal.PascalErrorCode.*;
@@ -26,6 +25,7 @@ public class SetExpressionParser extends ExpressionParser {
         // This SET is different from PascalTokenType
         ICodeNode rootNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.SET);
         HashSet<Integer> values = new HashSet<Integer>();
+        rootNode.setAttribute(VALUE, values);
 
         // Crude way of extracting the set of numbers
         do {
@@ -109,13 +109,6 @@ public class SetExpressionParser extends ExpressionParser {
         }
         else if (token.getType() == RIGHT_BRACKET) {
             token = nextToken();  // consume the ]
-
-            for (Integer i : values) {
-                ICodeNode integerNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.INTEGER_CONSTANT);
-
-                integerNode.setAttribute(VALUE, i);
-                rootNode.addChild(integerNode);
-            }
         }
         else {
             errorHandler.flag(token, MISSING_RIGHT_BRACKET, this);
