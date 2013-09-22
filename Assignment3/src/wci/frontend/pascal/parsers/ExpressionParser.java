@@ -1,20 +1,23 @@
 package wci.frontend.pascal.parsers;
 
+import wci.frontend.Token;
+import wci.frontend.TokenType;
+import wci.frontend.pascal.PascalParserTD;
+import wci.frontend.pascal.PascalTokenType;
+import wci.intermediate.ICodeFactory;
+import wci.intermediate.ICodeNode;
+import wci.intermediate.ICodeNodeType;
+import wci.intermediate.SymTabEntry;
+import wci.intermediate.icodeimpl.ICodeNodeTypeImpl;
+
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.HashSet;
 
-import wci.frontend.*;
-import wci.frontend.pascal.*;
-import wci.intermediate.*;
-import wci.intermediate.icodeimpl.*;
-
-import static wci.frontend.pascal.PascalTokenType.*;
-import static wci.frontend.pascal.PascalTokenType.NOT;
 import static wci.frontend.pascal.PascalErrorCode.*;
+import static wci.frontend.pascal.PascalTokenType.*;
+import static wci.intermediate.icodeimpl.ICodeKeyImpl.ID;
+import static wci.intermediate.icodeimpl.ICodeKeyImpl.VALUE;
 import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
-import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
-import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.SET;
 
 /**
  * <h1>ExpressionParser</h1>
@@ -263,6 +266,7 @@ public class ExpressionParser extends StatementParser
                 id.appendLineNumber(token.getLineNumber());
 
                 token = nextToken();  // consume the identifier
+                // TODO: Add set operations here?
                 break;
             }
 
@@ -270,7 +274,7 @@ public class ExpressionParser extends StatementParser
                 // Create an INTEGER_CONSTANT node as the root node.
                 rootNode = ICodeFactory.createICodeNode(INTEGER_CONSTANT);
                 rootNode.setAttribute(VALUE, token.getValue());
-
+                // TODO: Should add the 'IN' operation here for 'integer IN set' type expressions
                 token = nextToken();  // consume the number
                 break;
             }
