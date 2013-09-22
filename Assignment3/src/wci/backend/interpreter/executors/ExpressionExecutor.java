@@ -41,6 +41,9 @@ public class ExpressionExecutor extends StatementExecutor
         ICodeNodeTypeImpl nodeType = (ICodeNodeTypeImpl) node.getType();
 
         switch (nodeType) {
+            case SET: {
+                return node.getAttribute(VALUE);
+            }
 
             case VARIABLE: {
 
