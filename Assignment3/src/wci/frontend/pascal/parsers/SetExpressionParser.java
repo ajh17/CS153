@@ -27,6 +27,9 @@ public class SetExpressionParser extends ExpressionParser {
         HashSet<Integer> values = new HashSet<Integer>();
         rootNode.setAttribute(VALUE, values);
 
+        // Note: NOT SURE IF THIS IS CORRECT. SHOULD WE ADD MULTIPLE CHILDREN WITH CONSTANT INTEGERS?
+        rootNode.setAttribute(VALUE, values);
+
         // Crude way of extracting the set of numbers
         do {
             switch ((PascalTokenType) (token.getType())) {
