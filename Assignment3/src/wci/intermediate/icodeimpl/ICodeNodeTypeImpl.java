@@ -34,14 +34,14 @@ public enum ICodeNodeTypeImpl implements ICodeNodeType
     STRING_CONSTANT, BOOLEAN_CONSTANT, SET,
 
     // Set operators
-    UNION, // +
-    DIFFERENCE, // -
-    INTERSECT, // *
-    SUBSET, // <=
-    SUPERSET, // >=
-    NOT_EQUAL, // <>
-    EQUAL, // =
-    CONTAINED_IN // in
+    SET_UNION, // +
+    SET_DIFFERENCE, // -
+    SET_INTERSECT, // *
+    SET_SUBSET, // <=
+    SET_SUPERSET, // >=
+    SET_NOT_EQUAL, // <>
+    SET_EQUAL, // =
+    CONTAINED_IN_SET, // in
 
     // WRITE parameter
     WRITE_PARM,

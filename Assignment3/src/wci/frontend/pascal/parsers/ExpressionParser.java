@@ -72,6 +72,20 @@ public class ExpressionParser extends StatementParser
         REL_OPS_MAP.put(GREATER_EQUALS, GE);
     };
 
+    // Map set operator tokens to node types.
+    private static final HashMap<PascalTokenType, ICodeNodeType>
+            SET_OPS_MAP = new HashMap<PascalTokenType, ICodeNodeType>();
+    static {
+        SET_OPS_MAP.put(PLUS, SET_UNION);
+        SET_OPS_MAP.put(MINUS, SET_DIFFERENCE);
+        SET_OPS_MAP.put(STAR, SET_INTERSECT);
+        SET_OPS_MAP.put(LESS_EQUALS, SET_SUBSET);
+        SET_OPS_MAP.put(GREATER_EQUALS, SET_SUPERSET);
+        SET_OPS_MAP.put(NOT_EQUALS, SET_NOT_EQUAL);
+        SET_OPS_MAP.put(EQUALS, SET_EQUAL);
+        SET_OPS_MAP.put(IN, CONTAINED_IN_SET);
+    };
+
     /**
      * Parse an expression.
      * @param token the initial token.
