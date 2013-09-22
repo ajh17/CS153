@@ -33,6 +33,16 @@ public enum ICodeNodeTypeImpl implements ICodeNodeType
     INTEGER_CONSTANT, REAL_CONSTANT,
     STRING_CONSTANT, BOOLEAN_CONSTANT, SET,
 
+    // Set operators
+    UNION, // +
+    DIFFERENCE, // -
+    INTERSECT, // *
+    SUBSET, // <=
+    SUPERSET, // >=
+    NOT_EQUAL, // <>
+    EQUAL, // =
+    CONTAINED_IN // in
+
     // WRITE parameter
     WRITE_PARM,
 }
