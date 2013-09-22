@@ -44,8 +44,7 @@ public class SetExpressionExecutor extends ExpressionExecutor {
 
         switch (nodeType) {
             case CONTAINED_IN_SET:
-                ICodeNode tempNode = children.get(0);
-                int value = (Integer) execute(tempNode);
+                int value = (Integer) execute(children.get(0));
                 return operand2.contains(value);
             case SET_UNION:
                 return operand1.addAll(operand2);
