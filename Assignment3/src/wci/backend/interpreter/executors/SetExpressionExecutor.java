@@ -20,7 +20,7 @@ public class SetExpressionExecutor extends ExpressionExecutor {
     private static final EnumSet<ICodeNodeTypeImpl> SET_OPS =
         EnumSet.of (
             SET_UNION, SET_DIFFERENCE, SET_INTERSECT, SET_SUBSET, SET_SUPERSET,
-            SET_EQUAL, SET_NOT_EQUAL
+            SET_EQUAL, SET_NOT_EQUAL, CONTAINED_IN_SET
         );
 
     public Object execute(ICodeNode node)
