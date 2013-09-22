@@ -49,7 +49,7 @@ public class SetExpressionExecutor extends ExpressionExecutor {
             case SET_DIFFERENCE:
                 return operand1.removeAll(operand2);
             case SET_INTERSECT:
-                break;
+                return operand1.retainAll(operand2);
             case SET_SUBSET:
                 return operand2.containsAll(operand1);
             case SET_SUPERSET:
