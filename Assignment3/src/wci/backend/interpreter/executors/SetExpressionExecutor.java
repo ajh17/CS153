@@ -35,8 +35,7 @@ public class SetExpressionExecutor extends ExpressionExecutor {
         }
     }
 
-    private Object executeBinaryOperator(ICodeNode node,
-                                         ICodeNodeTypeImpl nodeType)
+    private Object executeBinaryOperator(ICodeNode node, ICodeNodeTypeImpl nodeType)
     {
         // Get the two operand children
         ArrayList<ICodeNode> children = node.getChildren();
