@@ -40,20 +40,20 @@ public class SetExpressionExecutor extends ExpressionExecutor {
     {
         // Get the two operand children
         ArrayList<ICodeNode> children = node.getChildren();
-        Object operand1 = this.execute(children.get(0));
-        Object operand2 = this.execute(children.get(1));
+        HashSet<Integer> operand1 = (HashSet<Integer>) this.execute(children.get(0));
+        HashSet<Integer> operand2 = (HashSet<Integer>) this.execute(children.get(1));
 
         switch (nodeType) {
             case SET_UNION:
-                break;
+                return operand1.addAll(operand2);
             case SET_DIFFERENCE:
-                break;
+                return operand1.removeAll(operand2);
             case SET_INTERSECT:
                 break;
             case SET_SUBSET:
-                break;
+                return operand2.containsAll(operand1);
             case SET_SUPERSET:
-                break;
+                return operand1.containsAll(operand2);
             case SET_EQUAL:
                 // Eh, don't know if this is right or if we should check the node's type.
                 return operand1 == operand2;
