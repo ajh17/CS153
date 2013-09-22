@@ -43,6 +43,10 @@ public class SetExpressionExecutor extends ExpressionExecutor {
         HashSet<Integer> operand2 = (HashSet<Integer>) this.execute(children.get(1));
 
         switch (nodeType) {
+            case CONTAINED_IN_SET:
+                ICodeNode tempNode = children.get(0);
+                int value = (Integer) execute(tempNode);
+                return operand2.contains(value);
             case SET_UNION:
                 return operand1.addAll(operand2);
             case SET_DIFFERENCE:
