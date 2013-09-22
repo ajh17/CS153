@@ -39,7 +39,7 @@ public class SetExpressionExecutor extends ExpressionExecutor {
     {
         // Get the two operand children
         ArrayList<ICodeNode> children = node.getChildren();
-        HashSet<Integer> operand1 = (HashSet<Integer>) this.execute(children.get(0));
+        Object operand1 = this.execute(children.get(0));
         HashSet<Integer> operand2 = (HashSet<Integer>) this.execute(children.get(1));
 
         switch (nodeType) {
@@ -47,19 +47,23 @@ public class SetExpressionExecutor extends ExpressionExecutor {
                 int value = (Integer) execute(children.get(0));
                 return operand2.contains(value);
             case SET_UNION:
-                return operand1.addAll(operand2);
+                return ((HashSet<Integer) operand1).addAll(operand2);
             case SET_DIFFERENCE:
-                return operand1.removeAll(operand2);
+                return ((HashSet<Integer) operand1).removeAll(operand2);
             case SET_INTERSECT:
-                return operand1.retainAll(operand2);
+                return ((HashSet<Integer) operand1).retainAll(operand2);
             case SET_SUBSET:
-                return operand2.containsAll(operand1);
+                return operand2.containsAll(((HashSet<Integer) operand1));
             case SET_SUPERSET:
-                return operand1.containsAll(operand2);
+                return ((HashSet<Integer) operand1).containsAll(operand2);
             case SET_EQUAL:
-                return (operand1.containsAll(operand2) && operand2.containsAll(operand1));
+                return (((HashSet<Integer) operand1).containsAll(operand2)
+                        && operand2.containsAll(((HashSet<Integer) operand1)));
             case SET_NOT_EQUAL:
-                return (!operand1.containsAll(operand2) || !operand2.containsAll(operand1));
+                return (!((HashSet<Integer) operand1).containsAll(operand2)
+                        || !operand2.containsAll(((HashSet<Integer) operand1)));
+            case CONTAINED_IN_SET:
+                return operand2.contains((Integer) operand1);
         }
         return 0;  // should never get here
     }
