@@ -131,7 +131,8 @@ public class SetExpressionParser extends ExpressionParser
                     break;
                 case DOT_DOT:
                     // case still needs to be implemented.
-                    token = nextToken();
+                    // case where [mid .. 47] occurs.
+                    token = nextToken(); // eat the .. for now
                     break;
                 default:
                     // Found an unexpected token in set expression.
