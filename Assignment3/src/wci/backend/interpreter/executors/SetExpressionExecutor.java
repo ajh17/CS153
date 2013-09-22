@@ -1,15 +1,13 @@
 package wci.backend.interpreter.executors;
 
+import wci.backend.interpreter.*;
 import wci.intermediate.*;
 import wci.intermediate.icodeimpl.*;
-import wci.backend.interpreter.*;
 
-import java.util.EnumSet;
+import java.util.*;
 
-import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
-import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
-import static wci.backend.interpreter.RuntimeErrorCode.*;
+import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
 
 public class SetExpressionExecutor extends ExpressionExecutor {
 
@@ -40,6 +38,27 @@ public class SetExpressionExecutor extends ExpressionExecutor {
     private Object executeBinaryOperator(ICodeNode node,
         ICodeNodeTypeImpl nodeType)
     {
+        // Get the two operand children
+        ArrayList<ICodeNode> children = node.getChildren();
+        Object operand1 = this.execute(children.get(0));
+        Object operand2 = this.execute(children.get(1));
+
+        switch (nodeType) {
+            case SET_UNION:
+                break;
+            case SET_DIFFERENCE:
+                break;
+            case SET_INTERSECT:
+                break;
+            case SET_SUBSET:
+                break;
+            case SET_SUPERSET:
+                break;
+            case SET_EQUAL:
+                break;
+            case SET_NOT_EQUAL:
+                break;
+        }
         return 0;  // should never get here
     }
 }
