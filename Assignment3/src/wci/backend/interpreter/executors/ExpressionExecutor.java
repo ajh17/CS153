@@ -3,7 +3,6 @@ package wci.backend.interpreter.executors;
 import wci.backend.interpreter.*;
 import wci.intermediate.*;
 import wci.intermediate.icodeimpl.*;
-import wci.intermediate.symtabimpl.SymTabKeyImpl;
 
 import java.util.*;
 
@@ -11,8 +10,6 @@ import static wci.backend.interpreter.RuntimeErrorCode.*;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
-import static wci.intermediate.symtabimpl.SymTabKeyImpl.DATA_TYPE;
-
 /**
  * <h1>ExpressionExecutor</h1>
  *
@@ -40,23 +37,12 @@ public class ExpressionExecutor extends StatementExecutor
     public Object execute(ICodeNode node)
     {
         ICodeNodeTypeImpl nodeType = (ICodeNodeTypeImpl) node.getType();
-        SetExpressionExecutor setExprExecutor = new SetExpressionExecutor(this);
 
         switch (nodeType) {
-            case SET:
+            case SET: {
+                SetExpressionExecutor setExprExecutor = new SetExpressionExecutor(this);
                 return setExprExecutor.execute(node);
-            case SET_UNION: // S1 + S2
-            case SET_DIFFERENCE: // S1 - S2
-            case SET_SUBSET:  // S1 <= S2
-            case SET_SUPERSET:  // S1 >= S2
-            case SET_EQUAL: // S1 = S2
-            case SET_NOT_EQUAL:  // S1 <> S2
-            case CONTAINED_IN_SET:  // s in S1
-            case MULTIPLY: // S1 * S2
-                if (node.getChildren().get(1).getAttribute(ICodeKeyImpl.DATA_TYPE) == ICodeNodeTypeImpl.SET) {
-                    return setExprExecutor.execute(node);
-                }
-                return executeBinaryOperator(node, nodeType);
+            }
 
             case VARIABLE: {
 
