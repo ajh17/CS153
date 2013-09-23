@@ -45,7 +45,14 @@ public class ExpressionExecutor extends StatementExecutor
         switch (nodeType) {
             case SET:
                 return setExprExecutor.execute(node);
-            case MULTIPLY:
+            case SET_UNION: // S1 + S2
+            case SET_DIFFERENCE: // S1 - S2
+            case SET_SUBSET:  // S1 <= S2
+            case SET_SUPERSET:  // S1 >= S2
+            case SET_EQUAL: // S1 = S2
+            case SET_NOT_EQUAL:  // S1 <> S2
+            case CONTAINED_IN_SET:  // s in S1
+            case MULTIPLY: // S1 * S2
                 if (node.getChildren().get(1).getAttribute(ICodeKeyImpl.DATA_TYPE) == ICodeNodeTypeImpl.SET) {
                     return setExprExecutor.execute(node);
                 }
