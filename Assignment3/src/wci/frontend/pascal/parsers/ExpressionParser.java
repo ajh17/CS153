@@ -361,10 +361,6 @@ public class ExpressionParser extends StatementParser {
         ADD_OPS_OPS_MAP.put(PascalTokenType.OR, ICodeNodeTypeImpl.OR);
     }
 
-    ;
-
-    
-    
     private ICodeNode parseSet(Token token)
             throws Exception {
 
@@ -376,8 +372,8 @@ public class ExpressionParser extends StatementParser {
         if (token.getType() == COMMA){
             token = nextToken();
         }
-       
-        // if there is more in the set, keep trying to parse it. 
+
+        // if there is more in the set, keep trying to parse it.
         // ADD STUFF HERE
 
         return rootNode;
