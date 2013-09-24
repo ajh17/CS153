@@ -16,13 +16,6 @@ public class SetExpressionExecutor extends ExpressionExecutor {
         super(parent);
     }
 
-    // Set of set operator node types.
-    private static final EnumSet<ICodeNodeTypeImpl> SET_OPS =
-        EnumSet.of (
-            SET_UNION, SET_DIFFERENCE, SET_INTERSECT, SET_SUBSET, SET_SUPERSET,
-            SET_EQUAL, SET_NOT_EQUAL, CONTAINED_IN_SET
-        );
-
     public Object execute(ICodeNode node)
     {
         ICodeNodeTypeImpl nodeType = (ICodeNodeTypeImpl) node.getType();
