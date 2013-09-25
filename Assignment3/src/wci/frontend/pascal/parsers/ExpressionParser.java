@@ -12,6 +12,7 @@ import wci.intermediate.icodeimpl.ICodeNodeTypeImpl;
 
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import static wci.frontend.pascal.PascalErrorCode.*;
 import static wci.frontend.pascal.PascalTokenType.*;
@@ -362,19 +363,35 @@ public class ExpressionParser extends StatementParser {
     }
 
     private ICodeNode parseSet(Token token)
-            throws Exception {
+        throws Exception
+    {
 
         ICodeNode rootNode = parseSimpleExpression(token);
-
         token = currentToken();
         TokenType tokenType = token.getType();
+        HashSet<Integer> values = new HashSet<Integer>();
+        Integer leftRange = null;
 
-        if (token.getType() == COMMA){
-            token = nextToken();
-        }
+        do {
+            if (SET_OPS.contains(tokenType)) {
+                switch ((PascalTokenType) tokenType) {
+                    case COMMA:
+                    case RIGHT_BRACKET:
+                        // TODO: incomplete
+                        break;
+                    case DOT_DOT:
+                        // TODO: Incomplete
+                        token = nextToken(); // first, consume ..
+                        // Not completely sure what to do here yet. Still working on it.
+                        break;
+                    default:
+                        errorHandler.flag(token, UNEXPECTED_TOKEN, this);
+                        break;
+                }
+            }
 
-        // if there is more in the set, keep trying to parse it.
-        // ADD STUFF HERE
+            // if there is more stuff in the set, keep trying to parse it.
+        } while (token.getType() != RIGHT_BRACKET && token.getType() != ERROR);
 
         return rootNode;
     }
