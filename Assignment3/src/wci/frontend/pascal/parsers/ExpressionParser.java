@@ -383,12 +383,12 @@ public class ExpressionParser extends StatementParser {
                         // TODO: incomplete
                         break;
                     case DOT_DOT:
-                        token = nextToken(); // first, consume ..
-                        numberNode = parseSimpleExpression(token);
+                        token = nextToken(); // Consume the ..
+                        numberNode = parseSimpleExpression(token); // Parse the right subrange
                         Integer rightRange = (Integer) numberNode.getAttribute(VALUE);
 
                         while (leftRange <= rightRange) {
-                            values.add(leftRange++);
+                            values.add(leftRange++); // Add range of values into the set
                         }
 
                         break;
