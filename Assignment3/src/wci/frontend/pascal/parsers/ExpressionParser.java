@@ -407,7 +407,12 @@ public class ExpressionParser extends StatementParser {
                     } //both the subranges are not integers.
                     else {
                         // if both subranges not ints
-                        //its enough to just look them up in symtab and make sure theyre in there. 
+                        //its enough to just look them up in symtab and make sure theyre in there.
+                        ICodeNode subrangeNode = ICodeFactory.createICodeNode(SUBRANGE);
+                        // Is this the correct order?
+                        subrangeNode.addChild(leftNumberNode);
+                        subrangeNode.addChild(rightNumberNode);
+                        rootNode.addChild(subrangeNode);
                     }
 
                     break;
