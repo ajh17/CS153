@@ -373,7 +373,7 @@ public class ExpressionParser extends StatementParser {
         TokenType tokenType = token.getType();
 
         do {
-            if (SET_OPS.contains(tokenType)) {
+            //if (SET_OPS.contains(tokenType)) {
                 switch ((PascalTokenType) tokenType) {
                     case COMMA:
                         values.add(leftRange); // Add the number if its not part of a subrange
@@ -398,7 +398,7 @@ public class ExpressionParser extends StatementParser {
                         errorHandler.flag(token, UNEXPECTED_TOKEN, this);
                         break;
                 }
-            }
+            //}
 
             // if there is more stuff in the set, keep trying to parse it.
         } while (token.getType() != RIGHT_BRACKET && token.getType() != ERROR);
