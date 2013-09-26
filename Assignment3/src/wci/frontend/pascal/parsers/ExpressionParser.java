@@ -383,11 +383,12 @@ public class ExpressionParser extends StatementParser {
                     case COMMA:
                         // in case the leftNumber node is not a variable that we need to look up later.
                         if (leftNumberNode.getAttribute(VALUE) == INTEGER) {
-                            values.add((Integer) leftNumberNode.getAttribute(VALUE));
+                            values.add((Integer) leftRange);
                         }
                         else {
                             rootNode.addChild(leftNumberNode);
                         }
+                        token = nextToken(); // Consume ,
                         break;
                     case DOT_DOT:
                         token = nextToken(); // Consume the ..
