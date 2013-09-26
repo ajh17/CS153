@@ -123,6 +123,11 @@ public class ExpressionExecutor extends StatementExecutor
         Object operand1 = execute(operandNode1);
         Object operand2 = execute(operandNode2);
 
+        // Use these only if performing set operations
+        HashSet<Integer> set1 = (HashSet<Integer>) operand1;
+        HashSet<Integer> set2 = (HashSet<Integer>) operand2;
+
+
         boolean integerMode = (operand1 instanceof Integer) &&
             (operand2 instanceof Integer);
         boolean setMode =
@@ -186,24 +191,22 @@ public class ExpressionExecutor extends StatementExecutor
                 }
                 switch (nodeType) {
                     case ADD: // S1 + S2
-                        return ((HashSet<Integer>) operand1).addAll((HashSet<Integer>) operand2);
+                        return set1.addAll(set2);
                     case SUBTRACT: // S1 - S2
-                        return ((HashSet<Integer>) operand1).removeAll((HashSet<Integer>) operand2);
+                        return set1.removeAll(set2);
                     case MULTIPLY:  // S1 * S2
-                        return ((HashSet<Integer>) operand1).retainAll((HashSet<Integer>) operand2);
+                        return set1.retainAll(set2); // THIS IS INCORRECT. IT RETURNS A BOOLEAN
                     case LE:  // S1 <= S2
-                        return ((HashSet<Integer>) operand2).containsAll((HashSet<Integer>) operand1);
+                        return set2.containsAll(set1);
                     case GE:  // S1 >= S2
-                        return ((HashSet<Integer>) operand1).containsAll((HashSet<Integer>) operand2);
+                        return set1.containsAll(set2);
                     case EQ: // S1 = S2
-                        return (((HashSet<Integer>) operand1).containsAll((HashSet<Integer>) operand2)
-                                && ((HashSet<Integer>) operand2).containsAll((HashSet<Integer>) operand1));
+                        return set1.containsAll(set2) && set2.containsAll(set1);
                     case NE:  // S1 <> S2
-                        return (!((HashSet<Integer>) operand1).containsAll((HashSet<Integer>) operand2)
-                                || !((HashSet<Integer>) operand2).containsAll((HashSet<Integer>) operand1));
+                        return !set1.containsAll(set2) || !set2.containsAll(set1);
                     case IN_SET:  // s in S1
                         // TODO: Ensure first operand is an integer or variable of an integer
-                        return ((HashSet<Integer>)operand2 ).contains(operand1);
+                        return set2.contains(operand1);
                 }
             }
             else {
