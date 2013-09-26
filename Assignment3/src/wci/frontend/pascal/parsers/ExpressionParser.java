@@ -373,7 +373,7 @@ public class ExpressionParser extends StatementParser {
                         break;
                     case COMMA:
                         // in case the leftNumber node is not a variable that we need to look up later.
-                        if (leftNumberNode.getAttribute(VALUE) == INTEGER) {
+                        if (leftNumberNode.getType() == INTEGER_CONSTANT) {
                             values.add(leftRange);
                         }
                         else {
