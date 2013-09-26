@@ -349,10 +349,7 @@ public class ExpressionParser extends StatementParser {
 
         return rootNode;
     }
-    private static final EnumSet<ICodeNodeTypeImpl> SET_OPS =
-            EnumSet.of(
-            SET_UNION, SET_DIFFERENCE, SET_INTERSECT, SET_SUBSET, SET_SUPERSET,
-            SET_EQUAL, SET_NOT_EQUAL, CONTAINED_IN_SET);
+
     private static final HashMap<PascalTokenType, ICodeNodeTypeImpl> SET_OPS_MAP = new HashMap<PascalTokenType, ICodeNodeTypeImpl>();
 
     static {
