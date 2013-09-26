@@ -191,8 +191,6 @@ public class ExpressionExecutor extends StatementExecutor {
                 }
                 switch (nodeType) {
                     case ADD: // S1 + S2
-                        // addAll will return a boolean. We need to return a hashset with all the elem instead
-                        // we also create a copy of S1, don't want to lose our elements!
                         tempSet = makeHashSetCopy(set1);
                         (tempSet).addAll(set2);
                         return tempSet;
@@ -243,7 +241,8 @@ public class ExpressionExecutor extends StatementExecutor {
                     }
                 }
             }
-        } // ==========
+        }
+        // ==========
         // AND and OR
         // ==========
         else if ((nodeType == AND) || (nodeType == OR)) {
@@ -256,7 +255,8 @@ public class ExpressionExecutor extends StatementExecutor {
                 case OR:
                     return value1 || value2;
             }
-        } // ====================
+        }
+        // ====================
         // Relational operators
         // ====================
         else if (integerMode) {
