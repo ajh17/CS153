@@ -379,9 +379,6 @@ public class ExpressionParser extends StatementParser {
                     values.add(leftRange); // Add the number if its not part of a subrange
                     token = nextToken(); // Consume the ,
                     break;
-                case RIGHT_BRACKET:
-                    // TODO: incomplete
-                    break;
                 case DOT_DOT:
                     token = nextToken(); // Consume the ..
                     numberNode = parseSimpleExpression(token); // Parse the right subrange
