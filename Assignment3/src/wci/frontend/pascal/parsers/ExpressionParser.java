@@ -70,8 +70,6 @@ public class ExpressionParser extends StatementParser {
         REL_OPS_MAP.put(GREATER_EQUALS, GE);
     }
 
-    ;
-
     /**
      * Parse an expression.
      * @param token the initial token.
@@ -119,8 +117,6 @@ public class ExpressionParser extends StatementParser {
         ADD_OPS_OPS_MAP.put(MINUS, SUBTRACT);
         ADD_OPS_OPS_MAP.put(PascalTokenType.OR, ICodeNodeTypeImpl.OR);
     }
-
-    ;
 
     /**
      * Parse a simple expression.
@@ -192,8 +188,6 @@ public class ExpressionParser extends StatementParser {
         MULT_OPS_OPS_MAP.put(PascalTokenType.MOD, ICodeNodeTypeImpl.MOD);
         MULT_OPS_OPS_MAP.put(PascalTokenType.AND, ICodeNodeTypeImpl.AND);
     }
-
-    ;
 
     /**
      * Parse a term.
