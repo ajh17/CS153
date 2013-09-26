@@ -179,7 +179,8 @@ public class ExpressionParser extends StatementParser {
     }
     // Set of multiplicative operators.
     private static final EnumSet<PascalTokenType> MULT_OPS =
-            EnumSet.of(STAR, SLASH, DIV, PascalTokenType.MOD, PascalTokenType.AND);
+            EnumSet.of(STAR, SLASH, DIV, PascalTokenType.MOD, PascalTokenType.AND, EQUALS, NOT_EQUALS,
+                    LESS_EQUALS, GREATER_EQUALS, IN);
     // Map multiplicative operator tokens to node types.
     private static final HashMap<PascalTokenType, ICodeNodeType> MULT_OPS_OPS_MAP = new HashMap<PascalTokenType, ICodeNodeType>();
 
@@ -189,6 +190,12 @@ public class ExpressionParser extends StatementParser {
         MULT_OPS_OPS_MAP.put(DIV, INTEGER_DIVIDE);
         MULT_OPS_OPS_MAP.put(PascalTokenType.MOD, ICodeNodeTypeImpl.MOD);
         MULT_OPS_OPS_MAP.put(PascalTokenType.AND, ICodeNodeTypeImpl.AND);
+        // The following are strictly for SET operations
+        MULT_OPS_OPS_MAP.put(NOT_EQUALS, SET_NOT_EQUAL);
+        MULT_OPS_OPS_MAP.put(EQUALS, SET_EQUAL);
+        MULT_OPS_OPS_MAP.put(LESS_EQUALS, SET_SUBSET);
+        MULT_OPS_OPS_MAP.put(GREATER_EQUALS, SET_SUPERSET);
+        MULT_OPS_OPS_MAP.put(IN, CONTAINED_IN_SET);
     }
 
     /**
@@ -364,7 +371,6 @@ public class ExpressionParser extends StatementParser {
         HashSet<Integer> values = new HashSet<Integer>();
         rootNode.setAttribute(VALUE, values);
 
-
         while (token.getType() != RIGHT_BRACKET && token.getType() != ERROR) {
             ICodeNode leftNumberNode = parseSimpleExpression(token);
             Integer leftRange = (Integer) leftNumberNode.getAttribute(VALUE); // In case next token is ..
@@ -380,7 +386,7 @@ public class ExpressionParser extends StatementParser {
                     } else {
                         rootNode.addChild(leftNumberNode);
                     }
-                    token = nextToken(); // Consume ,
+                    token = nextToken(); // Consume the ,
                     break;
                 case DOT_DOT:
                     token = nextToken(); // Consume the ..
@@ -403,6 +409,7 @@ public class ExpressionParser extends StatementParser {
                         errorHandler.flag(token, RANGE_INTEGER, this);
                     }
                     else {
+                        token = nextToken(); // Consume the ,
                         // If either the left or right is not an INTEGER_CONSTANT
                         // They could still be out of range if one of the variables are 50+ during execution
                         ICodeNode subrangeNode = ICodeFactory.createICodeNode(SUBRANGE);
