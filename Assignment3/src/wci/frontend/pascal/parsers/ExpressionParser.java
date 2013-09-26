@@ -373,12 +373,19 @@ public class ExpressionParser extends StatementParser {
 
             switch ((PascalTokenType) token.getType()) {
                 case RIGHT_BRACKET:
+                    if (leftNumberNode.getType() == INTEGER_CONSTANT) {
+                        values.add(leftRange);
+                    }
+                    else {
+                        rootNode.addChild(leftNumberNode);
+                    }
                     break;
                 case COMMA:
                     // in case the leftNumber node is not a variable that we need to look up later.
                     if (leftNumberNode.getType() == INTEGER_CONSTANT) {
                         values.add(leftRange);
-                    } else {
+                    }
+                    else {
                         rootNode.addChild(leftNumberNode);
                     }
                     token = nextToken(); // Consume the ,
