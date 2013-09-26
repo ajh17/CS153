@@ -367,39 +367,38 @@ public class ExpressionParser extends StatementParser {
         ICodeNode rootNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.SET);
         HashSet<Integer> values = new HashSet<Integer>();
         rootNode.setAttribute(VALUE, values);
-        ICodeNode numberNode = parseSimpleExpression(token);
-        Integer leftRange = (Integer) numberNode.getAttribute(VALUE); // In case next token is ..
-        token = currentToken();
-        TokenType tokenType = token.getType();
 
         do {
-            //if (SET_OPS.contains(tokenType)) {
-                switch ((PascalTokenType) tokenType) {
-                    case COMMA:
-                        values.add(leftRange); // Add the number if its not part of a subrange
-                        token = nextToken(); // Consume the ,
-                        break;
-                    case RIGHT_BRACKET:
-                        // TODO: incomplete
-                        break;
-                    case DOT_DOT:
-                        token = nextToken(); // Consume the ..
-                        numberNode = parseSimpleExpression(token); // Parse the right subrange
-                        token = currentToken();
-                        Integer rightRange = (Integer) numberNode.getAttribute(VALUE);
+            ICodeNode numberNode = parseSimpleExpression(token);
+            Integer leftRange = (Integer) numberNode.getAttribute(VALUE); // In case next token is ..
+            token = currentToken();
+            TokenType tokenType = token.getType();
 
-                        while (leftRange <= rightRange) {
-                            if (! values.add(leftRange++)) {
-                                errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
-                            }
+            switch ((PascalTokenType) tokenType) {
+                case COMMA:
+                    values.add(leftRange); // Add the number if its not part of a subrange
+                    token = nextToken(); // Consume the ,
+                    break;
+                case RIGHT_BRACKET:
+                    // TODO: incomplete
+                    break;
+                case DOT_DOT:
+                    token = nextToken(); // Consume the ..
+                    numberNode = parseSimpleExpression(token); // Parse the right subrange
+                    token = currentToken();
+                    Integer rightRange = (Integer) numberNode.getAttribute(VALUE);
+
+                    while (leftRange <= rightRange) {
+                        if (! values.add(leftRange++)) {
+                            errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
                         }
+                    }
 
-                        break;
-                    default:
-                        errorHandler.flag(token, UNEXPECTED_TOKEN, this);
-                        break;
-                }
-            //}
+                    break;
+                default:
+                    errorHandler.flag(token, UNEXPECTED_TOKEN, this);
+                    break;
+            }
 
             // if there is more stuff in the set, keep trying to parse it.
         } while (token.getType() != RIGHT_BRACKET && token.getType() != ERROR);
