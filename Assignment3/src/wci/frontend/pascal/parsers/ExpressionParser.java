@@ -364,7 +364,7 @@ public class ExpressionParser extends StatementParser {
         HashSet<Integer> values = new HashSet<Integer>();
         rootNode.setAttribute(VALUE, values);
 
-<<<<<<< HEAD
+
         while (token.getType() != RIGHT_BRACKET && token.getType() != ERROR) {
             ICodeNode leftNumberNode = parseSimpleExpression(token);
             Integer leftRange = (Integer) leftNumberNode.getAttribute(VALUE); // In case next token is ..
@@ -376,7 +376,7 @@ public class ExpressionParser extends StatementParser {
                     break;
                 case COMMA:
                     // in case the leftNumber node is not a variable that we need to look up later.
-                    if (leftNumberNode.getAttribute(VALUE) == INTEGER) {
+                    if (leftNumberNode.getType() == INTEGER_CONSTANT) {
                         values.add(leftRange);
                     } else {
                         rootNode.addChild(leftNumberNode);
@@ -387,50 +387,16 @@ public class ExpressionParser extends StatementParser {
                     token = nextToken(); // Consume the ..
                     ICodeNode rightNumberNode = parseSimpleExpression(token); // Parse the right subrange
                     token = currentToken();
-
-
                     // Need to check that the left and right parts of the subrange are integers.
-                    if (rightNumberNode.getType() == INTEGER_CONSTANT && leftNumberNode.getAttribute(VALUE) == INTEGER) {
+                    if (rightNumberNode.getType() == INTEGER_CONSTANT) {
                         Integer rightRange = (Integer) rightNumberNode.getAttribute(VALUE);
                         // Flag duplicates as an error.
                         while (leftRange <= rightRange) {
                             if (!values.add(leftRange++)) {
                                 errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
-=======
-        while (token.getType() != RIGHT_BRACKET && token.getType() != ERROR){
-                ICodeNode leftNumberNode = parseSimpleExpression(token);
-                Integer leftRange = (Integer) leftNumberNode.getAttribute(VALUE); // In case next token is ..
-                token = currentToken();
-                TokenType tokenType = token.getType();
-
-                switch ((PascalTokenType) tokenType) {
-                    case RIGHT_BRACKET:
-                        break;
-                    case COMMA:
-                        // in case the leftNumber node is not a variable that we need to look up later.
-                        if (leftNumberNode.getType() == INTEGER_CONSTANT) {
-                            values.add(leftRange);
-                        }
-                        else {
-                            rootNode.addChild(leftNumberNode);
-                        }
-                        token = nextToken(); // Consume ,
-                        break;
-                    case DOT_DOT:
-                        token = nextToken(); // Consume the ..
-                        ICodeNode rightNumberNode = parseSimpleExpression(token); // Parse the right subrange
-                        token = currentToken();
-                        // Need to check that the left and right parts of the subrange are integers.
-                        if (rightNumberNode.getType() == INTEGER_CONSTANT) {
-                            Integer rightRange = (Integer) rightNumberNode.getAttribute(VALUE);
-                            // Flag duplicates as an error.
-                            while (leftRange <= rightRange) {
-                                if (! values.add(leftRange++)) {
-                                    errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
-                                }
->>>>>>> 342373c6467797009675b08a103f8e2e70fb5e41
                             }
                         }
+
                     } else if (rightNumberNode.getType() == INTEGER_CONSTANT && leftNumberNode.getAttribute(VALUE) != INTEGER) {
                         Integer rightRange = (Integer) rightNumberNode.getAttribute(VALUE);
 
