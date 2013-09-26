@@ -409,6 +409,7 @@ public class ExpressionParser extends StatementParser {
                         subrangeNode.addChild(leftNumberNode);
                         subrangeNode.addChild(rightNumberNode);
                         rootNode.addChild(subrangeNode);
+                        token = nextToken();
                     }
 
                     break;
