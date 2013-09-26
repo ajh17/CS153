@@ -369,34 +369,53 @@ public class ExpressionParser extends StatementParser {
         rootNode.setAttribute(VALUE, values);
 
         do {
-            ICodeNode numberNode = parseSimpleExpression(token);
-            Integer leftRange = (Integer) numberNode.getAttribute(VALUE); // In case next token is ..
-            token = currentToken();
-            TokenType tokenType = token.getType();
+            if (SET_OPS.contains(token.getType())) {
+                ICodeNode leftNumberNode = parseSimpleExpression(token);
+                Integer leftRange = (Integer) leftNumberNode.getAttribute(VALUE); // In case next token is ..
+                token = currentToken();
+                TokenType tokenType = token.getType();
 
-            switch ((PascalTokenType) tokenType) {
-                case RIGHT_BRACKET:
-                    break;
-                case COMMA:
-                    values.add(leftRange); // Add the number if its not part of a subrange
-                    token = nextToken(); // Consume the ,
-                    break;
-                case DOT_DOT:
-                    token = nextToken(); // Consume the ..
-                    numberNode = parseSimpleExpression(token); // Parse the right subrange
-                    token = currentToken();
-                    Integer rightRange = (Integer) numberNode.getAttribute(VALUE);
-
-                    while (leftRange <= rightRange) {
-                        if (! values.add(leftRange++)) {
-                            errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
+                switch ((PascalTokenType) tokenType) {
+                    case RIGHT_BRACKET:
+                        break;
+                    case COMMA:
+                        if (leftNumberNode.getAttribute(VALUE) == INTEGER) {
+                            values.add((Integer) leftNumberNode.getAttribute(VALUE));
                         }
-                    }
+                        else {
+                            rootNode.addChild(leftNumberNode);
+                        }
+                        break;
+                    case DOT_DOT:
+                        token = nextToken(); // Consume the ..
+                        ICodeNode rightNumberNode = parseSimpleExpression(token); // Parse the right subrange
+                        token = currentToken();
+                        // Not too sure but what if the left or right part of the subrange isn't an integer?
+                        // If not, we need to look up the their value in the symbol table and then parse them.
+                        if (rightNumberNode.getAttribute(VALUE) == INTEGER) {
+                            Integer rightRange = (Integer) rightNumberNode.getAttribute(VALUE);
+                            // Flag duplicates as an error.
+                            while (leftRange <= rightRange) {
+                                if (! values.add(leftRange++)) {
+                                    errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
+                                }
+                            }
+                        }
+                        // One of or both the subranges are not integers.
+                        // rootNode.
+                        else {
+                            // TODO: Incomplete.
+                        }
 
-                    break;
-                default:
-                    errorHandler.flag(token, UNEXPECTED_TOKEN, this);
-                    break;
+                        break;
+                    default:
+                        errorHandler.flag(token, UNEXPECTED_TOKEN, this);
+                        break;
+                }
+            }
+            // Don't know if this is a good way to do this or not.
+            else {
+                break;
             }
 
             // if there is more stuff in the set, keep trying to parse it.
