@@ -125,8 +125,8 @@ public class ExpressionExecutor extends StatementExecutor
 
         boolean integerMode = (operand1 instanceof Integer) &&
             (operand2 instanceof Integer);
-        boolean setMode = (operand1 instanceof HashSet) &&
-                (operand2 instanceof HashSet);
+        boolean setMode =
+                (operand1 instanceof HashSet || operand1 instanceof Integer) && (operand2 instanceof HashSet);
 
         // ====================
         // Arithmetic operators
@@ -181,7 +181,30 @@ public class ExpressionExecutor extends StatementExecutor
                 }
             }
             else if (setMode) {
-                return ((HashSet<Integer>) operand1).addAll((HashSet<Integer>) operand2);
+                if (operand1 instanceof Integer) {
+                    return ((HashSet<Integer>) operand2).contains(operand1);
+                }
+                switch (nodeType) {
+                    case ADD: // S1 + S2
+                        return ((HashSet<Integer>) operand1).addAll((HashSet<Integer>) operand2);
+                    case SUBTRACT: // S1 - S2
+                        return ((HashSet<Integer>) operand1).removeAll((HashSet<Integer>) operand2);
+                    case MULTIPLY:  // S1 * S2
+                        return ((HashSet<Integer>) operand1).retainAll((HashSet<Integer>) operand2);
+                    case LE:  // S1 <= S2
+                        return ((HashSet<Integer>) operand2).containsAll((HashSet<Integer>) operand1);
+                    case GE:  // S1 >= S2
+                        return ((HashSet<Integer>) operand1).containsAll((HashSet<Integer>) operand2);
+                    case EQ: // S1 = S2
+                        return (((HashSet<Integer>) operand1).containsAll((HashSet<Integer>) operand2)
+                                && ((HashSet<Integer>) operand2).containsAll((HashSet<Integer>) operand1));
+                    case NE:  // S1 <> S2
+                        return (!((HashSet<Integer>) operand1).containsAll((HashSet<Integer>) operand2)
+                                || !((HashSet<Integer>) operand2).containsAll((HashSet<Integer>) operand1));
+                    case IN_SET:  // s in S1
+                        // TODO: Ensure first operand is an integer or variable of an integer
+                        return ((HashSet<Integer>)operand2 ).contains(operand1);
+                }
             }
             else {
                 float value1 = operand1 instanceof Integer
