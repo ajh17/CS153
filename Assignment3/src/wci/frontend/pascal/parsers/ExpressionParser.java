@@ -57,7 +57,7 @@ public class ExpressionParser extends StatementParser {
     // Set of relational operators.
     private static final EnumSet<PascalTokenType> REL_OPS =
             EnumSet.of(EQUALS, NOT_EQUALS, LESS_THAN, LESS_EQUALS,
-            GREATER_THAN, GREATER_EQUALS);
+            GREATER_THAN, GREATER_EQUALS, IN);
     // Map relational operator tokens to node types.
     private static final HashMap<PascalTokenType, ICodeNodeType> REL_OPS_MAP = new HashMap<PascalTokenType, ICodeNodeType>();
 
@@ -68,6 +68,8 @@ public class ExpressionParser extends StatementParser {
         REL_OPS_MAP.put(LESS_EQUALS, LE);
         REL_OPS_MAP.put(GREATER_THAN, GT);
         REL_OPS_MAP.put(GREATER_EQUALS, GE);
+        REL_OPS_MAP.put(IN, IN_SET);
+
     }
 
     /**
