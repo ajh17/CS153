@@ -40,10 +40,8 @@ public class ExpressionExecutor extends StatementExecutor {
         ICodeNodeTypeImpl nodeType = (ICodeNodeTypeImpl) node.getType();
 
         switch (nodeType) {
-            case SET: {
-                SetExpressionExecutor setExprExecutor = new SetExpressionExecutor(this);
-                return setExprExecutor.execute(node);
-            }
+            case SET:
+                return node.getAttribute(VALUE);
 
             case IN_SET:
                 return executeBinaryOperator(node, nodeType);
@@ -116,7 +114,7 @@ public class ExpressionExecutor extends StatementExecutor {
      * @return the computed value of the expression.
      */
     private Object executeBinaryOperator(ICodeNode node,
-                                         ICodeNodeTypeImpl nodeType) {
+            ICodeNodeTypeImpl nodeType) {
         // Get the two operand children of the operator node.
         ArrayList<ICodeNode> children = node.getChildren();
         ICodeNode operandNode1 = children.get(0);
@@ -192,8 +190,7 @@ public class ExpressionExecutor extends StatementExecutor {
                         }
                     }
                 }
-            }
-            else if (setMode) {
+            } else if (setMode) {
                 HashSet<Integer> tempSet;
 
                 switch (nodeType) {
@@ -220,8 +217,7 @@ public class ExpressionExecutor extends StatementExecutor {
                     case IN_SET:  // s in S1
                         return set2.contains(operand1);
                 }
-            }
-            else {
+            } else {
                 float value1 = operand1 instanceof Integer ? (Integer) operand1 : (Float) operand1;
                 float value2 = operand2 instanceof Integer ? (Integer) operand2 : (Float) operand2;
                 // Float operations.
@@ -245,8 +241,7 @@ public class ExpressionExecutor extends StatementExecutor {
                     }
                 }
             }
-        }
-        // ==========
+        } // ==========
         // AND and OR
         // ==========
         else if ((nodeType == AND) || (nodeType == OR)) {
@@ -259,8 +254,7 @@ public class ExpressionExecutor extends StatementExecutor {
                 case OR:
                     return value1 || value2;
             }
-        }
-        // ====================
+        } // ====================
         // Relational operators
         // ====================
         else if (integerMode) {
@@ -282,8 +276,7 @@ public class ExpressionExecutor extends StatementExecutor {
                 case GE:
                     return value1 >= value2;
             }
-        }
-        else {
+        } else {
             float value1 = operand1 instanceof Integer
                     ? (Integer) operand1 : (Float) operand1;
             float value2 = operand2 instanceof Integer
