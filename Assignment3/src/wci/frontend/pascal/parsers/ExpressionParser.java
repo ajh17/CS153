@@ -72,6 +72,7 @@ public class ExpressionParser extends StatementParser {
 
     /**
      * Parse an expression.
+     *
      * @param token the initial token.
      * @return the root of the generated parse subtree.
      * @throws Exception if an error occurred.
@@ -120,6 +121,7 @@ public class ExpressionParser extends StatementParser {
 
     /**
      * Parse a simple expression.
+     *
      * @param token the initial token.
      * @return the root of the generated parse subtree.
      * @throws Exception if an error occurred.
@@ -191,6 +193,7 @@ public class ExpressionParser extends StatementParser {
 
     /**
      * Parse a term.
+     *
      * @param token the initial token.
      * @return the root of the generated parse subtree.
      * @throws Exception if an error occurred.
@@ -356,55 +359,61 @@ public class ExpressionParser extends StatementParser {
     }
 
     private ICodeNode parseSet(Token token)
-        throws Exception
-    {
+            throws Exception {
         ICodeNode rootNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.SET);
         HashSet<Integer> values = new HashSet<Integer>();
         rootNode.setAttribute(VALUE, values);
 
-        while (token.getType() != RIGHT_BRACKET && token.getType() != ERROR){
-                ICodeNode leftNumberNode = parseSimpleExpression(token);
-                Integer leftRange = (Integer) leftNumberNode.getAttribute(VALUE); // In case next token is ..
-                token = currentToken();
-                TokenType tokenType = token.getType();
+        while (token.getType() != RIGHT_BRACKET && token.getType() != ERROR) {
+            ICodeNode leftNumberNode = parseSimpleExpression(token);
+            Integer leftRange = (Integer) leftNumberNode.getAttribute(VALUE); // In case next token is ..
+            token = currentToken();
+            TokenType tokenType = token.getType();
 
-                switch ((PascalTokenType) tokenType) {
-                    case RIGHT_BRACKET:
-                        break;
-                    case COMMA:
-                        // in case the leftNumber node is not a variable that we need to look up later.
-                        if (leftNumberNode.getAttribute(VALUE) == INTEGER) {
-                            values.add(leftRange);
-                        }
-                        else {
-                            rootNode.addChild(leftNumberNode);
-                        }
-                        token = nextToken(); // Consume ,
-                        break;
-                    case DOT_DOT:
-                        token = nextToken(); // Consume the ..
-                        ICodeNode rightNumberNode = parseSimpleExpression(token); // Parse the right subrange
-                        token = currentToken();
-                        // Need to check that the left and right parts of the subrange are integers.
-                        if (rightNumberNode.getType() == INTEGER_CONSTANT) {
-                            Integer rightRange = (Integer) rightNumberNode.getAttribute(VALUE);
-                            // Flag duplicates as an error.
-                            while (leftRange <= rightRange) {
-                                if (! values.add(leftRange++)) {
-                                    errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
-                                }
+            switch ((PascalTokenType) tokenType) {
+                case RIGHT_BRACKET:
+                    break;
+                case COMMA:
+                    // in case the leftNumber node is not a variable that we need to look up later.
+                    if (leftNumberNode.getAttribute(VALUE) == INTEGER) {
+                        values.add(leftRange);
+                    } else {
+                        rootNode.addChild(leftNumberNode);
+                    }
+                    token = nextToken(); // Consume ,
+                    break;
+                case DOT_DOT:
+                    token = nextToken(); // Consume the ..
+                    ICodeNode rightNumberNode = parseSimpleExpression(token); // Parse the right subrange
+                    token = currentToken();
+
+
+                    // Need to check that the left and right parts of the subrange are integers.
+                    if (rightNumberNode.getType() == INTEGER_CONSTANT && leftNumberNode.getAttribute(VALUE) == INTEGER) {
+                        Integer rightRange = (Integer) rightNumberNode.getAttribute(VALUE);
+                        // Flag duplicates as an error.
+                        while (leftRange <= rightRange) {
+                            if (!values.add(leftRange++)) {
+                                errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
                             }
                         }
-                        // One of or both the subranges are not integers.
-                        else {
-                            // TODO: Incomplete.
-                        }
+                    } else if (rightNumberNode.getType() == INTEGER_CONSTANT && leftNumberNode.getAttribute(VALUE) != INTEGER) {
+                        Integer rightRange = (Integer) rightNumberNode.getAttribute(VALUE);
 
-                        break;
-                    default:
-                        errorHandler.flag(token, UNEXPECTED_TOKEN, this);
-                        break;
-                }
+                        if (rightRange > 50)// of form var .. constant
+                        {
+                            errorHandler.flag(token, RANGE_INTEGER, this);
+                        }
+                    } //both the subranges are not integers.
+                    else {
+                        // TODO: Incomplete.
+                    }
+
+                    break;
+                default:
+                    errorHandler.flag(token, UNEXPECTED_TOKEN, this);
+                    break;
+            }
         }
 
         return rootNode;
