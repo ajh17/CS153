@@ -210,7 +210,6 @@ public class ExpressionExecutor extends StatementExecutor {
                     case NE:  // S1 <> S2
                         return !set1.containsAll(set2) || !set2.containsAll(set1);
                     case IN_SET:  // s in S1
-                        // TODO: Ensure first operand is an integer or variable of an integer
                         return set2.contains(operand1);
                 }
             }
