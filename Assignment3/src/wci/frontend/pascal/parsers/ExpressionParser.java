@@ -370,8 +370,6 @@ public class ExpressionParser extends StatementParser {
 
                 switch ((PascalTokenType) tokenType) {
                     case RIGHT_BRACKET:
-                        // This is interfering with something. arrgh!
-                        // Can't remove this or it will output more errors.
                         break;
                     case COMMA:
                         // in case the leftNumber node is not a variable that we need to look up later.
