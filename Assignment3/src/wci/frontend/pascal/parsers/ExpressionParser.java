@@ -392,7 +392,7 @@ public class ExpressionParser extends StatementParser {
                                 values.add(leftRange++); // Add range of values into the set
                             }
                             else {
-                                errorHandler.flag(token, NOT_CONSTANT_IDENTIFIER, this);
+                                errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
                             }
                         }
 
