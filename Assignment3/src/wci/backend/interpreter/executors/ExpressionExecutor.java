@@ -187,9 +187,7 @@ public class ExpressionExecutor extends StatementExecutor {
             }
             else if (setMode) {
                 HashSet<Integer> tempSet;
-                if (operand1 instanceof Integer) {
-                    return ((HashSet<Integer>) operand2).contains(operand1);
-                }
+
                 switch (nodeType) {
                     case ADD: // S1 + S2
                         tempSet = makeHashSetCopy(set1);
