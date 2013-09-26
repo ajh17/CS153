@@ -327,13 +327,10 @@ public class ExpressionParser extends StatementParser {
 
             // Case statement for set expressions
             case LEFT_BRACKET: {
-                HashSet<Integer> values = new HashSet<Integer>();
                 token = nextToken();      // consume the [
 
-                // Parse an expression and make its node the root node.
-                rootNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.SET);
-                rootNode.setAttribute(VALUE, values);
-                rootNode.addChild(parseSet(token, values));
+                // Parse the set and make it the root node
+                rootNode = parseSet(token);
 
                 // Look for the matching ] token.
                 token = currentToken();
@@ -364,26 +361,36 @@ public class ExpressionParser extends StatementParser {
         ADD_OPS_OPS_MAP.put(PascalTokenType.OR, ICodeNodeTypeImpl.OR);
     }
 
-    private ICodeNode parseSet(Token token, HashSet<Integer> values)
+    private ICodeNode parseSet(Token token)
         throws Exception
     {
-
-        ICodeNode rootNode = parseSimpleExpression(token);
+        ICodeNode rootNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.SET);
+        HashSet<Integer> values = new HashSet<Integer>();
+        rootNode.setAttribute(VALUE, values);
+        ICodeNode numberNode = parseSimpleExpression(token);
+        Integer leftRange = (Integer) numberNode.getAttribute(VALUE); // In case next token is ..
         token = currentToken();
         TokenType tokenType = token.getType();
-        Integer leftRange = null;
 
         do {
             if (SET_OPS.contains(tokenType)) {
                 switch ((PascalTokenType) tokenType) {
                     case COMMA:
+                        values.add(leftRange); // Add the number if its not part of a subrange
+                        token = nextToken(); // Consume the ,
+                        break;
                     case RIGHT_BRACKET:
                         // TODO: incomplete
                         break;
                     case DOT_DOT:
-                        // TODO: Incomplete
                         token = nextToken(); // first, consume ..
-                        // Not completely sure what to do here yet. Still working on it.
+                        numberNode = parseSimpleExpression(token);
+                        Integer rightRange = (Integer) numberNode.getAttribute(VALUE);
+
+                        while (leftRange <= rightRange) {
+                            values.add(leftRange++);
+                        }
+
                         break;
                     default:
                         errorHandler.flag(token, UNEXPECTED_TOKEN, this);
