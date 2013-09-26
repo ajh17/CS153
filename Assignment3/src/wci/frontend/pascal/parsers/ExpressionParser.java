@@ -388,7 +388,7 @@ public class ExpressionParser extends StatementParser {
                     ICodeNode rightNumberNode = parseSimpleExpression(token); // Parse the right subrange
                     token = currentToken();
                     // Need to check that the left and right parts of the subrange are integers.
-                    if (rightNumberNode.getType() == INTEGER_CONSTANT) {
+                    if (rightNumberNode.getType() == INTEGER_CONSTANT && leftNumberNode.getAttribute(VALUE) == INTEGER) {
                         Integer rightRange = (Integer) rightNumberNode.getAttribute(VALUE);
                         // Flag duplicates as an error.
                         while (leftRange <= rightRange) {
@@ -396,7 +396,6 @@ public class ExpressionParser extends StatementParser {
                                 errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
                             }
                         }
-
                     } else if (rightNumberNode.getType() == INTEGER_CONSTANT && leftNumberNode.getAttribute(VALUE) != INTEGER) {
                         Integer rightRange = (Integer) rightNumberNode.getAttribute(VALUE);
 
@@ -406,7 +405,8 @@ public class ExpressionParser extends StatementParser {
                         }
                     } //both the subranges are not integers.
                     else {
-                        // TODO: Incomplete.
+                        // if both subranges not ints
+                        //its enough to just look them up in symtab and make sure theyre in there. 
                     }
 
                     break;
