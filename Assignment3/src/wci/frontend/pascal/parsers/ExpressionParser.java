@@ -388,10 +388,7 @@ public class ExpressionParser extends StatementParser {
                         Integer rightRange = (Integer) numberNode.getAttribute(VALUE);
 
                         while (leftRange <= rightRange) {
-                            if (! values.add(leftRange)) {
-                                values.add(leftRange++); // Add range of values into the set
-                            }
-                            else {
+                            if (! values.add(leftRange++)) {
                                 errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
                             }
                         }
