@@ -327,11 +327,13 @@ public class ExpressionParser extends StatementParser {
 
             // Case statement for set expressions
             case LEFT_BRACKET: {
+                HashSet<Integer> values = new HashSet<Integer>();
                 token = nextToken();      // consume the [
 
                 // Parse an expression and make its node the root node.
                 rootNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.SET);
-                rootNode.addChild(parseSet(token));
+                rootNode.setAttribute(VALUE, values);
+                rootNode.addChild(parseSet(token, values));
 
                 // Look for the matching ] token.
                 token = currentToken();
@@ -362,14 +364,13 @@ public class ExpressionParser extends StatementParser {
         ADD_OPS_OPS_MAP.put(PascalTokenType.OR, ICodeNodeTypeImpl.OR);
     }
 
-    private ICodeNode parseSet(Token token)
+    private ICodeNode parseSet(Token token, HashSet<Integer> values)
         throws Exception
     {
 
         ICodeNode rootNode = parseSimpleExpression(token);
         token = currentToken();
         TokenType tokenType = token.getType();
-        HashSet<Integer> values = new HashSet<Integer>();
         Integer leftRange = null;
 
         do {
