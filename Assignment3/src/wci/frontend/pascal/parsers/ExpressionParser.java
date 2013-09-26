@@ -368,8 +368,7 @@ public class ExpressionParser extends StatementParser {
         HashSet<Integer> values = new HashSet<Integer>();
         rootNode.setAttribute(VALUE, values);
 
-        do {
-            if (SET_OPS.contains(token.getType())) {
+        while (token.getType() != RIGHT_BRACKET && token.getType() != ERROR){
                 ICodeNode leftNumberNode = parseSimpleExpression(token);
                 Integer leftRange = (Integer) leftNumberNode.getAttribute(VALUE); // In case next token is ..
                 token = currentToken();
@@ -414,15 +413,7 @@ public class ExpressionParser extends StatementParser {
                         errorHandler.flag(token, UNEXPECTED_TOKEN, this);
                         break;
                 }
-            }
-            // Don't know if this is a good way to do this or not.
-            else {
-                break;
-                // TODO: Program stalls if I don't manually break out of the loop. Try to figure out why.
-            }
-
-            // if there is more stuff in the set, keep trying to parse it.
-        } while (token.getType() != RIGHT_BRACKET && token.getType() != ERROR);
+        }
 
         return rootNode;
     }
