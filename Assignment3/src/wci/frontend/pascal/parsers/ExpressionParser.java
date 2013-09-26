@@ -369,9 +369,8 @@ public class ExpressionParser extends StatementParser {
             ICodeNode leftNumberNode = parseSimpleExpression(token);
             Integer leftRange = (Integer) leftNumberNode.getAttribute(VALUE); // In case next token is ..
             token = currentToken();
-            TokenType tokenType = token.getType();
 
-            switch ((PascalTokenType) tokenType) {
+            switch ((PascalTokenType) token.getType()) {
                 case RIGHT_BRACKET:
                     break;
                 case COMMA:
@@ -389,7 +388,7 @@ public class ExpressionParser extends StatementParser {
                     token = currentToken();
                     // Need to check that the left and right parts of the subrange are integers.
 
-                    if (leftNumberNode.getAttribute(VALUE) == INTEGER_CONSTANT && rightNumberNode.getType() == INTEGER_CONSTANT) {
+                    if (leftNumberNode.getType() == INTEGER_CONSTANT && rightNumberNode.getType() == INTEGER_CONSTANT) {
                         Integer rightRange = (Integer) rightNumberNode.getAttribute(VALUE);
                         // Flag duplicates as an error.
                         while (leftRange <= rightRange) {
