@@ -101,13 +101,9 @@ public class ExpressionExecutor extends StatementExecutor
         }
     }
 
-    // Set of arithmetic operator node types.
+    // Set of arithmetic and set operator node types.
     private static final EnumSet<ICodeNodeTypeImpl> ARITH_OPS =
-        EnumSet.of(ADD, SUBTRACT, MULTIPLY, FLOAT_DIVIDE, INTEGER_DIVIDE, MOD);
-
-    // Set of set operator node types.
-    private static final EnumSet<ICodeNodeTypeImpl> SET_OPS =
-        EnumSet.of(ADD, SUBTRACT, MULTIPLY, IN_SET, EQ, NE, LE, GE);
+        EnumSet.of(ADD, SUBTRACT, MULTIPLY, FLOAT_DIVIDE, INTEGER_DIVIDE, MOD, IN_SET, EQ, NE, LE, GE);
 
     /**
      * Execute a binary operator.
@@ -183,6 +179,9 @@ public class ExpressionExecutor extends StatementExecutor
                         }
                     }
                 }
+            }
+            else if (setMode) {
+                return ((HashSet<Integer>) operand1).addAll((HashSet<Integer>) operand2);
             }
             else {
                 float value1 = operand1 instanceof Integer
