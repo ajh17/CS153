@@ -186,16 +186,15 @@ public class ExpressionExecutor extends StatementExecutor
                 }
             }
             else if (setMode) {
-                if (operand1 instanceof Integer) {
-                    return ((HashSet<Integer>) operand2).contains(operand1);
-                }
                 switch (nodeType) {
                     case ADD: // S1 + S2
                         return set1.addAll(set2);
                     case SUBTRACT: // S1 - S2
                         return set1.removeAll(set2);
                     case MULTIPLY:  // S1 * S2
-                        return set1.retainAll(set2); // THIS IS INCORRECT. IT RETURNS A BOOLEAN
+                        HashSet<Integer> temp = new HashSet<Integer>(set1);
+                        temp.removeAll(set2);
+                        return set1.retainAll(set2);
                     case LE:  // S1 <= S2
                         return set2.containsAll(set1);
                     case GE:  // S1 >= S2
