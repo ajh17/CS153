@@ -10,32 +10,33 @@ import static wci.backend.interpreter.RuntimeErrorCode.*;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
+
 /**
  * <h1>ExpressionExecutor</h1>
  *
  * <p>Execute an expression.</p>
  *
  * <p>Copyright (c) 2009 by Ronald Mak</p>
- * <p>For instructional purposes only.  No warranties.</p>
+ * <p>For instructional purposes only. No warranties.</p>
  */
-public class ExpressionExecutor extends StatementExecutor
-{
+public class ExpressionExecutor extends StatementExecutor {
+
     /**
      * Constructor.
+     *
      * @param parent the parent executor.
      */
-    public ExpressionExecutor(Executor parent)
-    {
+    public ExpressionExecutor(Executor parent) {
         super(parent);
     }
 
     /**
      * Execute an expression.
+     *
      * @param node the root intermediate code node of the compound statement.
      * @return the computed value of the expression.
      */
-    public Object execute(ICodeNode node)
-    {
+    public Object execute(ICodeNode node) {
         ICodeNodeTypeImpl nodeType = (ICodeNodeTypeImpl) node.getType();
 
         switch (nodeType) {
@@ -79,8 +80,7 @@ public class ExpressionExecutor extends StatementExecutor
                 Object value = execute(expressionNode);
                 if (value instanceof Integer) {
                     return -((Integer) value);
-                }
-                else {
+                } else {
                     return -((Float) value);
                 }
             }
@@ -97,23 +97,23 @@ public class ExpressionExecutor extends StatementExecutor
             }
 
             // Must be a binary operator.
-            default: return executeBinaryOperator(node, nodeType);
+            default:
+                return executeBinaryOperator(node, nodeType);
         }
     }
-
     // Set of arithmetic and set operator node types.
     private static final EnumSet<ICodeNodeTypeImpl> ARITH_OPS =
-        EnumSet.of(ADD, SUBTRACT, MULTIPLY, FLOAT_DIVIDE, INTEGER_DIVIDE, MOD, IN_SET, EQ, NE, LE, GE);
+            EnumSet.of(ADD, SUBTRACT, MULTIPLY, FLOAT_DIVIDE, INTEGER_DIVIDE, MOD, IN_SET, EQ, NE, LE, GE);
 
     /**
      * Execute a binary operator.
+     *
      * @param node the root node of the expression.
      * @param nodeType the node type.
      * @return the computed value of the expression.
      */
     private Object executeBinaryOperator(ICodeNode node,
-                                         ICodeNodeTypeImpl nodeType)
-    {
+            ICodeNodeTypeImpl nodeType) {
         // Get the two operand children of the operator node.
         ArrayList<ICodeNode> children = node.getChildren();
         ICodeNode operandNode1 = children.get(0);
@@ -123,8 +123,8 @@ public class ExpressionExecutor extends StatementExecutor
         Object operand1 = execute(operandNode1);
         Object operand2 = execute(operandNode2);
 
-        boolean integerMode = (operand1 instanceof Integer) &&
-            (operand2 instanceof Integer);
+        boolean integerMode = (operand1 instanceof Integer)
+                && (operand2 instanceof Integer);
         boolean setMode =
                 (operand1 instanceof HashSet || operand1 instanceof Integer) && (operand2 instanceof HashSet);
 
@@ -139,17 +139,19 @@ public class ExpressionExecutor extends StatementExecutor
 
                 // Integer operations.
                 switch (nodeType) {
-                    case ADD:      return value1 + value2;
-                    case SUBTRACT: return value1 - value2;
-                    case MULTIPLY: return value1 * value2;
+                    case ADD:
+                        return value1 + value2;
+                    case SUBTRACT:
+                        return value1 - value2;
+                    case MULTIPLY:
+                        return value1 * value2;
 
                     case FLOAT_DIVIDE: {
 
                         // Check for division by zero.
                         if (value2 != 0) {
-                            return ((float) value1)/((float) value2);
-                        }
-                        else {
+                            return ((float) value1) / ((float) value2);
+                        } else {
                             errorHandler.flag(node, DIVISION_BY_ZERO, this);
                             return 0;
                         }
@@ -159,38 +161,45 @@ public class ExpressionExecutor extends StatementExecutor
 
                         // Check for division by zero.
                         if (value2 != 0) {
-                            return value1/value2;
-                        }
-                        else {
+                            return value1 / value2;
+                        } else {
                             errorHandler.flag(node, DIVISION_BY_ZERO, this);
                             return 0;
                         }
                     }
 
-                    case MOD:  {
+                    case MOD: {
 
                         // Check for division by zero.
                         if (value2 != 0) {
-                            return value1%value2;
-                        }
-                        else {
+                            return value1 % value2;
+                        } else {
                             errorHandler.flag(node, DIVISION_BY_ZERO, this);
                             return 0;
                         }
                     }
                 }
-            }
-            else if (setMode) {
+            } else if (setMode) {
+                HashSet<Integer> tempSet;
                 if (operand1 instanceof Integer) {
                     return ((HashSet<Integer>) operand2).contains(operand1);
                 }
                 switch (nodeType) {
                     case ADD: // S1 + S2
-                        return ((HashSet<Integer>) operand1).addAll((HashSet<Integer>) operand2);
+                        // addAll will return a boolean. We need to return a hashset with all the elem instead
+                        // we also create a copy of S1, don't want to lose our elements!
+                        tempSet = makeHashSetCopy((HashSet<Integer>) operand1);
+                        ((HashSet<Integer>) tempSet).addAll((HashSet<Integer>) operand2);
+                        return ((HashSet<Integer>) tempSet);
                     case SUBTRACT: // S1 - S2
-                        return ((HashSet<Integer>) operand1).removeAll((HashSet<Integer>) operand2);
+                         tempSet = makeHashSetCopy((HashSet<Integer>) operand1);
+                        ((HashSet<Integer>) tempSet).removeAll((HashSet<Integer>) operand2);
+                        return ((HashSet<Integer>) tempSet);
                     case MULTIPLY:  // S1 * S2
-                        return ((HashSet<Integer>) operand1).retainAll((HashSet<Integer>) operand2);
+                        // make a copy to work on first!
+                        tempSet = makeHashSetCopy((HashSet<Integer>) operand1);
+                        ((HashSet<Integer>) tempSet).retainAll((HashSet<Integer>) operand2);
+                        return (HashSet<Integer>) tempSet;
                     case LE:  // S1 <= S2
                         return ((HashSet<Integer>) operand2).containsAll((HashSet<Integer>) operand1);
                     case GE:  // S1 >= S2
@@ -203,85 +212,103 @@ public class ExpressionExecutor extends StatementExecutor
                                 || !((HashSet<Integer>) operand2).containsAll((HashSet<Integer>) operand1));
                     case IN_SET:  // s in S1
                         // TODO: Ensure first operand is an integer or variable of an integer
-                        return ((HashSet<Integer>)operand2 ).contains(operand1);
+                        return ((HashSet<Integer>) operand2).contains(operand1);
                 }
-            }
-            else {
+            } else {
                 float value1 = operand1 instanceof Integer
-                    ? (Integer) operand1 : (Float) operand1;
+                        ? (Integer) operand1 : (Float) operand1;
                 float value2 = operand2 instanceof Integer
-                    ? (Integer) operand2 : (Float) operand2;
+                        ? (Integer) operand2 : (Float) operand2;
 
                 // Float operations.
                 switch (nodeType) {
-                    case ADD:      return value1 + value2;
-                    case SUBTRACT: return value1 - value2;
-                    case MULTIPLY: return value1 * value2;
+                    case ADD:
+                        return value1 + value2;
+                    case SUBTRACT:
+                        return value1 - value2;
+                    case MULTIPLY:
+                        return value1 * value2;
 
                     case FLOAT_DIVIDE: {
 
                         // Check for division by zero.
                         if (value2 != 0.0f) {
-                            return value1/value2;
-                        }
-                        else {
+                            return value1 / value2;
+                        } else {
                             errorHandler.flag(node, DIVISION_BY_ZERO, this);
                             return 0.0f;
                         }
                     }
                 }
             }
-        }
-
-        // ==========
+        } // ==========
         // AND and OR
         // ==========
-
         else if ((nodeType == AND) || (nodeType == OR)) {
             boolean value1 = (Boolean) operand1;
             boolean value2 = (Boolean) operand2;
 
             switch (nodeType) {
-                case AND: return value1 && value2;
-                case OR:  return value1 || value2;
+                case AND:
+                    return value1 && value2;
+                case OR:
+                    return value1 || value2;
             }
-        }
-
-        // ====================
+        } // ====================
         // Relational operators
         // ====================
-
         else if (integerMode) {
             int value1 = (Integer) operand1;
             int value2 = (Integer) operand2;
 
             // Integer operands.
             switch (nodeType) {
-                case EQ: return value1 == value2;
-                case NE: return value1 != value2;
-                case LT: return value1 <  value2;
-                case LE: return value1 <= value2;
-                case GT: return value1 >  value2;
-                case GE: return value1 >= value2;
+                case EQ:
+                    return value1 == value2;
+                case NE:
+                    return value1 != value2;
+                case LT:
+                    return value1 < value2;
+                case LE:
+                    return value1 <= value2;
+                case GT:
+                    return value1 > value2;
+                case GE:
+                    return value1 >= value2;
             }
-        }
-        else {
+        } else {
             float value1 = operand1 instanceof Integer
-                ? (Integer) operand1 : (Float) operand1;
+                    ? (Integer) operand1 : (Float) operand1;
             float value2 = operand2 instanceof Integer
-                ? (Integer) operand2 : (Float) operand2;
+                    ? (Integer) operand2 : (Float) operand2;
 
             // Float operands.
             switch (nodeType) {
-                case EQ: return value1 == value2;
-                case NE: return value1 != value2;
-                case LT: return value1 <  value2;
-                case LE: return value1 <= value2;
-                case GT: return value1 >  value2;
-                case GE: return value1 >= value2;
+                case EQ:
+                    return value1 == value2;
+                case NE:
+                    return value1 != value2;
+                case LT:
+                    return value1 < value2;
+                case LE:
+                    return value1 <= value2;
+                case GT:
+                    return value1 > value2;
+                case GE:
+                    return value1 >= value2;
             }
         }
 
         return 0;  // should never get here
+    }
+
+    HashSet<Integer> makeHashSetCopy(HashSet<Integer> set) {
+        HashSet<Integer> newSet = new HashSet();
+
+        for (Integer i : set) {
+            newSet.add(i.intValue());
+        }
+
+        return newSet;
     }
 }
