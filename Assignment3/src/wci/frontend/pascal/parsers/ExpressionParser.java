@@ -419,6 +419,7 @@ public class ExpressionParser extends StatementParser {
             // Don't know if this is a good way to do this or not.
             else {
                 break;
+                // TODO: Program stalls if I don't manually break out of the loop. Try to figure out why.
             }
 
             // if there is more stuff in the set, keep trying to parse it.
