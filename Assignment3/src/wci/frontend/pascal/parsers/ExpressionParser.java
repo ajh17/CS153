@@ -394,8 +394,8 @@ public class ExpressionParser extends StatementParser {
                     token = nextToken(); // Consume the ..
                     ICodeNode rightNumberNode = parseSimpleExpression(token); // Parse the right subrange
                     token = currentToken();
-                    // Need to check that the left and right parts of the subrange are integers.
 
+                    // Need to check that the left and right parts of the subrange are integers.
                     if (leftNumberNode.getType() == INTEGER_CONSTANT && rightNumberNode.getType() == INTEGER_CONSTANT) {
                         Integer rightRange = (Integer) rightNumberNode.getAttribute(VALUE);
                         // Flag duplicates as an error.
@@ -405,6 +405,7 @@ public class ExpressionParser extends StatementParser {
                             }
                         }
                     }
+                    // TODO: NEED TO CHECK VALUES ARE NOT LESS THAN 0
                     else if ((leftNumberNode.getType() == INTEGER_CONSTANT && ((Integer) leftNumberNode.getAttribute(VALUE)) > 50)
                         || (rightNumberNode.getType() == INTEGER_CONSTANT && ((Integer) rightNumberNode.getAttribute(VALUE)) > 50))
                     {
