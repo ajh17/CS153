@@ -386,6 +386,9 @@ public class ExpressionParser extends StatementParser {
                         rootNode.addChild(leftNumberNode);
                     }
                     token = nextToken(); // Consume the ,
+                    if (token.getType() == COMMA) {
+                        errorHandler.flag(token, EXTRA_COMMAS, this);
+                    }
                     break;
                 case DOT_DOT:
                     token = nextToken(); // Consume the ..
