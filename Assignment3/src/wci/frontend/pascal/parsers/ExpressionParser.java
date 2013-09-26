@@ -418,6 +418,10 @@ public class ExpressionParser extends StatementParser {
                     }
 
                     break;
+                case INTEGER:
+                    errorHandler.flag(token, MISSING_COMMA, this);
+                    break;
+
                 default:
                     errorHandler.flag(token, UNEXPECTED_TOKEN, this);
                     break;
