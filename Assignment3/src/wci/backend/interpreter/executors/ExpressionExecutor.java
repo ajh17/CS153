@@ -201,10 +201,16 @@ public class ExpressionExecutor extends StatementExecutor {
                         (tempSet).removeAll(set2);
                         return ((HashSet<Integer>) tempSet);
                     case MULTIPLY:  // S1 * S2
-                        // make a copy to work on first!
-                        tempSet = makeHashSetCopy(set1);
-                        (tempSet).retainAll(set2);
-                        return (HashSet<Integer>) tempSet;
+
+                        HashSet<Integer> temp = new HashSet<Integer>();
+
+                        for (Integer i: set1) {
+                            if (set2.contains(i)) {
+                                temp.add(i);
+                            }
+                        }
+
+                        return temp;
                     case LE:  // S1 <= S2
                         return set2.containsAll(set1);
                     case GE:  // S1 >= S2
