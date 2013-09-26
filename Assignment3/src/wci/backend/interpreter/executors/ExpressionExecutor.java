@@ -113,7 +113,7 @@ public class ExpressionExecutor extends StatementExecutor {
      * @return the computed value of the expression.
      */
     private Object executeBinaryOperator(ICodeNode node,
-            ICodeNodeTypeImpl nodeType) {
+                                         ICodeNodeTypeImpl nodeType) {
         // Get the two operand children of the operator node.
         ArrayList<ICodeNode> children = node.getChildren();
         ICodeNode operandNode1 = children.get(0);
@@ -184,7 +184,8 @@ public class ExpressionExecutor extends StatementExecutor {
                         }
                     }
                 }
-            } else if (setMode) {
+            }
+            else if (setMode) {
                 HashSet<Integer> tempSet;
                 if (operand1 instanceof Integer) {
                     return ((HashSet<Integer>) operand2).contains(operand1);
@@ -214,12 +215,10 @@ public class ExpressionExecutor extends StatementExecutor {
                         // TODO: Ensure first operand is an integer or variable of an integer
                         return set2.contains(operand1);
                 }
-            } else {
-                float value1 = operand1 instanceof Integer
-                        ? (Integer) operand1 : (Float) operand1;
-                float value2 = operand2 instanceof Integer
-                        ? (Integer) operand2 : (Float) operand2;
-
+            }
+            else {
+                float value1 = operand1 instanceof Integer ? (Integer) operand1 : (Float) operand1;
+                float value2 = operand2 instanceof Integer ? (Integer) operand2 : (Float) operand2;
                 // Float operations.
                 switch (nodeType) {
                     case ADD:
@@ -278,7 +277,8 @@ public class ExpressionExecutor extends StatementExecutor {
                 case GE:
                     return value1 >= value2;
             }
-        } else {
+        }
+        else {
             float value1 = operand1 instanceof Integer
                     ? (Integer) operand1 : (Float) operand1;
             float value2 = operand2 instanceof Integer
@@ -305,8 +305,8 @@ public class ExpressionExecutor extends StatementExecutor {
     }
 
     HashSet<Integer> makeHashSetCopy(HashSet<Integer> set) {
-        HashSet<Integer> newSet = new HashSet();
-        // make a deep copy of HashSet 
+        HashSet<Integer> newSet = new HashSet<Integer>();
+        // make a deep copy of HashSet
         for (Integer i : set) {
             newSet.add(i.intValue());
         }
