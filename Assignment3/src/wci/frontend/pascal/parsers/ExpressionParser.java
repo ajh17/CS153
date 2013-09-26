@@ -375,6 +375,8 @@ public class ExpressionParser extends StatementParser {
             TokenType tokenType = token.getType();
 
             switch ((PascalTokenType) tokenType) {
+                case RIGHT_BRACKET:
+                    break;
                 case COMMA:
                     values.add(leftRange); // Add the number if its not part of a subrange
                     token = nextToken(); // Consume the ,
