@@ -385,6 +385,7 @@ public class ExpressionParser extends StatementParser {
                     case DOT_DOT:
                         token = nextToken(); // Consume the ..
                         numberNode = parseSimpleExpression(token); // Parse the right subrange
+                        token = currentToken();
                         Integer rightRange = (Integer) numberNode.getAttribute(VALUE);
 
                         while (leftRange <= rightRange) {
