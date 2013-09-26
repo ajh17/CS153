@@ -125,7 +125,7 @@ public class ExpressionExecutor extends StatementExecutor {
 
         boolean integerMode = (operand1 instanceof Integer)
                 && (operand2 instanceof Integer);
-        
+
         boolean setMode =
                 (operand1 instanceof HashSet || operand1 instanceof Integer) && (operand2 instanceof HashSet);
 
@@ -195,22 +195,15 @@ public class ExpressionExecutor extends StatementExecutor {
                         // we also create a copy of S1, don't want to lose our elements!
                         tempSet = makeHashSetCopy(set1);
                         (tempSet).addAll(set2);
-                        return ((HashSet<Integer>) tempSet);
+                        return tempSet;
                     case SUBTRACT: // S1 - S2
-                         tempSet = makeHashSetCopy(set1);
+                        tempSet = makeHashSetCopy(set1);
                         (tempSet).removeAll(set2);
-                        return ((HashSet<Integer>) tempSet);
+                        return tempSet;
                     case MULTIPLY:  // S1 * S2
-
-                        HashSet<Integer> temp = new HashSet<Integer>();
-
-                        for (Integer i: set1) {
-                            if (set2.contains(i)) {
-                                temp.add(i);
-                            }
-                        }
-
-                        return temp;
+                        tempSet = makeHashSetCopy(set1);
+                        tempSet.retainAll(set2);
+                        return tempSet;
                     case LE:  // S1 <= S2
                         return set2.containsAll(set1);
                     case GE:  // S1 >= S2
@@ -313,7 +306,7 @@ public class ExpressionExecutor extends StatementExecutor {
 
     HashSet<Integer> makeHashSetCopy(HashSet<Integer> set) {
         HashSet<Integer> newSet = new HashSet();
-
+        // make a deep copy of HashSet 
         for (Integer i : set) {
             newSet.add(i.intValue());
         }
