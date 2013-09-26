@@ -181,8 +181,7 @@ public class ExpressionParser extends StatementParser {
     }
     // Set of multiplicative operators.
     private static final EnumSet<PascalTokenType> MULT_OPS =
-            EnumSet.of(STAR, SLASH, DIV, PascalTokenType.MOD, PascalTokenType.AND, EQUALS, NOT_EQUALS,
-                    LESS_EQUALS, GREATER_EQUALS, IN);
+            EnumSet.of(STAR, SLASH, DIV, PascalTokenType.MOD, PascalTokenType.AND);
     // Map multiplicative operator tokens to node types.
     private static final HashMap<PascalTokenType, ICodeNodeType> MULT_OPS_OPS_MAP = new HashMap<PascalTokenType, ICodeNodeType>();
 
@@ -192,12 +191,6 @@ public class ExpressionParser extends StatementParser {
         MULT_OPS_OPS_MAP.put(DIV, INTEGER_DIVIDE);
         MULT_OPS_OPS_MAP.put(PascalTokenType.MOD, ICodeNodeTypeImpl.MOD);
         MULT_OPS_OPS_MAP.put(PascalTokenType.AND, ICodeNodeTypeImpl.AND);
-        // The following are strictly for SET operations
-        MULT_OPS_OPS_MAP.put(NOT_EQUALS, SET_NOT_EQUAL);
-        MULT_OPS_OPS_MAP.put(EQUALS, SET_EQUAL);
-        MULT_OPS_OPS_MAP.put(LESS_EQUALS, SET_SUBSET);
-        MULT_OPS_OPS_MAP.put(GREATER_EQUALS, SET_SUPERSET);
-        MULT_OPS_OPS_MAP.put(IN, CONTAINED_IN_SET);
     }
 
     /**
