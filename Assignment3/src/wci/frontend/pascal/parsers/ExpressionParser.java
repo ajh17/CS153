@@ -396,13 +396,9 @@ public class ExpressionParser extends StatementParser {
                                 errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
                             }
                         }
-                    } else if (rightNumberNode.getType() == INTEGER_CONSTANT && leftNumberNode.getAttribute(VALUE) != INTEGER) {
-                        Integer rightRange = (Integer) rightNumberNode.getAttribute(VALUE);
-
-                        if (rightRange > 50)// of form var .. constant
-                        {
-                            errorHandler.flag(token, RANGE_INTEGER, this);
-                        }
+                    }
+                    else if (rightNumberNode.getType() == INTEGER_CONSTANT && ((Integer) rightNumberNode.getAttribute(VALUE)) > 50) {
+                        errorHandler.flag(token, RANGE_INTEGER, this);
                     } //both the subranges are not integers.
                     else {
                         // if both subranges not ints
