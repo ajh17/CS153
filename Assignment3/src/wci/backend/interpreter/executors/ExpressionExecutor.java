@@ -192,9 +192,15 @@ public class ExpressionExecutor extends StatementExecutor
                     case SUBTRACT: // S1 - S2
                         return set1.removeAll(set2);
                     case MULTIPLY:  // S1 * S2
-                        HashSet<Integer> temp = new HashSet<Integer>(set1);
-                        temp.removeAll(set2);
-                        return set1.retainAll(set2);
+                        HashSet<Integer> temp = new HashSet<Integer>();
+
+                        for (Integer i: set1) {
+                            if (set2.contains(i)) {
+                                temp.add(i);
+                            }
+                        }
+
+                        return temp;
                     case LE:  // S1 <= S2
                         return set2.containsAll(set1);
                     case GE:  // S1 >= S2
