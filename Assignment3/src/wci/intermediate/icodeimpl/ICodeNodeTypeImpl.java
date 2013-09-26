@@ -42,6 +42,7 @@ public enum ICodeNodeTypeImpl implements ICodeNodeType
     SET_NOT_EQUAL, // <>
     SET_EQUAL, // =
     CONTAINED_IN_SET, // in
+    SUBRANGE,
 
     // WRITE parameter
     WRITE_PARM,
