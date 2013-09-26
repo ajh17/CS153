@@ -386,7 +386,7 @@ public class ExpressionParser extends StatementParser {
                         ICodeNode rightNumberNode = parseSimpleExpression(token); // Parse the right subrange
                         token = currentToken();
                         // Need to check that the left and right parts of the subrange are integers.
-                        if (rightNumberNode.getAttribute(VALUE) == INTEGER) {
+                        if (rightNumberNode.getType() == INTEGER_CONSTANT) {
                             Integer rightRange = (Integer) rightNumberNode.getAttribute(VALUE);
                             // Flag duplicates as an error.
                             while (leftRange <= rightRange) {
