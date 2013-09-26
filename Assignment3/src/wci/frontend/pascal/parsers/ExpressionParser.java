@@ -383,7 +383,7 @@ public class ExpressionParser extends StatementParser {
                     case COMMA:
                         // in case the leftNumber node is not a variable that we need to look up later.
                         if (leftNumberNode.getAttribute(VALUE) == INTEGER) {
-                            values.add((Integer) leftRange);
+                            values.add(leftRange);
                         }
                         else {
                             rootNode.addChild(leftNumberNode);
@@ -394,8 +394,7 @@ public class ExpressionParser extends StatementParser {
                         token = nextToken(); // Consume the ..
                         ICodeNode rightNumberNode = parseSimpleExpression(token); // Parse the right subrange
                         token = currentToken();
-                        // Not too sure but what if the left or right part of the subrange isn't an integer?
-                        // If not, we need to look up the their value in the symbol table and then parse them.
+                        // Need to check that the left and right parts of the subrange are integers.
                         if (rightNumberNode.getAttribute(VALUE) == INTEGER) {
                             Integer rightRange = (Integer) rightNumberNode.getAttribute(VALUE);
                             // Flag duplicates as an error.
@@ -406,7 +405,6 @@ public class ExpressionParser extends StatementParser {
                             }
                         }
                         // One of or both the subranges are not integers.
-                        // rootNode.
                         else {
                             // TODO: Incomplete.
                         }
