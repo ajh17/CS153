@@ -397,12 +397,14 @@ public class ExpressionParser extends StatementParser {
                             }
                         }
                     }
-                    else if (rightNumberNode.getType() == INTEGER_CONSTANT && ((Integer) rightNumberNode.getAttribute(VALUE)) > 50) {
+                    else if ((leftNumberNode.getType() == INTEGER_CONSTANT && ((Integer) leftNumberNode.getAttribute(VALUE)) > 50)
+                        || (rightNumberNode.getType() == INTEGER_CONSTANT && ((Integer) rightNumberNode.getAttribute(VALUE)) > 50))
+                    {
                         errorHandler.flag(token, RANGE_INTEGER, this);
-                    } //both the subranges are not integers.
+                    }
                     else {
-                        // if both subranges not ints
-                        //its enough to just look them up in symtab and make sure theyre in there.
+                        // If either the left or right is not an INTEGER_CONSTANT
+                        // They could still be out of range if one of the variables are 50+ during execution
                         ICodeNode subrangeNode = ICodeFactory.createICodeNode(SUBRANGE);
                         subrangeNode.addChild(leftNumberNode);
                         subrangeNode.addChild(rightNumberNode);
