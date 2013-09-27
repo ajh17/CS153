@@ -131,7 +131,7 @@ public class ExpressionExecutor extends StatementExecutor {
     }
     // Set of arithmetic and set operator node types.
     private static final EnumSet<ICodeNodeTypeImpl> ARITH_OPS =
-            EnumSet.of(ADD, SUBTRACT, MULTIPLY, FLOAT_DIVIDE, INTEGER_DIVIDE, MOD, IN_SET, EQ, NE, LE, GE);
+            EnumSet.of(ADD, SUBTRACT, MULTIPLY, FLOAT_DIVIDE, INTEGER_DIVIDE, MOD, IN_SET, EQ, LE, NE, GE);
 
     /**
      * Execute a binary operator.
@@ -186,7 +186,6 @@ public class ExpressionExecutor extends StatementExecutor {
                         return value1 - value2;
                     case MULTIPLY:
                         return value1 * value2;
-
                     case FLOAT_DIVIDE: {
 
                         // Check for division by zero.
@@ -219,6 +218,14 @@ public class ExpressionExecutor extends StatementExecutor {
                             return 0;
                         }
                     }
+                    case LE:
+                        return (value1 <= value2);
+                    case GE:
+                        return (value1 >= value2);
+                    case EQ:
+                        return (value1 == value2);
+                    case NE:
+                        return (value1 != value2);
                 }
             } else if (setMode) {
                 HashSet<Integer> tempSet;
