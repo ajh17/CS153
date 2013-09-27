@@ -56,6 +56,10 @@ public class ExpressionExecutor extends StatementExecutor {
                                     values.add(leftRange++);
                                 }
                                 break;
+                            case ADD:
+                            case SUBTRACT:
+                            case MULTIPLY:
+                                values.add((Integer) executeBinaryOperator(childNode, (ICodeNodeTypeImpl) childNode.getType()));
                             case INTEGER_CONSTANT:
                             case VARIABLE:
                                 values.add((Integer) execute(childNode));
@@ -155,11 +159,14 @@ public class ExpressionExecutor extends StatementExecutor {
 
         // Use these only if performing set operations
         HashSet<Integer> set1 = null;
-        HashSet<Integer> set2 = (HashSet<Integer>) operand2;
+        HashSet<Integer> set2 = null;
 
         // Prevent class cast exception when the LHS is an Integer
         if (operand1 instanceof HashSet) {
             set1 = (HashSet<Integer>) operand1;
+        }
+        if (operand2 instanceof HashSet) {
+            set2 = (HashSet<Integer>) operand2;
         }
 
         // ====================
