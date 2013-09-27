@@ -218,14 +218,18 @@ public class ExpressionExecutor extends StatementExecutor {
                             return 0;
                         }
                     }
-                    case LE:
-                        return (value1 <= value2);
-                    case GE:
-                        return (value1 >= value2);
-                    case EQ:
-                        return (value1 == value2);
-                    case NE:
-                        return (value1 != value2);
+                case EQ:
+                    return value1 == value2;
+                case NE:
+                    return value1 != value2;
+                case LT:
+                    return value1 < value2;
+                case LE:
+                    return value1 <= value2;
+                case GT:
+                    return value1 > value2;
+                case GE:
+                    return value1 >= value2;
                 }
             } else if (setMode) {
                 HashSet<Integer> tempSet;
