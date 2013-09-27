@@ -38,10 +38,33 @@ public class ExpressionExecutor extends StatementExecutor {
      */
     public Object execute(ICodeNode node) {
         ICodeNodeTypeImpl nodeType = (ICodeNodeTypeImpl) node.getType();
+        ArrayList<ICodeNode> children;
 
         switch (nodeType) {
             case SET:
-                return node.getAttribute(VALUE);
+                HashSet<Integer> values = (HashSet<Integer>) node.getAttribute(VALUE);
+                children = node.getChildren();
+
+                if (!children.isEmpty()) {
+                    for (ICodeNode childNode : children) {
+                        switch ((ICodeNodeTypeImpl) childNode.getType()) {
+                            case SUBRANGE:
+                                ArrayList<ICodeNode> subrangeChildren = childNode.getChildren();
+                                Integer leftRange = (Integer) execute(subrangeChildren.get(0));
+                                Integer rightRange = (Integer) execute(subrangeChildren.get(1));
+                                while (leftRange <= rightRange) {
+                                    values.add(leftRange++);
+                                }
+                                break;
+                            case INTEGER_CONSTANT:
+                            case VARIABLE:
+                                values.add((Integer) execute(childNode));
+                                break;
+                        }
+                    }
+                }
+
+                return values;
 
             case IN_SET:
                 return executeBinaryOperator(node, nodeType);
@@ -74,7 +97,7 @@ public class ExpressionExecutor extends StatementExecutor {
             case NEGATE: {
 
                 // Get the NEGATE node's expression node child.
-                ArrayList<ICodeNode> children = node.getChildren();
+                children = node.getChildren();
                 ICodeNode expressionNode = children.get(0);
 
                 // Execute the expression and return the negative of its value.
@@ -89,7 +112,7 @@ public class ExpressionExecutor extends StatementExecutor {
             case NOT: {
 
                 // Get the NOT node's expression node child.
-                ArrayList<ICodeNode> children = node.getChildren();
+                children = node.getChildren();
                 ICodeNode expressionNode = children.get(0);
 
                 // Execute the expression and return the "not" of its value.
