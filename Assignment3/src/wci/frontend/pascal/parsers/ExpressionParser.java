@@ -401,7 +401,7 @@ public class ExpressionParser extends StatementParser {
                                 errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
                             }
                         }
-                    } 
+                    }
                     else if ((leftNumberNode.getType() == INTEGER_CONSTANT && ((Integer) leftNumberNode.getAttribute(VALUE)) > 50)
                             || (rightNumberNode.getType() == INTEGER_CONSTANT && ((Integer) rightNumberNode.getAttribute(VALUE)) > 50)) {
                         errorHandler.flag(token, RANGE_INTEGER, this);
@@ -421,10 +421,6 @@ public class ExpressionParser extends StatementParser {
                     break;
                 case INTEGER:
                     errorHandler.flag(token, MISSING_COMMA, this);
-                    break;
-
-                case SEMICOLON:
-                    errorHandler.flag(token, MISSING_RIGHT_BRACKET, this);
                     break;
 
                 default:
