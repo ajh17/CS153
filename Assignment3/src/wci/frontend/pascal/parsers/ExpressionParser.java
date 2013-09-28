@@ -69,7 +69,6 @@ public class ExpressionParser extends StatementParser {
         REL_OPS_MAP.put(GREATER_THAN, GT);
         REL_OPS_MAP.put(GREATER_EQUALS, GE);
         REL_OPS_MAP.put(IN, IN_SET);
-
     }
 
     /**
@@ -349,7 +348,6 @@ public class ExpressionParser extends StatementParser {
 
         return rootNode;
     }
-
     private static final HashMap<PascalTokenType, ICodeNodeTypeImpl> SET_OPS_MAP = new HashMap<PascalTokenType, ICodeNodeTypeImpl>();
 
     static {
@@ -372,8 +370,7 @@ public class ExpressionParser extends StatementParser {
                 case RIGHT_BRACKET:
                     if (leftNumberNode.getType() == INTEGER_CONSTANT) {
                         values.add(leftRange);
-                    }
-                    else {
+                    } else {
                         rootNode.addChild(leftNumberNode);
                     }
                     break;
@@ -381,8 +378,7 @@ public class ExpressionParser extends StatementParser {
                     // in case the leftNumber node is not a variable that we need to look up later.
                     if (leftNumberNode.getType() == INTEGER_CONSTANT) {
                         values.add(leftRange);
-                    }
-                    else {
+                    } else {
                         rootNode.addChild(leftNumberNode);
                     }
                     token = nextToken(); // Consume the ,
@@ -405,14 +401,14 @@ public class ExpressionParser extends StatementParser {
                                 errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
                             }
                         }
-                    }
-                    // TODO: NEED TO CHECK VALUES ARE NOT LESS THAN 0
+                    } 
                     else if ((leftNumberNode.getType() == INTEGER_CONSTANT && ((Integer) leftNumberNode.getAttribute(VALUE)) > 50)
-                        || (rightNumberNode.getType() == INTEGER_CONSTANT && ((Integer) rightNumberNode.getAttribute(VALUE)) > 50))
-                    {
+                            || (rightNumberNode.getType() == INTEGER_CONSTANT && ((Integer) rightNumberNode.getAttribute(VALUE)) > 50)) {
                         errorHandler.flag(token, RANGE_INTEGER, this);
-                    }
-                    else {
+                    } else if ((leftNumberNode.getType() == INTEGER_CONSTANT && ((Integer) leftNumberNode.getAttribute(VALUE)) < 0)
+                            || (rightNumberNode.getType() == INTEGER_CONSTANT && ((Integer) rightNumberNode.getAttribute(VALUE)) <0)) {
+                        errorHandler.flag(token, RANGE_INTEGER, this);
+                    } else {
                         token = nextToken(); // Consume the ,
                         // If either the left or right is not an INTEGER_CONSTANT
                         // They could still be out of range if one of the variables are 50+ during execution
