@@ -43,7 +43,7 @@ public class ExpressionExecutor extends StatementExecutor {
         switch (nodeType) {
             case SET:
                 HashSet<Integer> values = (HashSet<Integer>) node.getAttribute(VALUE);
-                values.clear();
+                values.clear(); // Must clear the state and repopulate the values in case it depends on a variable
                 children = node.getChildren();
 
                 if (!children.isEmpty()) {
