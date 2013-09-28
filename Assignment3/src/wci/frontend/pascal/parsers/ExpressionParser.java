@@ -388,6 +388,7 @@ public class ExpressionParser extends StatementParser {
                     token = nextToken(); // Consume the ,
                     if (token.getType() == COMMA) {
                         errorHandler.flag(token, EXTRA_COMMAS, this);
+                        token = nextToken(); // Consume the extra ,
                     }
                     break;
                 case DOT_DOT:
