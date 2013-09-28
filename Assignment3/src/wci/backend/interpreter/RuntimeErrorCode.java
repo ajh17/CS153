@@ -16,6 +16,7 @@ public enum RuntimeErrorCode
     DIVISION_BY_ZERO("Division by zero"),
     INVALID_STANDARD_FUNCTION_ARGUMENT("Invalid standard function argument"),
     INVALID_INPUT("Invalid input"),
+    INVALID_OPERATOR("Invalid operator"),
     STACK_OVERFLOW("Runtime stack overflow"),
     UNIMPLEMENTED_FEATURE("Unimplemented runtime feature");
 
