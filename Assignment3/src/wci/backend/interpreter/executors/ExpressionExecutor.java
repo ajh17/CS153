@@ -256,7 +256,13 @@ public class ExpressionExecutor extends StatementExecutor {
                     case NE:  // S1 <> S2
                         return !set1.containsAll(set2) || !set2.containsAll(set1);
                     case IN_SET:  // s in S1
-                        return set2.contains(operand1);
+                        if (operand1 instanceof Integer) {
+                            return set2.contains(operand1);
+                        }
+                        errorHandler.flag(node, INVALID_OPERATOR, this);
+                        break;
+                    default:
+                        errorHandler.flag(node, INVALID_OPERATOR, this);
                 }
             } else {
                 float value1 = operand1 instanceof Integer ? (Integer) operand1 : (Float) operand1;
