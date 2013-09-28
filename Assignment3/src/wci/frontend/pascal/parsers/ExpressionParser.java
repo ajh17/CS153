@@ -423,6 +423,10 @@ public class ExpressionParser extends StatementParser {
                     errorHandler.flag(token, MISSING_COMMA, this);
                     break;
 
+                case SEMICOLON:
+                    errorHandler.flag(token, MISSING_RIGHT_BRACKET, this);
+                    break;
+
                 default:
                     errorHandler.flag(token, UNEXPECTED_TOKEN, this);
                     break;
