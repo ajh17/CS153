@@ -38,7 +38,7 @@ public enum PascalErrorCode
     MISSING_BEGIN("Missing BEGIN"),
     MISSING_COLON("Missing :"),
     MISSING_COLON_EQUALS("Missing :="),
-    MISSING_COMMA("Missing ,"),
+    MISSING_COMMA("Missing comma"),
     MISSING_CONSTANT("Missing constant"),
     MISSING_DO("Missing DO"),
     MISSING_DOT_DOT("Missing .."),
