@@ -29,6 +29,7 @@ public enum PascalErrorCode
     INVALID_NUMBER("Invalid number"),
     INVALID_OPERATOR("Invalid operator"),
     INVALID_STATEMENT("Invalid statement"),
+    INVALID_SUBRANGE("Invalid range of values"),
     INVALID_SUBRANGE_TYPE("Invalid subrange type"),
     INVALID_TARGET("Invalid assignment target"),
     INVALID_TYPE("Invalid type"),

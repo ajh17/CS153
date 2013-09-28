@@ -389,6 +389,10 @@ public class ExpressionParser extends StatementParser {
                     break;
                 case DOT_DOT:
                     token = nextToken(); // Consume the ..
+                    if (token.getType() == COMMA) {
+                        errorHandler.flag(token, INVALID_SUBRANGE, this);
+                        token = nextToken();
+                    }
                     ICodeNode rightNumberNode = parseSimpleExpression(token); // Parse the right subrange
                     token = currentToken();
 
