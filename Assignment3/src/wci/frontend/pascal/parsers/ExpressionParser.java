@@ -41,7 +41,7 @@ public class ExpressionParser extends StatementParser {
     // Synchronization set for starting an expression.
     static final EnumSet<PascalTokenType> EXPR_START_SET =
             EnumSet.of(PLUS, MINUS, IDENTIFIER, INTEGER, REAL, STRING,
-            PascalTokenType.NOT, LEFT_PAREN, LEFT_BRACKET);
+                    PascalTokenType.NOT, LEFT_PAREN, LEFT_BRACKET);
 
     /**
      * Parse an expression.
@@ -57,7 +57,7 @@ public class ExpressionParser extends StatementParser {
     // Set of relational operators.
     private static final EnumSet<PascalTokenType> REL_OPS =
             EnumSet.of(EQUALS, NOT_EQUALS, LESS_THAN, LESS_EQUALS,
-            GREATER_THAN, GREATER_EQUALS, IN);
+                    GREATER_THAN, GREATER_EQUALS, IN);
     // Map relational operator tokens to node types.
     private static final HashMap<PascalTokenType, ICodeNodeType> REL_OPS_MAP = new HashMap<PascalTokenType, ICodeNodeType>();
 
@@ -358,12 +358,18 @@ public class ExpressionParser extends StatementParser {
     private ICodeNode parseSet(Token token)
             throws Exception {
         ICodeNode rootNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.SET);
-        HashSet<Integer> values = new HashSet<Integer>();
-        rootNode.setAttribute(VALUE, values);
+        HashSet<Integer> values = new HashSet<Integer>(); // This is used for parse time duplicate error checking only
+        rootNode.setAttribute(VALUE, new HashSet<Integer>());
 
         while (token.getType() != RIGHT_BRACKET && token.getType() != ERROR) {
             ICodeNode leftNumberNode = parseSimpleExpression(token);
             token = currentToken();
+
+            if (leftNumberNode.getType() == INTEGER_CONSTANT
+                    && !values.add((Integer) leftNumberNode.getAttribute(VALUE)))
+            {
+                errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
+            }
 
             switch ((PascalTokenType) token.getType()) {
                 case RIGHT_BRACKET:
@@ -375,6 +381,7 @@ public class ExpressionParser extends StatementParser {
                     token = nextToken(); // Consume the ,
                     if (token.getType() == COMMA) {
                         errorHandler.flag(token, EXTRA_COMMAS, this);
+                        token = nextToken(); // Consume the extra ,
                     }
                     break;
                 case DOT_DOT:
@@ -382,7 +389,7 @@ public class ExpressionParser extends StatementParser {
                     if (token.getType() == COMMA) {
                         errorHandler.flag(token, INVALID_SUBRANGE, this);
                         token = nextToken(); // Consume the , that causes a syntax error
-                        rootNode.addChild(leftNumberNode); // Add the left subrange as a single value anway
+                        rootNode.addChild(leftNumberNode); // Add the left subrange as a single value anyway
                     }
                     else {
                         ICodeNode rightNumberNode = parseSimpleExpression(token); // Parse the right subrange
@@ -390,6 +397,12 @@ public class ExpressionParser extends StatementParser {
                         subrangeNode.addChild(leftNumberNode);
                         subrangeNode.addChild(rightNumberNode);
                         rootNode.addChild(subrangeNode);
+
+                        if (rightNumberNode.getType() == INTEGER_CONSTANT
+                                && !values.add((Integer) rightNumberNode.getAttribute(VALUE)))
+                        {
+                            errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
+                        }
 
                         token = currentToken();
                         if (token.getType() == COMMA) {
@@ -402,6 +415,11 @@ public class ExpressionParser extends StatementParser {
                     break;
                 case INTEGER:
                     errorHandler.flag(token, MISSING_COMMA, this);
+                    synchronize(EXPR_START_SET); // Just trying this out
+                    break;
+                case SEMICOLON:
+                    errorHandler.flag(token, MISSING_RIGHT_BRACKET, this);
+                    synchronize(EXPR_START_SET); // Just trying this out
                     break;
                 default:
                     errorHandler.flag(token, UNEXPECTED_TOKEN, this);
