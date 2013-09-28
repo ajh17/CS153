@@ -363,24 +363,15 @@ public class ExpressionParser extends StatementParser {
 
         while (token.getType() != RIGHT_BRACKET && token.getType() != ERROR) {
             ICodeNode leftNumberNode = parseSimpleExpression(token);
-            Integer leftRange = (Integer) leftNumberNode.getAttribute(VALUE); // In case next token is ..
             token = currentToken();
 
             switch ((PascalTokenType) token.getType()) {
                 case RIGHT_BRACKET:
-                    if (leftNumberNode.getType() == INTEGER_CONSTANT) {
-                        values.add(leftRange);
-                    } else {
-                        rootNode.addChild(leftNumberNode);
-                    }
+                    rootNode.addChild(leftNumberNode);
                     break;
+
                 case COMMA:
-                    // in case the leftNumber node is not a variable that we need to look up later.
-                    if (leftNumberNode.getType() == INTEGER_CONSTANT) {
-                        values.add(leftRange);
-                    } else {
-                        rootNode.addChild(leftNumberNode);
-                    }
+                    rootNode.addChild(leftNumberNode);
                     token = nextToken(); // Consume the ,
                     if (token.getType() == COMMA) {
                         errorHandler.flag(token, EXTRA_COMMAS, this);
@@ -391,37 +382,24 @@ public class ExpressionParser extends StatementParser {
                     token = nextToken(); // Consume the ..
                     if (token.getType() == COMMA) {
                         errorHandler.flag(token, INVALID_SUBRANGE, this);
-                        token = nextToken();
+                        token = nextToken(); // Consume the , that causes a syntax error
+                        rootNode.addChild(leftNumberNode); // Add the left subrange as a single value anway
                     }
-                    ICodeNode rightNumberNode = parseSimpleExpression(token); // Parse the right subrange
-                    token = currentToken();
-
-                    // Need to check that the left and right parts of the subrange are integers.
-                    if (leftNumberNode.getType() == INTEGER_CONSTANT && rightNumberNode.getType() == INTEGER_CONSTANT) {
-                        Integer rightRange = (Integer) rightNumberNode.getAttribute(VALUE);
-                        // Flag duplicates as an error.
-                        while (leftRange <= rightRange) {
-                            if (!values.add(leftRange++)) {
-                                errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
-                            }
-                        }
-                    }
-                    else if ((leftNumberNode.getType() == INTEGER_CONSTANT && ((Integer) leftNumberNode.getAttribute(VALUE)) > 50)
-                            || (rightNumberNode.getType() == INTEGER_CONSTANT && ((Integer) rightNumberNode.getAttribute(VALUE)) > 50)) {
-                        errorHandler.flag(token, RANGE_INTEGER, this);
-                    } else if ((leftNumberNode.getType() == INTEGER_CONSTANT && ((Integer) leftNumberNode.getAttribute(VALUE)) < 0)
-                            || (rightNumberNode.getType() == INTEGER_CONSTANT && ((Integer) rightNumberNode.getAttribute(VALUE)) <0)) {
-                        errorHandler.flag(token, RANGE_INTEGER, this);
-                    } else {
-                        token = nextToken(); // Consume the ,
-                        // If either the left or right is not an INTEGER_CONSTANT
-                        // They could still be out of range if one of the variables are 50+ during execution
+                    else {
+                        ICodeNode rightNumberNode = parseSimpleExpression(token); // Parse the right subrange
                         ICodeNode subrangeNode = ICodeFactory.createICodeNode(SUBRANGE);
                         subrangeNode.addChild(leftNumberNode);
                         subrangeNode.addChild(rightNumberNode);
                         rootNode.addChild(subrangeNode);
-                    }
 
+                        token = currentToken();
+                        if (token.getType() == COMMA) {
+                            token = nextToken(); // Consume the ,
+                        }
+                        else if (token.getType() != RIGHT_BRACKET) {
+                            errorHandler.flag(token, MISSING_COMMA, this);
+                        }
+                    }
                     break;
                 case INTEGER:
                     errorHandler.flag(token, MISSING_COMMA, this);

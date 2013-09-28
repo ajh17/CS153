@@ -43,6 +43,7 @@ public class ExpressionExecutor extends StatementExecutor {
         switch (nodeType) {
             case SET:
                 HashSet<Integer> values = (HashSet<Integer>) node.getAttribute(VALUE);
+                values.clear();
                 children = node.getChildren();
 
                 if (!children.isEmpty()) {
