@@ -286,7 +286,7 @@ public class ExpressionExecutor extends StatementExecutor {
         } // ==========
         // AND and OR
         // ==========
-        else if ((nodeType == AND) || (nodeType == OR)) {
+        else if ((nodeType == AND) || (nodeType == OR) && !(operand1 instanceof HashSet) && !(operand2 instanceof HashSet)) {
             boolean value1 = (Boolean) operand1;
             boolean value2 = (Boolean) operand2;
 
@@ -318,6 +318,9 @@ public class ExpressionExecutor extends StatementExecutor {
                 case GE:
                     return value1 >= value2;
             }
+        }
+        else if (setMode && (operand1 instanceof HashSet) && (operand2 instanceof HashSet)) {
+            errorHandler.flag(node, INVALID_OPERATOR, this);
         }
         else {
             float value1 = operand1 instanceof Integer
