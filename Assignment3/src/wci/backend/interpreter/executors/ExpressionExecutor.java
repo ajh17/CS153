@@ -321,6 +321,7 @@ public class ExpressionExecutor extends StatementExecutor {
         }
         else if (setMode && (operand1 instanceof HashSet) && (operand2 instanceof HashSet)) {
             errorHandler.flag(node, INVALID_OPERATOR, this);
+            return 0;
         }
         else {
             float value1 = operand1 instanceof Integer
