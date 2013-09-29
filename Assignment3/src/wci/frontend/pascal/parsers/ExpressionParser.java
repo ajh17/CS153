@@ -222,7 +222,7 @@ public class ExpressionParser extends StatementParser {
         token = currentToken();
         TokenType tokenType = token.getType();
 
-        if (rootNode.getType() == ICodeNodeTypeImpl.SET && tokenType == PascalTokenType.OR) {
+        if (rootNode.getType() == ICodeNodeTypeImpl.SET && (tokenType == PascalTokenType.OR || tokenType == PascalTokenType.AND)) {
             errorHandler.flag(token, INVALID_OPERATOR, this);
         }
 
