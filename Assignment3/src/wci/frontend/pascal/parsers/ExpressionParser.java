@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import static wci.frontend.pascal.PascalErrorCode.*;
+import static wci.frontend.pascal.PascalErrorCode.INVALID_OPERATOR;
 import static wci.frontend.pascal.PascalTokenType.*;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.ID;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.VALUE;
@@ -96,11 +97,26 @@ public class ExpressionParser extends StatementParser {
             ICodeNode opNode = ICodeFactory.createICodeNode(nodeType);
             opNode.addChild(rootNode);
 
+            switch ((ICodeNodeTypeImpl) opNode.getType()) {
+                case OR:
+                case LT:
+                case IN_SET:
+                    if (rootNode.getType() == ICodeNodeTypeImpl.SET) {
+                        errorHandler.flag(token, INVALID_OPERATOR, this);
+                    }
+            }
+
+            Token lastToken = token;
             token = nextToken();  // consume the operator
 
             // Parse the second simple expression.  The operator node adopts
             // the simple expression's tree as its second child.
-            opNode.addChild(parseSimpleExpression(token));
+            ICodeNode rhs = parseSimpleExpression(token);
+            opNode.addChild(rhs);
+
+            if (rhs.getType() == INTEGER_CONSTANT) {
+                errorHandler.flag(lastToken, INVALID_OPERATOR, this);
+            }
 
             // The operator node becomes the new root node.
             rootNode = opNode;
@@ -216,11 +232,20 @@ public class ExpressionParser extends StatementParser {
             ICodeNode opNode = ICodeFactory.createICodeNode(nodeType);
             opNode.addChild(rootNode);
 
+            switch ((ICodeNodeTypeImpl) opNode.getType()) {
+                case INTEGER_DIVIDE:
+                case FLOAT_DIVIDE:
+                    if (rootNode.getType() == ICodeNodeTypeImpl.SET) {
+                        errorHandler.flag(token, INVALID_OPERATOR, this);
+                    }
+            }
+
             token = nextToken();  // consume the operator
 
             // Parse another factor.  The operator node adopts
             // the term's tree as its second child.
-            opNode.addChild(parseFactor(token));
+            ICodeNode rhs = parseFactor(token);
+            opNode.addChild(rhs);
 
             // The operator node becomes the new root node.
             rootNode = opNode;
