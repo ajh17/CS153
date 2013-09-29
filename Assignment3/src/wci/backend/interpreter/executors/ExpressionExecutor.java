@@ -240,6 +240,21 @@ public class ExpressionExecutor extends StatementExecutor {
                         tempSet = makeHashSetCopy(set1);
                         tempSet.retainAll(set2);
                         return tempSet;
+                    case LE:  // S1 <= S2
+                        return set2.containsAll(set1);
+                    case GE:  // S1 >= S2
+                        return set1.containsAll(set2);
+                    case EQ: // S1 = S2
+                        return set1.containsAll(set2) && set2.containsAll(set1);
+                    case NE:  // S1 <> S2
+                        return !set1.containsAll(set2) || !set2.containsAll(set1);
+                    case IN_SET:  // s in S1
+                        // TODO: Figure out why this is not flagging error9 as an error.
+                        if (operand1 instanceof Integer && operand2 instanceof HashSet) {
+                            return set2.contains(operand1);
+                        }
+                        errorHandler.flag(node, INVALID_OPERATOR, this);
+                        return 0;
                     default:
                         errorHandler.flag(node, INVALID_OPERATOR, this);
                         break;
@@ -302,28 +317,6 @@ public class ExpressionExecutor extends StatementExecutor {
                     return value1 > value2;
                 case GE:
                     return value1 >= value2;
-            }
-        }
-        else if (setMode) {
-            switch (nodeType) {
-                case LE:  // S1 <= S2
-                    return set2.containsAll(set1);
-                case GE:  // S1 >= S2
-                    return set1.containsAll(set2);
-                case EQ: // S1 = S2
-                    return set1.containsAll(set2) && set2.containsAll(set1);
-                case NE:  // S1 <> S2
-                    return !set1.containsAll(set2) || !set2.containsAll(set1);
-                case IN_SET:  // s in S1
-                    // TODO: Figure out why this is not flagging error9 as an error.
-                    if (operand1 instanceof Integer && operand2 instanceof HashSet) {
-                        return set2.contains(operand1);
-                    }
-                    errorHandler.flag(node, INVALID_OPERATOR, this);
-                    return 0;
-                default:
-                    errorHandler.flag(node, INVALID_OPERATOR, this);
-                    return 0;
             }
         }
         else {
