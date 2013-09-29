@@ -222,6 +222,10 @@ public class ExpressionParser extends StatementParser {
         token = currentToken();
         TokenType tokenType = token.getType();
 
+        if (rootNode.getType() == ICodeNodeTypeImpl.SET && tokenType == PascalTokenType.OR) {
+            errorHandler.flag(token, INVALID_OPERATOR, this);
+        }
+
         // Loop over multiplicative operators.
         while (MULT_OPS.contains(tokenType)) {
 
