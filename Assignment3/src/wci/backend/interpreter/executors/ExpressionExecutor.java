@@ -159,16 +159,8 @@ public class ExpressionExecutor extends StatementExecutor {
                 (operand1 instanceof HashSet || operand1 instanceof Integer) && (operand2 instanceof HashSet);
 
         // Use these only if performing set operations
-        HashSet<Integer> set1 = null;
-        HashSet<Integer> set2 = null;
-
-        // Prevent class cast exception when the LHS is an Integer
-        if (operand1 instanceof HashSet) {
-            set1 = (HashSet<Integer>) operand1;
-        }
-        if (operand2 instanceof HashSet) {
-            set2 = (HashSet<Integer>) operand2;
-        }
+        HashSet<Integer> set1 = operand1 instanceof HashSet ? (HashSet<Integer>) operand1 : null;
+        HashSet<Integer> set2 = operand2 instanceof HashSet ? (HashSet<Integer>) operand2 : null;
 
         // ====================
         // Arithmetic operators
