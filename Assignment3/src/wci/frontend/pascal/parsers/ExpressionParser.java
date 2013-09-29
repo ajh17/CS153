@@ -106,6 +106,7 @@ public class ExpressionParser extends StatementParser {
                     if (rootNode.getType() == ICodeNodeTypeImpl.SET) {
                         errorHandler.flag(token, INVALID_OPERATOR, this);
                     }
+                    break;
             }
 
             Token lastToken = token;
