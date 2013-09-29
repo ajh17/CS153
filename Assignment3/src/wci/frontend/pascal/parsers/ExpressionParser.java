@@ -99,6 +99,7 @@ public class ExpressionParser extends StatementParser {
 
             switch ((ICodeNodeTypeImpl) opNode.getType()) {
                 case LT:
+                case GT:
                 case IN_SET:
                     if (rootNode.getType() == ICodeNodeTypeImpl.SET) {
                         errorHandler.flag(token, INVALID_OPERATOR, this);
