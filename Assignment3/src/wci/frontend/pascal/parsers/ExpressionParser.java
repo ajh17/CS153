@@ -113,7 +113,7 @@ public class ExpressionParser extends StatementParser {
             ICodeNode rhs = parseSimpleExpression(token);
             opNode.addChild(rhs);
 
-            if (rootNode.getType() == ICodeNodeTypeImpl.SET && rhs.getType() == INTEGER_CONSTANT) {
+            if (opNode.getType() == IN_SET && rhs.getType() == INTEGER_CONSTANT) {
                 errorHandler.flag(lastToken, INVALID_OPERATOR, this);
             }
 
