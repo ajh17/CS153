@@ -364,24 +364,20 @@ public class ExpressionParser extends StatementParser {
 
         while (token.getType() != RIGHT_BRACKET && token.getType() != ERROR && !setParsingFinished) {
             ICodeNode leftNumberNode = parseSimpleExpression(token);
+
+            if (leftNumberNode.getType() == INTEGER_CONSTANT
+                    && !values.add((Integer) leftNumberNode.getAttribute(VALUE)))
+            {
+                errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
+            }
+
             token = currentToken();
 
             switch ((PascalTokenType) token.getType()) {
                 case RIGHT_BRACKET:
-                    if (leftNumberNode.getType() == INTEGER_CONSTANT
-                            && !values.add((Integer) leftNumberNode.getAttribute(VALUE)))
-                    {
-                        errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
-                    }
                     rootNode.addChild(leftNumberNode);
                     break;
-
                 case COMMA:
-                    if (leftNumberNode.getType() == INTEGER_CONSTANT
-                            && !values.add((Integer) leftNumberNode.getAttribute(VALUE)))
-                    {
-                        errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
-                    }
                     rootNode.addChild(leftNumberNode);
                     token = nextToken(); // Consume the ,
                     if (token.getType() == COMMA) {
@@ -405,7 +401,7 @@ public class ExpressionParser extends StatementParser {
 
                         if (leftNumberNode.getType() == INTEGER_CONSTANT && rightNumberNode.getType() == INTEGER_CONSTANT) {
                             boolean duplicateFound = false;
-                            Integer leftRange = (Integer) leftNumberNode.getAttribute(VALUE);
+                            Integer leftRange = (Integer) leftNumberNode.getAttribute(VALUE) + 1; // Already handled first number
                             Integer rightRange = (Integer) rightNumberNode.getAttribute(VALUE);
 
                             while (leftRange <= rightRange) {
