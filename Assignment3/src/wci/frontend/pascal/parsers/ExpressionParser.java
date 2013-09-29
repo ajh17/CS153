@@ -360,23 +360,28 @@ public class ExpressionParser extends StatementParser {
         ICodeNode rootNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.SET);
         HashSet<Integer> values = new HashSet<Integer>(); // This is used for parse time duplicate error checking only
         rootNode.setAttribute(VALUE, new HashSet<Integer>());
+        boolean setParsingFinished = false;
 
-        while (token.getType() != RIGHT_BRACKET && token.getType() != ERROR) {
+        while (token.getType() != RIGHT_BRACKET && token.getType() != ERROR && !setParsingFinished) {
             ICodeNode leftNumberNode = parseSimpleExpression(token);
             token = currentToken();
 
-            if (leftNumberNode.getType() == INTEGER_CONSTANT
-                    && !values.add((Integer) leftNumberNode.getAttribute(VALUE)))
-            {
-                errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
-            }
-
             switch ((PascalTokenType) token.getType()) {
                 case RIGHT_BRACKET:
+                    if (leftNumberNode.getType() == INTEGER_CONSTANT
+                            && !values.add((Integer) leftNumberNode.getAttribute(VALUE)))
+                    {
+                        errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
+                    }
                     rootNode.addChild(leftNumberNode);
                     break;
 
                 case COMMA:
+                    if (leftNumberNode.getType() == INTEGER_CONSTANT
+                            && !values.add((Integer) leftNumberNode.getAttribute(VALUE)))
+                    {
+                        errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
+                    }
                     rootNode.addChild(leftNumberNode);
                     token = nextToken(); // Consume the ,
                     if (token.getType() == COMMA) {
@@ -398,10 +403,17 @@ public class ExpressionParser extends StatementParser {
                         subrangeNode.addChild(rightNumberNode);
                         rootNode.addChild(subrangeNode);
 
-                        if (rightNumberNode.getType() == INTEGER_CONSTANT
-                                && !values.add((Integer) rightNumberNode.getAttribute(VALUE)))
-                        {
-                            errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
+                        if (leftNumberNode.getType() == INTEGER_CONSTANT && rightNumberNode.getType() == INTEGER_CONSTANT) {
+                            boolean duplicateFound = false;
+                            Integer leftRange = (Integer) leftNumberNode.getAttribute(VALUE);
+                            Integer rightRange = (Integer) rightNumberNode.getAttribute(VALUE);
+
+                            while (leftRange <= rightRange) {
+                                if (!values.add(leftRange++) && !duplicateFound) {
+                                    errorHandler.flag(token, NON_UNIQUE_MEMBERS, this);
+                                    duplicateFound = true;
+                                }
+                            }
                         }
 
                         token = currentToken();
@@ -415,11 +427,9 @@ public class ExpressionParser extends StatementParser {
                     break;
                 case INTEGER:
                     errorHandler.flag(token, MISSING_COMMA, this);
-                    synchronize(EXPR_START_SET); // Just trying this out
                     break;
                 case SEMICOLON:
-                    errorHandler.flag(token, MISSING_RIGHT_BRACKET, this);
-                    synchronize(EXPR_START_SET); // Just trying this out
+                    setParsingFinished = true;
                     break;
                 default:
                     errorHandler.flag(token, UNEXPECTED_TOKEN, this);
