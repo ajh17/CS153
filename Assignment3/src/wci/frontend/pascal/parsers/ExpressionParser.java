@@ -98,6 +98,7 @@ public class ExpressionParser extends StatementParser {
             opNode.addChild(rootNode);
 
             switch ((ICodeNodeTypeImpl) opNode.getType()) {
+                case OR:
                 case LT:
                 case IN_SET:
                     if (rootNode.getType() == ICodeNodeTypeImpl.SET) {
@@ -221,10 +222,6 @@ public class ExpressionParser extends StatementParser {
 
         token = currentToken();
         TokenType tokenType = token.getType();
-
-        if (tokenType == PascalTokenType.OR && rootNode.getType() == ICodeNodeTypeImpl.SET) {
-            errorHandler.flag(token, INVALID_OPERATOR, this);
-        }
 
         // Loop over multiplicative operators.
         while (MULT_OPS.contains(tokenType)) {
