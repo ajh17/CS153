@@ -98,7 +98,6 @@ public class ExpressionParser extends StatementParser {
             opNode.addChild(rootNode);
 
             switch ((ICodeNodeTypeImpl) opNode.getType()) {
-                case OR:
                 case LT:
                 case IN_SET:
                     if (rootNode.getType() == ICodeNodeTypeImpl.SET) {
