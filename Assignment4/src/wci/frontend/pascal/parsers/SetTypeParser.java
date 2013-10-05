@@ -7,6 +7,7 @@ import wci.intermediate.Definition;
 import wci.intermediate.SymTabEntry;
 import wci.intermediate.TypeFactory;
 import wci.intermediate.TypeSpec;
+import wci.intermediate.symtabimpl.DefinitionImpl;
 
 import static wci.frontend.pascal.PascalErrorCode.IDENTIFIER_UNDEFINED;
 import static wci.intermediate.typeimpl.TypeFormImpl.SET;
@@ -39,7 +40,17 @@ public class SetTypeParser extends TypeSpecificationParser {
                     if (id != null) {
                         Definition definition = id.getDefinition();
 
-                        // Do stuff here?
+                        if (definition == DefinitionImpl.TYPE) {
+                            id.appendLineNumber(token.getLineNumber());
+                            token = nextToken();  // consume the identifier
+
+                            // Return the type of the referent type.
+                            return id.getTypeSpec();
+                        }
+                        else {
+                            SubrangeTypeParser subrangeTypeParser = new SubrangeTypeParser(this);
+                            return subrangeTypeParser.parse(token);
+                        }
                     }
                     else {
                         errorHandler.flag(token, IDENTIFIER_UNDEFINED, this);
