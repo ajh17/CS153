@@ -3,9 +3,12 @@ package wci.frontend.pascal.parsers;
 import wci.frontend.Token;
 import wci.frontend.pascal.PascalParserTD;
 import wci.frontend.pascal.PascalTokenType;
+import wci.intermediate.Definition;
+import wci.intermediate.SymTabEntry;
 import wci.intermediate.TypeFactory;
 import wci.intermediate.TypeSpec;
 
+import static wci.frontend.pascal.PascalErrorCode.IDENTIFIER_UNDEFINED;
 import static wci.intermediate.typeimpl.TypeFormImpl.SET;
 
 public class SetTypeParser extends TypeSpecificationParser {
@@ -29,7 +32,24 @@ public class SetTypeParser extends TypeSpecificationParser {
             token = nextToken(); // consume OF
 
             switch ((PascalTokenType) token.getType()) {
+                case IDENTIFIER:
+                    String name = token.getText().toLowerCase();
+                    SymTabEntry id = symTabStack.lookup(name);
 
+                    if (id != null) {
+                        Definition definition = id.getDefinition();
+
+                        // Do stuff here?
+                    }
+                    else {
+                        errorHandler.flag(token, IDENTIFIER_UNDEFINED, this);
+                        token = nextToken();  // consume the identifier
+                        return null;
+                    }
+                default:
+                    // a = SET OF 4..6;    is considered valid
+                    SubrangeTypeParser subrangeTypeParser = new SubrangeTypeParser(this);
+                    return subrangeTypeParser.parse(token);
             }
         }
         else {
