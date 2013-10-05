@@ -47,10 +47,6 @@ public class SetTypeParser extends TypeSpecificationParser {
                             // Return the type of the referent type.
                             return id.getTypeSpec();
                         }
-                        else {
-                            SubrangeTypeParser subrangeTypeParser = new SubrangeTypeParser(this);
-                            return subrangeTypeParser.parse(token);
-                        }
                     }
                     else {
                         errorHandler.flag(token, IDENTIFIER_UNDEFINED, this);
