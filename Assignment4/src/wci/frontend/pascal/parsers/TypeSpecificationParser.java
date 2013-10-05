@@ -34,6 +34,7 @@ class TypeSpecificationParser extends PascalParserTD
     static {
         TYPE_START_SET.add(PascalTokenType.ARRAY);
         TYPE_START_SET.add(PascalTokenType.RECORD);
+        TYPE_START_SET.add(PascalTokenType.SET);
         TYPE_START_SET.add(SEMICOLON);
     }
 
