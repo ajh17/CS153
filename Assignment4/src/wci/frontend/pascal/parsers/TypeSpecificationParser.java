@@ -1,18 +1,13 @@
 package wci.frontend.pascal.parsers;
 
-import java.util.ArrayList;
+import wci.frontend.Token;
+import wci.frontend.pascal.PascalParserTD;
+import wci.frontend.pascal.PascalTokenType;
+import wci.intermediate.TypeSpec;
+
 import java.util.EnumSet;
 
-import wci.frontend.*;
-import wci.frontend.pascal.*;
-import wci.intermediate.*;
-import wci.intermediate.symtabimpl.*;
-
-import static wci.frontend.pascal.PascalTokenType.*;
-import static wci.frontend.pascal.PascalErrorCode.*;
-import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
-import static wci.intermediate.typeimpl.TypeFormImpl.*;
-import static wci.intermediate.typeimpl.TypeKeyImpl.*;
+import static wci.frontend.pascal.PascalTokenType.SEMICOLON;
 
 /**
  * <h1>TypeSpecificationParser</h1>
@@ -64,6 +59,11 @@ class TypeSpecificationParser extends PascalParserTD
             case RECORD: {
                 RecordTypeParser recordTypeParser = new RecordTypeParser(this);
                 return recordTypeParser.parse(token);
+            }
+
+            case SET: {
+                SetTypeParser setTypeParser = new SetTypeParser(this);
+                return setTypeParser.parse(token);
             }
 
             default: {
