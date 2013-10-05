@@ -53,10 +53,14 @@ public class SetTypeParser extends TypeSpecificationParser {
                         token = nextToken();  // consume the identifier
                         return null;
                     }
-                default:
-                    // a = SET OF 4..6;    is considered valid
+                case INTEGER:
                     SubrangeTypeParser subrangeTypeParser = new SubrangeTypeParser(this);
                     return subrangeTypeParser.parse(token);
+                case LEFT_PAREN:
+                    EnumerationTypeParser enumerationTypeParser = new EnumerationTypeParser(this);
+                    return enumerationTypeParser.parse(token);
+                default:
+                    // If it reaches here, it is an error
             }
         }
         else {
