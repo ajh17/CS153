@@ -51,6 +51,7 @@ public class SetTypeParser extends TypeSpecificationParser {
                         token = nextToken();  // consume the identifier
                         return null;
                     }
+                    break;
                 case INTEGER:
                     SubrangeTypeParser subrangeTypeParser = new SubrangeTypeParser(this);
                     return subrangeTypeParser.parse(token);
