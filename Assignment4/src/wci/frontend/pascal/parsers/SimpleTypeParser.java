@@ -5,6 +5,7 @@ import wci.frontend.pascal.PascalParserTD;
 import wci.frontend.pascal.PascalTokenType;
 import wci.intermediate.Definition;
 import wci.intermediate.SymTabEntry;
+import wci.intermediate.TypeForm;
 import wci.intermediate.TypeSpec;
 import wci.intermediate.symtabimpl.DefinitionImpl;
 
@@ -142,8 +143,7 @@ class SimpleTypeParser extends TypeSpecificationParser
                 }
 
             case LEFT_PAREN: {
-                EnumerationTypeParser enumerationTypeParser =
-                    new EnumerationTypeParser(this);
+                EnumerationTypeParser enumerationTypeParser = new EnumerationTypeParser(this);
                 return enumerationTypeParser.parse(token);
             }
 
@@ -154,8 +154,7 @@ class SimpleTypeParser extends TypeSpecificationParser
             }
 
             default: {
-                SubrangeTypeParser subrangeTypeParser =
-                    new SubrangeTypeParser(this);
+                SubrangeTypeParser subrangeTypeParser = new SubrangeTypeParser(this);
                 return subrangeTypeParser.parse(token);
             }
         }

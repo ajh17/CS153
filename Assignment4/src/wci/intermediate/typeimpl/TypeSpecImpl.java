@@ -19,7 +19,7 @@ import static wci.intermediate.typeimpl.TypeKeyImpl.*;
  */
 public class TypeSpecImpl
     extends HashMap<TypeKey, Object>
-    implements TypeSpec
+    implements TypeSpec, Cloneable
 {
     private TypeForm form;           // type form
     private SymTabEntry identifier;  // type identifier
@@ -123,5 +123,9 @@ public class TypeSpecImpl
     {
         return form == SUBRANGE ? (TypeSpec) getAttribute(SUBRANGE_BASE_TYPE)
                                 : this;
+    }
+
+    public Object clone() {
+        return super.clone();
     }
 }

@@ -5,6 +5,7 @@ import wci.frontend.TokenType;
 import wci.frontend.pascal.PascalParserTD;
 import wci.frontend.pascal.PascalTokenType;
 import wci.intermediate.SymTabEntry;
+import wci.intermediate.TypeFactory;
 import wci.intermediate.TypeSpec;
 
 import java.util.EnumSet;
@@ -12,6 +13,7 @@ import java.util.EnumSet;
 import static wci.frontend.pascal.PascalErrorCode.*;
 import static wci.frontend.pascal.PascalTokenType.*;
 import static wci.intermediate.symtabimpl.DefinitionImpl.TYPE;
+import static wci.intermediate.typeimpl.TypeFormImpl.ENUMERATION;
 
 /**
  * <h1>TypeDefinitionsParser</h1>
@@ -111,6 +113,11 @@ public class TypeDefinitionsParser extends DeclarationsParser
             if (type != null && typeId != null) {
                 if (type.getIdentifier() == null) {
                     type.setIdentifier(typeId);
+                }
+                else {
+                    TypeSpec clone = (TypeSpec) type.clone();
+                    clone.setIdentifier(typeId);
+                    type = clone;
                 }
                 typeId.setTypeSpec(type);
             }
