@@ -47,6 +47,7 @@ public class SetTypeParser extends TypeSpecificationParser {
                         }
                         else {
                             // TODO: Not sure what to do here...
+                            return null; // Temporary until we find out what to do.
                         }
                     }
                     else {
