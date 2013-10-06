@@ -21,7 +21,7 @@ public class SetTypeParser extends TypeSpecificationParser {
     public TypeSpec parse(Token token) throws Exception {
         // Synchronize at the start of a type specification.
 
-        // Synchronize to what?
+        // TODO: Where should we synchronize to???
         // token = synchronize();
 
         TypeSpec setType = TypeFactory.createType(SET);
@@ -45,13 +45,15 @@ public class SetTypeParser extends TypeSpecificationParser {
                             // Return the type of the referent type.
                             return id.getTypeSpec();
                         }
+                        else {
+                            // TODO: Not sure what to do here...
+                        }
                     }
                     else {
                         errorHandler.flag(token, IDENTIFIER_UNDEFINED, this);
                         token = nextToken();  // consume the identifier
                         return null;
                     }
-                    break;
                 case INTEGER:
                     SubrangeTypeParser subrangeTypeParser = new SubrangeTypeParser(this);
                     return subrangeTypeParser.parse(token);
@@ -60,12 +62,12 @@ public class SetTypeParser extends TypeSpecificationParser {
                     return enumerationTypeParser.parse(token);
                 default:
                     // If it reaches here, it is an error
+                    return null;
             }
         }
         else {
             // Invalid syntax for SET
+            return null; // Temporary to prevent build error
         }
-
-        return null; // Temporary to prevent build error
     }
 }
