@@ -114,7 +114,7 @@ class SimpleTypeParser extends TypeSpecificationParser
                                     token = nextToken();  // consume the identifier
 
                                     // Return the type of the referent type.
-                                    return id.getTypeSpec();
+                                    return (TypeSpec) id.getTypeSpec().clone();
                                 }
                                 else {
                                     // TODO: Not sure what to do here...
