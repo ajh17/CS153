@@ -1,19 +1,19 @@
 package wci.frontend.pascal.parsers;
 
+import wci.frontend.Token;
+import wci.frontend.pascal.PascalParserTD;
+import wci.frontend.pascal.PascalTokenType;
+import wci.intermediate.Definition;
+import wci.intermediate.SymTabEntry;
+import wci.intermediate.TypeSpec;
+import wci.intermediate.symtabimpl.DefinitionImpl;
+
 import java.util.EnumSet;
 
-import wci.frontend.*;
-import wci.frontend.pascal.*;
-import wci.intermediate.*;
-import wci.intermediate.symtabimpl.*;
-import wci.intermediate.typeimpl.*;
-
-import static wci.frontend.pascal.PascalTokenType.*;
 import static wci.frontend.pascal.PascalErrorCode.*;
-import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
-import static wci.intermediate.symtabimpl.DefinitionImpl.*;
-import static wci.intermediate.typeimpl.TypeFormImpl.*;
-import static wci.intermediate.typeimpl.TypeKeyImpl.*;
+import static wci.frontend.pascal.PascalTokenType.*;
+import static wci.intermediate.symtabimpl.DefinitionImpl.CONSTANT;
+import static wci.intermediate.symtabimpl.DefinitionImpl.ENUMERATION_CONSTANT;
 
 /**
  * <h1>SimpleTypeParser</h1>
@@ -40,6 +40,7 @@ class SimpleTypeParser extends TypeSpecificationParser
         ConstantDefinitionsParser.CONSTANT_START_SET.clone();
     static {
         SIMPLE_TYPE_START_SET.add(LEFT_PAREN);
+        SIMPLE_TYPE_START_SET.add(SET);
         SIMPLE_TYPE_START_SET.add(COMMA);
         SIMPLE_TYPE_START_SET.add(SEMICOLON);
     }
@@ -92,6 +93,53 @@ class SimpleTypeParser extends TypeSpecificationParser
                     return null;
                 }
             }
+
+            case SET:
+                token = nextToken();  // consume SET
+
+                if (token.getType() == PascalTokenType.OF)  {
+                    token = nextToken(); // consume OF
+
+                    switch ((PascalTokenType) token.getType()) {
+                        case IDENTIFIER:
+                            String name = token.getText().toLowerCase();
+                            SymTabEntry id = symTabStack.lookup(name);
+
+                            if (id != null) {
+                                Definition definition = id.getDefinition();
+
+                                if (definition == DefinitionImpl.TYPE) {
+                                    id.appendLineNumber(token.getLineNumber());
+                                    token = nextToken();  // consume the identifier
+
+                                    // Return the type of the referent type.
+                                    return id.getTypeSpec();
+                                }
+                                else {
+                                    // TODO: Not sure what to do here...
+                                    return null; // Temporary until we find out what to do.
+                                }
+                            }
+                            else {
+                                errorHandler.flag(token, IDENTIFIER_UNDEFINED, this);
+                                token = nextToken();  // consume the identifier
+                                return null;
+                            }
+                        case INTEGER:
+                            SubrangeTypeParser subrangeTypeParser = new SubrangeTypeParser(this);
+                            return subrangeTypeParser.parse(token);
+                        case LEFT_PAREN:
+                            EnumerationTypeParser enumerationTypeParser = new EnumerationTypeParser(this);
+                            return enumerationTypeParser.parse(token);
+                        default:
+                            // If it reaches here, it is an error
+                            return null;
+                    }
+                }
+                else {
+                    // Invalid syntax for SET
+                    return null; // Temporary to prevent build error
+                }
 
             case LEFT_PAREN: {
                 EnumerationTypeParser enumerationTypeParser =

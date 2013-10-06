@@ -34,7 +34,6 @@ class TypeSpecificationParser extends PascalParserTD
     static {
         TYPE_START_SET.add(PascalTokenType.ARRAY);
         TYPE_START_SET.add(PascalTokenType.RECORD);
-        TYPE_START_SET.add(PascalTokenType.SET);
         TYPE_START_SET.add(SEMICOLON);
     }
 
@@ -60,11 +59,6 @@ class TypeSpecificationParser extends PascalParserTD
             case RECORD: {
                 RecordTypeParser recordTypeParser = new RecordTypeParser(this);
                 return recordTypeParser.parse(token);
-            }
-
-            case SET: {
-                SetTypeParser setTypeParser = new SetTypeParser(this);
-                return setTypeParser.parse(token);
             }
 
             default: {
