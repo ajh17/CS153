@@ -7,10 +7,8 @@ import wci.intermediate.symtabimpl.DefinitionImpl;
 import wci.intermediate.typeimpl.TypeFormImpl;
 
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
-import static wci.intermediate.symtabimpl.DefinitionImpl.*;
 import static wci.intermediate.typeimpl.TypeFormImpl.*;
 import static wci.intermediate.typeimpl.TypeKeyImpl.*;
-import static wci.message.MessageType.*;
 
 /**
  * <h1>CrossReferencer</h1>
@@ -136,7 +134,7 @@ public class CrossReferencer
         printType(type);
 
         if (type.getForm() == SET) {
-            TypeSpec setValues = (TypeSpec) type.getAttribute(SET_VALUES);
+            TypeSpec setValues = (TypeSpec) type.getAttribute(UNNAMED_SET_VALUES);
 
             if (setValues != null) {
                 printTypeDetail(setValues, recordTypes);
