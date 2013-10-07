@@ -58,9 +58,6 @@ public class SetTypeParser extends TypeSpecificationParser {
                 case INTEGER:
                     SubrangeTypeParser subrangeTypeParser = new SubrangeTypeParser(this);
                     return subrangeTypeParser.parse(token);
-                case LEFT_PAREN:
-                    EnumerationTypeParser enumerationTypeParser = new EnumerationTypeParser(this);
-                    return enumerationTypeParser.parse(token);
                 default:
                     // If it reaches here, it is an error
                     return null;
