@@ -100,8 +100,7 @@ public class TypeDefinitionsParser extends DeclarationsParser
             }
 
             // Parse the type specification.
-            TypeSpecificationParser typeSpecificationParser =
-                new TypeSpecificationParser(this);
+            TypeSpecificationParser typeSpecificationParser = new TypeSpecificationParser(this);
             TypeSpec type = typeSpecificationParser.parse(token);
 
             // Set identifier to be a type and set its type specificationt.
@@ -110,7 +109,7 @@ public class TypeDefinitionsParser extends DeclarationsParser
             }
 
             // Cross-link the type identifier and the type specification.
-            if ((type != null) && (typeId != null)) {
+            if (type != null && typeId != null) {
                 if (type.getIdentifier() == null) {
                     type.setIdentifier(typeId);
                 }

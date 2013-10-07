@@ -40,10 +40,10 @@ public class SetTypeParser extends TypeSpecificationParser {
 
                         if (definition == DefinitionImpl.TYPE) {
                             id.appendLineNumber(token.getLineNumber());
+                            setType.setIdentifier(id);
                             token = nextToken();  // consume the identifier
 
-                            // Return the type of the referent type.
-                            return id.getTypeSpec();
+                            return setType;
                         }
                         else {
                             // TODO: Not sure what to do here...
