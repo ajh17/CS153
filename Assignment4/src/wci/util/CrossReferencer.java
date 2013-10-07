@@ -277,6 +277,9 @@ public class CrossReferencer
                 recordTypes.add(type);
                 break;
             }
+
+            case SET:
+
         }
     }
 
