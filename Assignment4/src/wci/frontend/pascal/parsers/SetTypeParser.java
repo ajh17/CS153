@@ -57,6 +57,7 @@ public class SetTypeParser extends TypeSpecificationParser {
                         return null;
                     }
                 case INTEGER:
+                    // These are unnamed types so we add the values as attributes to the SET TypeSpec
                     SubrangeTypeParser subrangeTypeParser = new SubrangeTypeParser(this);
                     TypeSpec subrange = subrangeTypeParser.parse(token);
                     setType.setAttribute(SUBRANGE_BASE_TYPE, subrange.getAttribute(SUBRANGE_BASE_TYPE));
@@ -64,6 +65,7 @@ public class SetTypeParser extends TypeSpecificationParser {
                     setType.setAttribute(SUBRANGE_MAX_VALUE, subrange.getAttribute(SUBRANGE_MAX_VALUE));
                     return setType;
                 case LEFT_PAREN:
+                    // These are unnamed types so we add the values as attributes to the SET TypeSpec
                     EnumerationTypeParser enumerationTypeParser = new EnumerationTypeParser(this);
                     TypeSpec enumeration = enumerationTypeParser.parse(token);
                     setType.setAttribute(ENUMERATION_CONSTANTS, enumeration.getAttribute(ENUMERATION_CONSTANTS));
