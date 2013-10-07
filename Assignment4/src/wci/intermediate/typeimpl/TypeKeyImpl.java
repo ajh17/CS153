@@ -26,5 +26,5 @@ public enum TypeKeyImpl implements TypeKey
 
     // Set
     UNNAMED_SET_VALUES,
-    REFERENCED_SET_VALUES
+    BASE_TYPE
 }

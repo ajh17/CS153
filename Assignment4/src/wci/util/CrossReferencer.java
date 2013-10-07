@@ -135,17 +135,18 @@ public class CrossReferencer
 
         if (type.getForm() == SET) {
             TypeSpec unnamedSetValues = (TypeSpec) type.getAttribute(UNNAMED_SET_VALUES);
-            SymTabEntry referencedValues = null;
+            SymTabEntry baseType = null;
 
             if (unnamedSetValues != null) {
                 printTypeDetail(unnamedSetValues, recordTypes);
             }
             else {
-                referencedValues = (SymTabEntry) type.getAttribute(REFERENCED_SET_VALUES);
+                baseType = (SymTabEntry) type.getAttribute(BASE_TYPE);
             }
 
-            if (referencedValues != null) {
-                printTypeDetail(referencedValues.getTypeSpec(), recordTypes);
+            if (baseType != null) {
+                System.out.println(INDENT + "--- Base type ---");
+                printType(baseType.getTypeSpec());
             }
         }
 

@@ -42,7 +42,8 @@ public class SetTypeParser extends TypeSpecificationParser {
                         if (definition == DefinitionImpl.TYPE) {
                             id.appendLineNumber(token.getLineNumber());
                             token = nextToken();  // consume the identifier
-                            setType.setAttribute(REFERENCED_SET_VALUES, id);
+                            setType.setAttribute(BASE_TYPE, id);
+                            //setType.setIdentifier(id);
 
                             return setType;
                         }
