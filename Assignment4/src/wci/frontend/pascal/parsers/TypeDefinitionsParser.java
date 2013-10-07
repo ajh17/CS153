@@ -110,9 +110,7 @@ public class TypeDefinitionsParser extends DeclarationsParser
 
             // Cross-link the type identifier and the type specification.
             if (type != null && typeId != null) {
-                if (type.getIdentifier() == null) {
-                    type.setIdentifier(typeId);
-                }
+                type.setIdentifier(typeId);
                 typeId.setTypeSpec(type);
             }
             else {

@@ -51,4 +51,6 @@ public interface TypeSpec
      * @return the base type of this type.
      */
     public TypeSpec baseType();
+
+    public TypeSpec clone();
 }
