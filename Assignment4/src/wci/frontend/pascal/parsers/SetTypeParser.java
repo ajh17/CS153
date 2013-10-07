@@ -60,15 +60,13 @@ public class SetTypeParser extends TypeSpecificationParser {
                     // These are unnamed types so we add the values as attributes to the SET TypeSpec
                     SubrangeTypeParser subrangeTypeParser = new SubrangeTypeParser(this);
                     TypeSpec subrange = subrangeTypeParser.parse(token);
-                    setType.setAttribute(SUBRANGE_BASE_TYPE, subrange.getAttribute(SUBRANGE_BASE_TYPE));
-                    setType.setAttribute(SUBRANGE_MIN_VALUE, subrange.getAttribute(SUBRANGE_MIN_VALUE));
-                    setType.setAttribute(SUBRANGE_MAX_VALUE, subrange.getAttribute(SUBRANGE_MAX_VALUE));
+                    setType.setAttribute(SET_VALUES, subrange);
                     return setType;
                 case LEFT_PAREN:
                     // These are unnamed types so we add the values as attributes to the SET TypeSpec
                     EnumerationTypeParser enumerationTypeParser = new EnumerationTypeParser(this);
                     TypeSpec enumeration = enumerationTypeParser.parse(token);
-                    setType.setAttribute(ENUMERATION_CONSTANTS, enumeration.getAttribute(ENUMERATION_CONSTANTS));
+                    setType.setAttribute(SET_VALUES, enumeration);
                     return setType;
                 default:
                     // If it reaches here, it is an error
