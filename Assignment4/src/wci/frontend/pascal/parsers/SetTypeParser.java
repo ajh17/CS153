@@ -11,6 +11,9 @@ import wci.intermediate.symtabimpl.DefinitionImpl;
 
 import static wci.frontend.pascal.PascalErrorCode.IDENTIFIER_UNDEFINED;
 import static wci.intermediate.typeimpl.TypeFormImpl.SET;
+import static wci.intermediate.typeimpl.TypeKeyImpl.SUBRANGE_BASE_TYPE;
+import static wci.intermediate.typeimpl.TypeKeyImpl.SUBRANGE_MAX_VALUE;
+import static wci.intermediate.typeimpl.TypeKeyImpl.SUBRANGE_MIN_VALUE;
 
 public class SetTypeParser extends TypeSpecificationParser {
 
@@ -57,7 +60,14 @@ public class SetTypeParser extends TypeSpecificationParser {
                     }
                 case INTEGER:
                     SubrangeTypeParser subrangeTypeParser = new SubrangeTypeParser(this);
-                    return subrangeTypeParser.parse(token);
+                    TypeSpec unnamed = subrangeTypeParser.parse(token);
+                    setType.setAttribute(SUBRANGE_BASE_TYPE, unnamed.getAttribute(SUBRANGE_BASE_TYPE));
+                    setType.setAttribute(SUBRANGE_MIN_VALUE, unnamed.getAttribute(SUBRANGE_MIN_VALUE));
+                    setType.setAttribute(SUBRANGE_MAX_VALUE, unnamed.getAttribute(SUBRANGE_MAX_VALUE));
+                    return setType;
+                case LEFT_PAREN:
+                    EnumerationTypeParser enumerationTypeParser = new EnumerationTypeParser(this);
+                    return enumerationTypeParser.parse(token);
                 default:
                     // If it reaches here, it is an error
                     return null;
