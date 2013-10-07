@@ -135,6 +135,14 @@ public class CrossReferencer
         TypeSpec type = entry.getTypeSpec();
         printType(type);
 
+        if (type.getForm() == SET) {
+            TypeSpec setValues = (TypeSpec) type.getAttribute(SET_VALUES);
+
+            if (setValues != null) {
+                printTypeDetail(setValues, recordTypes);
+            }
+        }
+
         switch ((DefinitionImpl) definition) {
 
             case CONSTANT: {
