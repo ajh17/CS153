@@ -133,23 +133,6 @@ public class CrossReferencer
         TypeSpec type = entry.getTypeSpec();
         printType(type);
 
-        if (type.getForm() == SET) {
-            TypeSpec unnamedSetValues = (TypeSpec) type.getAttribute(UNNAMED_SET_VALUES);
-            SymTabEntry baseType = null;
-
-            if (unnamedSetValues != null) {
-                printTypeDetail(unnamedSetValues, recordTypes);
-            }
-            else {
-                baseType = (SymTabEntry) type.getAttribute(BASE_TYPE);
-            }
-
-            if (baseType != null) {
-                System.out.println(INDENT + "--- Base type ---");
-                printType(baseType.getTypeSpec());
-            }
-        }
-
         switch ((DefinitionImpl) definition) {
 
             case CONSTANT: {
@@ -292,6 +275,22 @@ public class CrossReferencer
                 recordTypes.add(type);
                 break;
             }
+
+            case SET:
+                TypeSpec unnamedSetValues = (TypeSpec) type.getAttribute(UNNAMED_SET_VALUES);
+                SymTabEntry baseType = null;
+
+                if (unnamedSetValues != null) {
+                    printTypeDetail(unnamedSetValues, recordTypes);
+                }
+                else {
+                    baseType = (SymTabEntry) type.getAttribute(BASE_TYPE);
+                }
+
+                if (baseType != null) {
+                    System.out.println(INDENT + "--- Base type ---");
+                    printType(baseType.getTypeSpec());
+                }
         }
     }
 
