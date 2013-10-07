@@ -11,9 +11,7 @@ import wci.intermediate.symtabimpl.DefinitionImpl;
 
 import static wci.frontend.pascal.PascalErrorCode.IDENTIFIER_UNDEFINED;
 import static wci.intermediate.typeimpl.TypeFormImpl.SET;
-import static wci.intermediate.typeimpl.TypeKeyImpl.SUBRANGE_BASE_TYPE;
-import static wci.intermediate.typeimpl.TypeKeyImpl.SUBRANGE_MAX_VALUE;
-import static wci.intermediate.typeimpl.TypeKeyImpl.SUBRANGE_MIN_VALUE;
+import static wci.intermediate.typeimpl.TypeKeyImpl.*;
 
 public class SetTypeParser extends TypeSpecificationParser {
 
@@ -60,14 +58,16 @@ public class SetTypeParser extends TypeSpecificationParser {
                     }
                 case INTEGER:
                     SubrangeTypeParser subrangeTypeParser = new SubrangeTypeParser(this);
-                    TypeSpec unnamed = subrangeTypeParser.parse(token);
-                    setType.setAttribute(SUBRANGE_BASE_TYPE, unnamed.getAttribute(SUBRANGE_BASE_TYPE));
-                    setType.setAttribute(SUBRANGE_MIN_VALUE, unnamed.getAttribute(SUBRANGE_MIN_VALUE));
-                    setType.setAttribute(SUBRANGE_MAX_VALUE, unnamed.getAttribute(SUBRANGE_MAX_VALUE));
+                    TypeSpec subrange = subrangeTypeParser.parse(token);
+                    setType.setAttribute(SUBRANGE_BASE_TYPE, subrange.getAttribute(SUBRANGE_BASE_TYPE));
+                    setType.setAttribute(SUBRANGE_MIN_VALUE, subrange.getAttribute(SUBRANGE_MIN_VALUE));
+                    setType.setAttribute(SUBRANGE_MAX_VALUE, subrange.getAttribute(SUBRANGE_MAX_VALUE));
                     return setType;
                 case LEFT_PAREN:
                     EnumerationTypeParser enumerationTypeParser = new EnumerationTypeParser(this);
-                    return enumerationTypeParser.parse(token);
+                    TypeSpec enumeration = enumerationTypeParser.parse(token);
+                    setType.setAttribute(ENUMERATION_CONSTANTS, enumeration.getAttribute(ENUMERATION_CONSTANTS));
+                    return setType;
                 default:
                     // If it reaches here, it is an error
                     return null;
