@@ -25,5 +25,6 @@ public enum TypeKeyImpl implements TypeKey
     RECORD_SYMTAB,
 
     // Set
-    UNNAMED_SET_VALUES
+    UNNAMED_SET_VALUES,
+    REFERENCED_SET_VALUES
 }
