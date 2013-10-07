@@ -3,13 +3,11 @@ package wci.frontend.pascal.parsers;
 import wci.frontend.Token;
 import wci.frontend.pascal.PascalParserTD;
 import wci.frontend.pascal.PascalTokenType;
-import wci.intermediate.SymTabEntry;
 import wci.intermediate.TypeSpec;
 
 import java.util.EnumSet;
 
 import static wci.frontend.pascal.PascalTokenType.SEMICOLON;
-import static wci.intermediate.typeimpl.TypeKeyImpl.REFERENCED_SET_VALUES;
 
 /**
  * <h1>TypeSpecificationParser</h1>
@@ -66,18 +64,12 @@ class TypeSpecificationParser extends PascalParserTD
 
             case SET: {
                 SetTypeParser setTypeParser = new SetTypeParser(this);
-                TypeSpec named = setTypeParser.parse(token);
-                SymTabEntry identifier = named.getIdentifier();
-                named.setAttribute(REFERENCED_SET_VALUES, identifier);
-                return named;
+                return setTypeParser.parse(token);
             }
 
             default: {
                 SimpleTypeParser simpleTypeParser = new SimpleTypeParser(this);
-                TypeSpec named = simpleTypeParser.parse(token);
-                SymTabEntry identifier = named.getIdentifier();
-                named.setAttribute(REFERENCED_SET_VALUES, identifier);
-                return named;
+                return simpleTypeParser.parse(token);
             }
         }
     }

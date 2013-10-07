@@ -285,13 +285,6 @@ public class CrossReferencer
                 recordTypes.add(type);
                 break;
             }
-
-            case SET:
-                SymTabEntry test = (SymTabEntry) type.getAttribute(REFERENCED_SET_VALUES);
-
-                if (test != null) {
-                    printTypeDetail(test.getTypeSpec(), recordTypes);
-                }
         }
     }
 
