@@ -1,19 +1,19 @@
 package wci.frontend.pascal.parsers;
 
-import wci.frontend.Token;
-import wci.frontend.TokenType;
-import wci.frontend.pascal.PascalParserTD;
-import wci.frontend.pascal.PascalTokenType;
-import wci.intermediate.SymTabEntry;
-import wci.intermediate.TypeFactory;
-import wci.intermediate.TypeSpec;
-
+import java.util.ArrayList;
 import java.util.EnumSet;
 
-import static wci.frontend.pascal.PascalErrorCode.*;
+import wci.frontend.*;
+import wci.frontend.pascal.*;
+import wci.intermediate.*;
+import wci.intermediate.symtabimpl.*;
+
 import static wci.frontend.pascal.PascalTokenType.*;
+import static wci.frontend.pascal.PascalErrorCode.*;
+import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
 import static wci.intermediate.symtabimpl.DefinitionImpl.TYPE;
-import static wci.intermediate.typeimpl.TypeFormImpl.ENUMERATION;
+import static wci.intermediate.typeimpl.TypeFormImpl.*;
+import static wci.intermediate.typeimpl.TypeKeyImpl.*;
 
 /**
  * <h1>TypeDefinitionsParser</h1>
@@ -110,8 +110,10 @@ public class TypeDefinitionsParser extends DeclarationsParser
             }
 
             // Cross-link the type identifier and the type specification.
-            if (type != null && typeId != null) {
-                type.setIdentifier(typeId);
+            if ((type != null) && (typeId != null)) {
+                if (type.getIdentifier() == null) {
+                    type.setIdentifier(typeId);
+                }
                 typeId.setTypeSpec(type);
             }
             else {
