@@ -285,11 +285,6 @@ public class CrossReferencer
                 recordTypes.add(type);
                 break;
             }
-
-            case SET:
-                TypeSpec values = (TypeSpec) type.getAttribute(SET_VALUES);
-                printTypeDetail(values, recordTypes);
-
         }
     }
 
