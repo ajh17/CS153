@@ -165,13 +165,7 @@ public class CrossReferencer
             }
 
             case VARIABLE: {
-
-                // Print the type details only if the type is unnamed.
-                if (type.getIdentifier() == null) {
-                    printTypeDetail(type, recordTypes);
-                }
-
-                break;
+                printTypeDetail(type, recordTypes);
             }
         }
     }
@@ -278,9 +272,11 @@ public class CrossReferencer
 
             case SET:
                 TypeSpec unnamedSetValues = (TypeSpec) type.getAttribute(UNNAMED_SET_VALUES);
-                TypeSpec baseType = (TypeSpec) type.getAttribute(BASE_TYPE);;
+                TypeSpec baseType = (TypeSpec) type.getAttribute(BASE_TYPE);
 
                 if (unnamedSetValues != null) {
+                    System.out.println(INDENT + "--- Base type ---");
+                    printType(unnamedSetValues);
                     printTypeDetail(unnamedSetValues, recordTypes);
                 }
                 else if (baseType != null) {

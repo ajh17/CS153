@@ -72,7 +72,7 @@ class SimpleTypeParser extends TypeSpecificationParser
                         token = nextToken();  // consume the identifier
 
                         // Return the type of the referent type.
-                        return id.getTypeSpec().clone();
+                        return id.getTypeSpec();
                     }
                     else if ((definition != CONSTANT) &&
                              (definition != ENUMERATION_CONSTANT)) {
