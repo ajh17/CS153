@@ -278,18 +278,14 @@ public class CrossReferencer
 
             case SET:
                 TypeSpec unnamedSetValues = (TypeSpec) type.getAttribute(UNNAMED_SET_VALUES);
-                SymTabEntry baseType = null;
+                TypeSpec baseType = (TypeSpec) type.getAttribute(BASE_TYPE);;
 
                 if (unnamedSetValues != null) {
                     printTypeDetail(unnamedSetValues, recordTypes);
                 }
-                else {
-                    baseType = (SymTabEntry) type.getAttribute(BASE_TYPE);
-                }
-
-                if (baseType != null) {
+                else if (baseType != null) {
                     System.out.println(INDENT + "--- Base type ---");
-                    printType(baseType.getTypeSpec());
+                    printType(baseType);
                 }
         }
     }
