@@ -25,6 +25,6 @@ public enum TypeKeyImpl implements TypeKey
     RECORD_SYMTAB,
 
     // Set
-    UNNAMED_SET_VALUES,
-    BASE_TYPE
+    UNNAMED_SET_VALUES, // Hashes to a TypeSpec
+    BASE_TYPE // Hashes to a SymTabEntry
 }
