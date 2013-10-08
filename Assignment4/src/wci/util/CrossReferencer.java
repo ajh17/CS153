@@ -202,18 +202,7 @@ public class CrossReferencer
         if (type != null) {
             TypeForm form = type.getForm();
             SymTabEntry typeId = type.getIdentifier();
-            SymTabEntry baseType = (SymTabEntry) type.getAttribute(BASE_TYPE);
-            String typeName;
-
-            if (typeId != null) {
-                typeName = typeId.getName();
-            }
-            else if (baseType != null) {
-                typeName = baseType.getName();
-            }
-            else {
-                typeName = "<unnamed>";
-            }
+            String typeName = typeId != null ? typeId.getName() : "<unnamed>";
 
             System.out.println(INDENT + "Type form = " + form +
                                ", Type id = " + typeName);
