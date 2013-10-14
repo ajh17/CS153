@@ -379,6 +379,8 @@ public class ExpressionParser extends StatementParser
         return rootNode;
     }
 
+    static final EnumSet<PascalTokenType> SKIP_STATEMENT =  EnumSet.of(SEMICOLON);
+
     /**
      * Parse a factor.
      * @param token the initial token.
@@ -482,7 +484,7 @@ public class ExpressionParser extends StatementParser
             }
 
             default: {
-                errorHandler.flag(token, UNEXPECTED_TOKEN, this);
+                synchronize(SKIP_STATEMENT);
             }
         }
 
