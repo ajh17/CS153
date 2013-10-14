@@ -24,20 +24,9 @@ public class SetTypeParser extends TypeSpecificationParser {
     }
 
     // Synchronization set for starting a simple type specification.
-    static final EnumSet<PascalTokenType> SET_TYPE_START_SET =
-            ConstantDefinitionsParser.CONSTANT_START_SET.clone();
-    static {
-        SET_TYPE_START_SET.add(PascalTokenType.SET);
-        SET_TYPE_START_SET.add(LEFT_BRACKET);
-        SET_TYPE_START_SET.add(SEMICOLON);
-    }
+    static final EnumSet<PascalTokenType> SET_TYPE_START_SET =  EnumSet.of(SEMICOLON);
 
     public TypeSpec parse(Token token) throws Exception {
-        // Synchronize at the start of a type specification.
-
-        // TODO: Not sure if this is right
-        token = synchronize(SET_TYPE_START_SET);
-
         TypeSpec setType = TypeFactory.createType(SET);
         token = nextToken();  // consume SET
 
@@ -56,18 +45,16 @@ public class SetTypeParser extends TypeSpecificationParser {
                             id.appendLineNumber(token.getLineNumber());
                             token = nextToken();  // consume the identifier
                             setType.setAttribute(BASE_TYPE, id.getTypeSpec());
-                            //setType.setIdentifier(id);
 
                             return setType;
                         }
                         else {
-                            // TODO: Not sure what to do here...
-                            return null; // Temporary until we find out what to do.
+                            token = synchronize(SET_TYPE_START_SET);
+                            return null;
                         }
                     }
                     else {
-                        errorHandler.flag(token, IDENTIFIER_UNDEFINED, this);
-                        token = nextToken();  // consume the identifier
+                        token = synchronize(SET_TYPE_START_SET);
                         return null;
                     }
                 case INTEGER:
@@ -85,12 +72,11 @@ public class SetTypeParser extends TypeSpecificationParser {
                 default:
                     // If it reaches here, it is an error
                     token = synchronize(SET_TYPE_START_SET);
-                    errorHandler.flag(token, UNEXPECTED_TOKEN, this);
                     return null;
             }
         }
         else {
-            // Invalid syntax for SET
+            token = synchronize(SET_TYPE_START_SET);
             return null; // Temporary to prevent build error
         }
     }
