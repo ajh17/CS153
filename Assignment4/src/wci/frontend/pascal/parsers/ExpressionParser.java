@@ -379,6 +379,7 @@ public class ExpressionParser extends StatementParser
         return rootNode;
     }
 
+    // Synchronize to semicolon to skip invalid statement
     static final EnumSet<PascalTokenType> SKIP_STATEMENT =  EnumSet.of(SEMICOLON);
 
     /**
