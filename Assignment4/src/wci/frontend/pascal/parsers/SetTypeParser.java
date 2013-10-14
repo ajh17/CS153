@@ -9,6 +9,10 @@ import wci.intermediate.TypeFactory;
 import wci.intermediate.TypeSpec;
 import wci.intermediate.symtabimpl.DefinitionImpl;
 
+import java.util.EnumSet;
+
+import static wci.frontend.pascal.PascalErrorCode.UNEXPECTED_TOKEN;
+import static wci.frontend.pascal.PascalTokenType.*;
 import static wci.frontend.pascal.PascalErrorCode.IDENTIFIER_UNDEFINED;
 import static wci.intermediate.typeimpl.TypeFormImpl.SET;
 import static wci.intermediate.typeimpl.TypeKeyImpl.*;
@@ -19,11 +23,20 @@ public class SetTypeParser extends TypeSpecificationParser {
         super(parent);
     }
 
+    // Synchronization set for starting a simple type specification.
+    static final EnumSet<PascalTokenType> SET_TYPE_START_SET =
+            ConstantDefinitionsParser.CONSTANT_START_SET.clone();
+    static {
+        SET_TYPE_START_SET.add(PascalTokenType.SET);
+        SET_TYPE_START_SET.add(LEFT_BRACKET);
+        SET_TYPE_START_SET.add(SEMICOLON);
+    }
+
     public TypeSpec parse(Token token) throws Exception {
         // Synchronize at the start of a type specification.
 
-        // TODO: Where should we synchronize to???
-        // token = synchronize();
+        // TODO: Not sure if this is right
+        token = synchronize(SET_TYPE_START_SET);
 
         TypeSpec setType = TypeFactory.createType(SET);
         token = nextToken();  // consume SET
@@ -71,6 +84,8 @@ public class SetTypeParser extends TypeSpecificationParser {
                     return setType;
                 default:
                     // If it reaches here, it is an error
+                    token = synchronize(SET_TYPE_START_SET);
+                    errorHandler.flag(token, UNEXPECTED_TOKEN, this);
                     return null;
             }
         }
