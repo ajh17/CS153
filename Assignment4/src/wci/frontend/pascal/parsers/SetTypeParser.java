@@ -12,9 +12,7 @@ import wci.intermediate.symtabimpl.DefinitionImpl;
 import java.util.EnumSet;
 
 import static wci.frontend.pascal.PascalErrorCode.MISSING_OF;
-import static wci.frontend.pascal.PascalErrorCode.UNEXPECTED_TOKEN;
 import static wci.frontend.pascal.PascalTokenType.*;
-import static wci.frontend.pascal.PascalErrorCode.IDENTIFIER_UNDEFINED;
 import static wci.intermediate.typeimpl.TypeFormImpl.SET;
 import static wci.intermediate.typeimpl.TypeKeyImpl.*;
 
