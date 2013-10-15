@@ -1,0 +1,68 @@
+001 CONST
+002     low  = 15;
+003     mid  = 45;
+004     high = 50;
+005 
+006 TYPE
+007     LowNums  = 0..high;
+008     NumSet   = SET OF LowNums;
+009     RSet     = SET OF real;
+010     Giant    = (fee, fie, foe, fum);
+011     GSet     = SET OF SET OF Giant;
+                          ^
+*** Unexpected token [at "SET"]
+012     Rec      = RECORD 
+013                    x, y : real;
+014                END;
+015 
+016 VAR
+017     i  : LowNums;
+018     g  : Giant;
+019     gs : GSet;
+020 
+021     evens, odds, primes, teens : NumSet;
+022     s1, s2, s3 : NumSet;
+023     rs: SET OF Rec;
+024 
+025 BEGIN
+026     i     := 1;
+027     odds  := [fie];
+                 ^
+*** Unexpected token [at "["]
+                 ^
+*** Incompatible types [at "["]
+028     evens := -odds + [fum, i, foe];
+                 ^
+*** Incompatible types [at "-"]
+                         ^
+*** Unexpected token [at "["]
+                         ^
+*** Incompatible types [at "["]
+                 ^
+*** Incompatible types [at "-"]
+029     teens := gs + s1;
+                      ^
+*** Incompatible types [at "s1"]
+                 ^
+*** Incompatible types [at "gs"]
+030 
+031     gs     := [fum..fie] - i*[foe];
+                  ^
+*** Unexpected token [at "["]
+                  ^
+*** Incompatible types [at "["]
+032     primes := [2, fum, 5 7, 11.5, 13, b4..foo 53];
+                  ^
+*** Unexpected token [at "["]
+                  ^
+*** Incompatible types [at "["]
+033     s1     := s2/s3;
+                     ^
+*** Incompatible types [at "s3"]
+                  ^
+*** Incompatible types [at "s2"]
+034 END.
+
+                  34 source lines.
+                  15 syntax errors.
+                0.07 seconds total parsing time.

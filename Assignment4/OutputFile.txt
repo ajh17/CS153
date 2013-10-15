@@ -1,0 +1,211 @@
+001 CONST
+002     high = 50;
+003 
+004 TYPE
+005     LowNums  = 0..high;
+006     Giant    = (fee, fie, foe, fum);
+007     GSet     = SET OF Giant;
+008     NumSet   = SET OF LowNums;
+009     SetArray = ARRAY [Giant] OF NumSet;
+010     Array2d  = ARRAY [LowNums, Giant] OF fie..fum;
+011 
+012     RecordA = RECORD
+013                   fld1 : NumSet;
+014                   fld2 : SET OF Giant;
+015                   fld3 : SET OF 5..12;
+016                   fld4 : SetArray;
+017                   fld5 : Array2d;
+018                   fld6 : Giant;
+019               END;
+020 
+021     ArrayOfSet = ARRAY [Giant, -5..-1] OF SET OF Giant;
+022 
+023 VAR
+024     gs   : GSet;
+025     s    : NumSet;
+026     t    : SET OF (alpha, beta, gamma);
+027 
+028 BEGIN
+029 END.
+
+                  29 source lines.
+                   0 syntax errors.
+                1.03 seconds total parsing time.
+
+===== CROSS-REFERENCE TABLE =====
+
+*** PROGRAM dummyprogramname ***
+
+Identifier       Line numbers    Type specification
+----------       ------------    ------------------
+alpha            026
+                                 Defined as: enumeration constant
+                                 Scope nesting level: 1
+                                 Type form = enumeration, Type id = <unnamed>
+                                 Value = 0
+array2d          010 017
+                                 Defined as: type
+                                 Scope nesting level: 1
+                                 Type form = array, Type id = array2d
+                                 --- INDEX TYPE ---
+                                 Type form = subrange, Type id = lownums
+                                 --- ELEMENT TYPE ---
+                                 Type form = array, Type id = <unnamed>
+                                 51 elements
+                                 --- INDEX TYPE ---
+                                 Type form = enumeration, Type id = giant
+                                 --- ELEMENT TYPE ---
+                                 Type form = subrange, Type id = <unnamed>
+                                 4 elements
+                                 --- Base type ---
+                                 Type form = enumeration, Type id = giant
+                                 Range = 1..3
+arrayofset       021
+                                 Defined as: type
+                                 Scope nesting level: 1
+                                 Type form = array, Type id = arrayofset
+                                 --- INDEX TYPE ---
+                                 Type form = enumeration, Type id = giant
+                                 --- ELEMENT TYPE ---
+                                 Type form = array, Type id = <unnamed>
+                                 4 elements
+                                 --- INDEX TYPE ---
+                                 Type form = subrange, Type id = <unnamed>
+                                 --- Base type ---
+                                 Type form = scalar, Type id = integer
+                                 Range = -5..-1
+                                 --- ELEMENT TYPE ---
+                                 Type form = set, Type id = <unnamed>
+                                 5 elements
+                                 --- Base type ---
+                                 Type form = enumeration, Type id = giant
+beta             026
+                                 Defined as: enumeration constant
+                                 Scope nesting level: 1
+                                 Type form = enumeration, Type id = <unnamed>
+                                 Value = 1
+fee              006
+                                 Defined as: enumeration constant
+                                 Scope nesting level: 1
+                                 Type form = enumeration, Type id = giant
+                                 Value = 0
+fie              006 010
+                                 Defined as: enumeration constant
+                                 Scope nesting level: 1
+                                 Type form = enumeration, Type id = giant
+                                 Value = 1
+foe              006
+                                 Defined as: enumeration constant
+                                 Scope nesting level: 1
+                                 Type form = enumeration, Type id = giant
+                                 Value = 2
+fum              006 010
+                                 Defined as: enumeration constant
+                                 Scope nesting level: 1
+                                 Type form = enumeration, Type id = giant
+                                 Value = 3
+gamma            026
+                                 Defined as: enumeration constant
+                                 Scope nesting level: 1
+                                 Type form = enumeration, Type id = <unnamed>
+                                 Value = 2
+giant            006 007 009 010 014 018 021 021
+                                 Defined as: type
+                                 Scope nesting level: 1
+                                 Type form = enumeration, Type id = giant
+                                 --- Enumeration constants ---
+                                              fee = 0
+                                              fie = 1
+                                              foe = 2
+                                              fum = 3
+gs               024
+                                 Defined as: variable
+                                 Scope nesting level: 1
+                                 Type form = set, Type id = gs
+                                 --- Base type ---
+                                 Type form = enumeration, Type id = giant
+gset             007 024
+                                 Defined as: type
+                                 Scope nesting level: 1
+                                 Type form = set, Type id = gset
+                                 --- Base type ---
+                                 Type form = enumeration, Type id = giant
+high             002 005
+                                 Defined as: constant
+                                 Scope nesting level: 1
+                                 Type form = scalar, Type id = integer
+                                 Value = 50
+lownums          005 008 010
+                                 Defined as: type
+                                 Scope nesting level: 1
+                                 Type form = subrange, Type id = lownums
+                                 --- Base type ---
+                                 Type form = scalar, Type id = integer
+                                 Range = 0..50
+numset           008 009 013 025
+                                 Defined as: type
+                                 Scope nesting level: 1
+                                 Type form = set, Type id = numset
+                                 --- Base type ---
+                                 Type form = subrange, Type id = lownums
+recorda          012
+                                 Defined as: type
+                                 Scope nesting level: 1
+                                 Type form = record, Type id = recorda
+s                025
+                                 Defined as: variable
+                                 Scope nesting level: 1
+                                 Type form = set, Type id = s
+                                 --- Base type ---
+                                 Type form = subrange, Type id = lownums
+setarray         009 016
+                                 Defined as: type
+                                 Scope nesting level: 1
+                                 Type form = array, Type id = setarray
+                                 --- INDEX TYPE ---
+                                 Type form = enumeration, Type id = giant
+                                 --- ELEMENT TYPE ---
+                                 Type form = set, Type id = numset
+                                 4 elements
+t                026
+                                 Defined as: variable
+                                 Scope nesting level: 1
+                                 Type form = set, Type id = t
+                                 --- Base type ---
+                                 Type form = enumeration, Type id = <unnamed>
+                                 --- Enumeration constants ---
+                                            alpha = 0
+                                             beta = 1
+                                            gamma = 2
+
+--- RECORD recorda ---
+
+Identifier       Line numbers    Type specification
+----------       ------------    ------------------
+fld1             013
+                                 Defined as: record field
+                                 Scope nesting level: 2
+                                 Type form = set, Type id = fld1
+fld2             014
+                                 Defined as: record field
+                                 Scope nesting level: 2
+                                 Type form = set, Type id = fld2
+fld3             015
+                                 Defined as: record field
+                                 Scope nesting level: 2
+                                 Type form = set, Type id = fld3
+fld4             016
+                                 Defined as: record field
+                                 Scope nesting level: 2
+                                 Type form = array, Type id = fld4
+fld5             017
+                                 Defined as: record field
+                                 Scope nesting level: 2
+                                 Type form = array, Type id = fld5
+fld6             018
+                                 Defined as: record field
+                                 Scope nesting level: 2
+                                 Type form = enumeration, Type id = fld6
+
+                   0 instructions generated.
+                0.00 seconds total code generation time.
