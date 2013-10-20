@@ -1,6 +1,5 @@
 options {
     BUILD_PARSER=false;
-    DEBUG_TOKEN_MANAGER=true;
 }
 
 PARSER_BEGIN(Assignment5)
