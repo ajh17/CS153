@@ -55,10 +55,10 @@ SKIP : {
 
 // TODO: Fix character token, add real number token, verify if every token is correct.
 TOKEN: {
-    <CHARACTER: "'" <LETTER> "'">
+    <CHARACTER: "'" (<LETTER>|<DIGIT>|"\\") "'">
         { debugStream.println("CHARACTER token: " + matchedToken.image); }
     |
-    <STRING: "\""(<LETTER>|<DIGIT>)*"\"">
+    <STRING: "\""(~["\n","\r"])*"\"">
         { debugStream.println("STRING token: " + matchedToken.image); }
     |
     <RESERVED_WORD:
