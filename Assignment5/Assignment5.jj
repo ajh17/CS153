@@ -58,4 +58,5 @@ TOKEN: {
     | <HEXADECIMAL: ("0x"|"0X") (<DIGIT>|<LETTER>)*>
     | <#LETTER: ["a"-"z", "A"-"Z"]>
     | <#DIGIT: ["0" - "9"]>
+    | <#EXPONENT: "E"|"e">
 }
