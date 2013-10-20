@@ -53,7 +53,7 @@ SKIP : {
     <~[]>
 }
 
-// TODO: Fix character token, add real number token, verify if every token is correct.
+// TODO: Add real number token, verify that every token is correct.
 TOKEN: {
     <CHARACTER: "'" (<LETTER>|<DIGIT>|"\\") "'">
         { debugStream.println("CHARACTER token: " + matchedToken.image); }
