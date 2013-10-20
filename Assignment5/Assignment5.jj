@@ -1,5 +1,6 @@
 options {
     BUILD_PARSER=false;
+    OUTPUT_DIRECTORY="src/";
 }
 
 PARSER_BEGIN(Assignment5)

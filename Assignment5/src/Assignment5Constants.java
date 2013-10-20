@@ -30,6 +30,8 @@ public interface Assignment5Constants {
   int LETTER = 10;
   /** RegularExpression Id. */
   int DIGIT = 11;
+  /** RegularExpression Id. */
+  int EXPONENT = 12;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -48,6 +50,7 @@ public interface Assignment5Constants {
     "<HEXADECIMAL>",
     "<LETTER>",
     "<DIGIT>",
+    "<EXPONENT>",
   };
 
 }
