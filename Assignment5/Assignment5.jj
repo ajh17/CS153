@@ -38,7 +38,6 @@ TOKEN_MGR_DECLS : {
     }
 }
 
-// TODO: Skip multi-line comments. Already skips single line ones. ( // )
 SKIP : {
    <IGNORE : [" ", "\r", "\n", "\t"]>
    | <"//" (~["\n", "\r"])*>
@@ -53,7 +52,6 @@ SKIP : {
     <~[]>
 }
 
-// TODO: Add real number token, verify that every token is correct.
 TOKEN: {
     <CHARACTER: "'" (<LETTER>|<DIGIT>|"\\") "'">
         { debugStream.println("CHARACTER token: " + matchedToken.image); }
