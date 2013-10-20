@@ -27,7 +27,6 @@ TOKEN_MGR_DECLS : {
                 br.close();
             }
             catch (java.io.IOException ex) {
-
             }
         }
 
@@ -39,9 +38,10 @@ TOKEN_MGR_DECLS : {
     }
 }
 
-// TODO: Skip comments
+// TODO: Skip multi-line comments. Already skips single line ones. ( // )
 SKIP : {
    <IGNORE : [" ", "\r", "\n", "\t"]>
+   | <"//" (~["\n", "\r"])*>
 }
 
 // TODO: Not complete yet
