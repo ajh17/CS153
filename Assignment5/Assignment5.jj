@@ -71,6 +71,7 @@ TOKEN: {
     | "const" | "float" | "new" | "switch" | "while"
     | "continue" | "for" | "null"
     >
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
     |
     <SPECIAL_SYMBOL_TOKEN:
     "~" | "!" | "@" | "%" | "^" | "&" | "*" | "-" | "+" | "="
@@ -80,10 +81,11 @@ TOKEN: {
     | "*=" | "/=" | "==" | "!=" | "%=" | "&=" | "^=" | "||"
     | "&&" | "!=" | "<<=" | ">>="
     >
-        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+        { debugStream.println("SPECIAL_SYMBOL token: " + matchedToken.image); }
     | <IDENTIFIER : <LETTER> (<LETTER> | <DIGIT> | "_")*>
         { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
     | <INTEGER_NUMBER: <DECIMAL> | <OCTAL> | <HEXADECIMAL>>
+        { debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
     | <DECIMAL: ["1"-"9"] (["0"-"9"])*>
     | <OCTAL: "0" (["0"-"7"])*>
     | <HEXADECIMAL: ("0x"|"0X") (<DIGIT>|<LETTER>)*>
