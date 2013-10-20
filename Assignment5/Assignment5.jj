@@ -42,6 +42,15 @@ TOKEN_MGR_DECLS : {
 SKIP : {
    <IGNORE : [" ", "\r", "\n", "\t"]>
    | <"//" (~["\n", "\r"])*>
+   | <"/*"> : MULTI_LINE_COMMENT
+}
+
+<MULTI_LINE_COMMENT> SKIP: {
+    "*/" : DEFAULT
+}
+
+<MULTI_LINE_COMMENT> MORE: {
+    <~[]>
 }
 
 // TODO: Not complete yet
