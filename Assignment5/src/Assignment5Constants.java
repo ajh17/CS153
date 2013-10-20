@@ -11,27 +11,29 @@ public interface Assignment5Constants {
   /** RegularExpression Id. */
   int IGNORE = 1;
   /** RegularExpression Id. */
-  int CHARACTER = 2;
+  int SINGLE_LINE_COMMENT = 2;
   /** RegularExpression Id. */
-  int RESERVED_WORD = 3;
+  int CHARACTER = 3;
   /** RegularExpression Id. */
-  int SPECIAL_SYMBOL_TOKEN = 4;
+  int RESERVED_WORD = 4;
   /** RegularExpression Id. */
-  int IDENTIFIER = 5;
+  int SPECIAL_SYMBOL_TOKEN = 5;
   /** RegularExpression Id. */
-  int INTEGER_NUMBER = 6;
+  int IDENTIFIER = 6;
   /** RegularExpression Id. */
-  int DECIMAL = 7;
+  int INTEGER_NUMBER = 7;
   /** RegularExpression Id. */
-  int OCTAL = 8;
+  int DECIMAL = 8;
   /** RegularExpression Id. */
-  int HEXADECIMAL = 9;
+  int OCTAL = 9;
   /** RegularExpression Id. */
-  int LETTER = 10;
+  int HEXADECIMAL = 10;
   /** RegularExpression Id. */
-  int DIGIT = 11;
+  int LETTER = 11;
   /** RegularExpression Id. */
-  int EXPONENT = 12;
+  int DIGIT = 12;
+  /** RegularExpression Id. */
+  int EXPONENT = 13;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -40,6 +42,7 @@ public interface Assignment5Constants {
   String[] tokenImage = {
     "<EOF>",
     "<IGNORE>",
+    "\"//( )*(<LETTER>)*\"",
     "<CHARACTER>",
     "<RESERVED_WORD>",
     "<SPECIAL_SYMBOL_TOKEN>",
