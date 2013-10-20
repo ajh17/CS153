@@ -87,7 +87,11 @@ TOKEN: {
         { debugStream.println("SPECIAL_SYMBOL token: " + matchedToken.image); }
     | <IDENTIFIER : <LETTER> (<LETTER> | <DIGIT> | "_")*>
         { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
-    | <REAL_NUMBER: (<DIGIT>)+ "." (<DIGIT>)+>
+    |
+    <REAL_NUMBER: (<DIGIT>)+ "." (<DIGIT>)*(<EXPONENT>)?
+    | (<DIGIT>)+ (".")?(<DIGIT>)*<EXPONENT>
+    | (<DIGIT>)* "." (<DIGIT>)+ (<EXPONENT>)?
+    | (<DIGIT>)* (".")? (<DIGIT>)+ <EXPONENT>>
         { debugStream.println("REAL_NUMBER token: " + matchedToken.image); }
     | <INTEGER_NUMBER: <DECIMAL> | <OCTAL> | <HEXADECIMAL>>
         { debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
