@@ -21,19 +21,21 @@ public interface Assignment5Constants {
   /** RegularExpression Id. */
   int IDENTIFIER = 10;
   /** RegularExpression Id. */
-  int INTEGER_NUMBER = 11;
+  int REAL_NUMBER = 11;
   /** RegularExpression Id. */
-  int DECIMAL = 12;
+  int INTEGER_NUMBER = 12;
   /** RegularExpression Id. */
-  int OCTAL = 13;
+  int DECIMAL = 13;
   /** RegularExpression Id. */
-  int HEXADECIMAL = 14;
+  int OCTAL = 14;
   /** RegularExpression Id. */
-  int LETTER = 15;
+  int HEXADECIMAL = 15;
   /** RegularExpression Id. */
-  int DIGIT = 16;
+  int EXPONENT = 16;
   /** RegularExpression Id. */
-  int EXPONENT = 17;
+  int LETTER = 17;
+  /** RegularExpression Id. */
+  int DIGIT = 18;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -53,13 +55,14 @@ public interface Assignment5Constants {
     "<RESERVED_WORD>",
     "<SPECIAL_SYMBOL>",
     "<IDENTIFIER>",
+    "<REAL_NUMBER>",
     "<INTEGER_NUMBER>",
     "<DECIMAL>",
     "<OCTAL>",
     "<HEXADECIMAL>",
+    "<EXPONENT>",
     "<LETTER>",
     "<DIGIT>",
-    "<EXPONENT>",
   };
 
 }
