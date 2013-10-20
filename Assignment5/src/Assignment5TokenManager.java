@@ -1631,13 +1631,21 @@ static void TokenLexicalActions(Token matchedToken)
         image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
           debugStream.println("CHARACTER token: " + matchedToken.image);
          break;
-      case 8 :
+      case 7 :
         image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
           debugStream.println("RESERVED_WORD token: " + matchedToken.image);
+         break;
+      case 8 :
+        image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
+          debugStream.println("SPECIAL_SYMBOL token: " + matchedToken.image);
          break;
       case 9 :
         image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
           debugStream.println("IDENTIFIER token: " + matchedToken.image);
+         break;
+      case 10 :
+        image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
+          debugStream.println("INTEGER_NUMBER token: " + matchedToken.image);
          break;
       default :
          break;
