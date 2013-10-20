@@ -10,7 +10,28 @@ PARSER_END(Assignment5)
 TOKEN_MGR_DECLS : {
     public static void main(String[] args)
     {
-        java.io.StringReader sr = new java.io.StringReader(args[0]);
+        StringBuilder fileString = new StringBuilder();
+        java.io.BufferedReader br = null;
+        try {
+            br = new java.io.BufferedReader(new java.io.FileReader("input.txt"));
+            int i = 0;
+            char[] buffer = new char[1024];
+
+            while ((i = br.read(buffer)) != -1)
+                fileString.append(buffer, 0, i);
+        }
+        catch (java.io.IOException ex) {
+        }
+        finally {
+            try {
+                br.close();
+            }
+            catch (java.io.IOException ex) {
+
+            }
+        }
+
+        java.io.StringReader sr = new java.io.StringReader(fileString.toString());
         SimpleCharStream scs = new SimpleCharStream(sr);
         Assignment5TokenManager mgr = new Assignment5TokenManager(scs);
 
