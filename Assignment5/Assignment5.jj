@@ -53,10 +53,13 @@ SKIP : {
     <~[]>
 }
 
-// TODO: Not complete yet
+// TODO: Fix character token, add real number token, verify if string token is correct.
 TOKEN: {
     <CHARACTER: "'" <LETTER> "'">
         { debugStream.println("CHARACTER token: " + matchedToken.image); }
+    |
+    <STRING: "\""(<LETTER>|<DIGIT>)*"\"">
+        { debugStream.println("STRING token: " + matchedToken.image); }
     |
     <RESERVED_WORD:
     "abstract"  | "default" | "goto" | "package" | "synchronized"
@@ -73,7 +76,7 @@ TOKEN: {
     >
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
     |
-    <SPECIAL_SYMBOL_TOKEN:
+    <SPECIAL_SYMBOL:
     "~" | "!" | "@" | "%" | "^" | "&" | "*" | "-" | "+" | "="
     | "|" | "/" | ":" | ";" | "?" | "<" | ">" | "." | ","
     | "'" | "\"" | "(" | ")" | "[" | "]" | "{" | "}"
