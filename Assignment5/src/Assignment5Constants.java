@@ -11,38 +11,41 @@ public interface Assignment5Constants {
   /** RegularExpression Id. */
   int IGNORE = 1;
   /** RegularExpression Id. */
-  int SINGLE_LINE_COMMENT = 2;
+  int CHARACTER = 6;
   /** RegularExpression Id. */
-  int CHARACTER = 3;
+  int RESERVED_WORD = 7;
   /** RegularExpression Id. */
-  int RESERVED_WORD = 4;
+  int SPECIAL_SYMBOL_TOKEN = 8;
   /** RegularExpression Id. */
-  int SPECIAL_SYMBOL_TOKEN = 5;
+  int IDENTIFIER = 9;
   /** RegularExpression Id. */
-  int IDENTIFIER = 6;
+  int INTEGER_NUMBER = 10;
   /** RegularExpression Id. */
-  int INTEGER_NUMBER = 7;
+  int DECIMAL = 11;
   /** RegularExpression Id. */
-  int DECIMAL = 8;
+  int OCTAL = 12;
   /** RegularExpression Id. */
-  int OCTAL = 9;
+  int HEXADECIMAL = 13;
   /** RegularExpression Id. */
-  int HEXADECIMAL = 10;
+  int LETTER = 14;
   /** RegularExpression Id. */
-  int LETTER = 11;
+  int DIGIT = 15;
   /** RegularExpression Id. */
-  int DIGIT = 12;
-  /** RegularExpression Id. */
-  int EXPONENT = 13;
+  int EXPONENT = 16;
 
   /** Lexical state. */
   int DEFAULT = 0;
+  /** Lexical state. */
+  int MULTI_LINE_COMMENT = 1;
 
   /** Literal token values. */
   String[] tokenImage = {
     "<EOF>",
     "<IGNORE>",
-    "\"//( )*(<LETTER>)*\"",
+    "<token of kind 2>",
+    "\"/*\"",
+    "\"*/\"",
+    "<token of kind 5>",
     "<CHARACTER>",
     "<RESERVED_WORD>",
     "<SPECIAL_SYMBOL_TOKEN>",
