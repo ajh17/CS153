@@ -41,6 +41,14 @@ TOKEN: {
     | "const" | "float" | "new" | "switch" | "while"
     | "continue" | "for" | "null"
     >
+    <SPECIAL_SYMBOL_TOKEN:
+    "~" | "!" | "@" | "%" | "^" | "&" | "*" | "-" | "+" | "="
+    | "|" | "/" | ":" | ";" | "?" | "<" | ">" | "." | ","
+    | "'" | "\"" | "(" | ")" | "[" | "]" | "{" | "}"
+    | "++" | "--" | "<<" | ">>" | "<=" | ">=" | "+=" | "-="
+    | "*=" | "/=" | "==" | "!=" | "%=" | "&=" | "^=" | "||"
+    | "&&" | "!=" | "<<=" | ">>="
+    >
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
     | <IDENTIFIER : <LETTER> (<LETTER> | <DIGIT> | "_")*>
         { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
