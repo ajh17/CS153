@@ -45,7 +45,7 @@ TOKEN: {
     | <IDENTIFIER : <LETTER> (<LETTER> | <DIGIT> | "_")*>
         { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
     | <INTEGER_NUMBER: <DECIMAL> | <OCTAL> | <HEXADECIMAL>>
-    | <DECIMAL: ["1-9"] (["0"-"9"])*>
+    | <DECIMAL: ["1"-"9"] (["0"-"9"])*>
     | <OCTAL: "0" (["0"-"7"])*>
     | <HEXADECIMAL: ("0x"|"0X") (<DIGIT>|<LETTER>)*>
     | <#LETTER: ["a"-"z", "A"-"Z"]>
