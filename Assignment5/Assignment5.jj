@@ -41,6 +41,7 @@ TOKEN: {
     | "const" | "float" | "new" | "switch" | "while"
     | "continue" | "for" | "null"
     >
+    |
     <SPECIAL_SYMBOL_TOKEN:
     "~" | "!" | "@" | "%" | "^" | "&" | "*" | "-" | "+" | "="
     | "|" | "/" | ":" | ";" | "?" | "<" | ">" | "." | ","
