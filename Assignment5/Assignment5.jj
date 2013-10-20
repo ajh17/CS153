@@ -1,0 +1,47 @@
+options {
+    BUILD_PARSER=false;
+    DEBUG_TOKEN_MANAGER=true;
+}
+
+PARSER_BEGIN(Assignment5)
+    public class Assignment5 {}
+PARSER_END(Assignment5)
+
+TOKEN_MGR_DECLS : {
+    public static void main(String[] args)
+    {
+        java.io.StringReader sr = new java.io.StringReader(args[0]);
+        SimpleCharStream scs = new SimpleCharStream(sr);
+        Assignment5TokenManager mgr = new Assignment5TokenManager(scs);
+
+        while (mgr.getNextToken().kind != EOF) {}
+    }
+}
+
+// TODO: Skip comments
+SKIP : {
+   <IGNORE : [" ", "\r", "\n", "\t"]>
+}
+
+// TODO: Not complete yet
+TOKEN: {
+    <CHARACTER: "'" <LETTER> "'">
+        { debugStream.println("CHARACTER token: " + matchedToken.image); }
+    |
+    <RESERVED_WORD:
+    "abstract"  | "default" | "goto" | "package" | "synchronized"
+    | "assert" | "do" | "if" | "private" | "this"
+    | "boolean" | "double" | "implements" | "protected" | "throw"
+    | "break" | "else" | "import" | "public" | "throws"
+    | "byte" | "enum" | "instanceof" | "return" | "transient"
+    | "case" | "extends" | "int" | "short" | "true"
+    | "catch" | "false" | "interface" | "static" | "try"
+    | "char" | "final" | "long" | "strictfp" | "void"
+    | "class" | "finally" | "native" | "super" | "volatile"
+    | "const" | "float" | "new" | "switch" | "while"
+    | "continue" | "for" | "null"
+    >
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+    | <#LETTER: ["a"-"z", "A"-"Z"]>
+    | <#DIGIT: ["0" - "9"]>
+}
