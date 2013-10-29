@@ -1,0 +1,22 @@
+options {
+    BUILD_PARSER=true;
+    OUTPUT_DIRECTORY="src/";
+}
+
+PARSER_BEGIN(Assignment5)
+    public class Assignment6 {}
+PARSER_END(Assignment5)
+
+SKIP : {
+   <IGNORE : [" ", "\r", "\n", "\t"]>
+   | <"//" (~["\n", "\r"])*>
+   | <"/*"> : MULTI_LINE_COMMENT
+}
+
+<MULTI_LINE_COMMENT> SKIP: {
+    "*/" : DEFAULT
+}
+
+<MULTI_LINE_COMMENT> MORE: {
+    <~[]>
+}
