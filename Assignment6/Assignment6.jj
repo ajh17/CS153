@@ -3,9 +3,9 @@ options {
     OUTPUT_DIRECTORY="src/";
 }
 
-PARSER_BEGIN(Assignment5)
+PARSER_BEGIN(Assignment6)
     public class Assignment6 {}
-PARSER_END(Assignment5)
+PARSER_END(Assignment6)
 
 SKIP : {
    <IGNORE : [" ", "\r", "\n", "\t"]>
@@ -19,4 +19,35 @@ SKIP : {
 
 <MULTI_LINE_COMMENT> MORE: {
     <~[]>
+}
+
+TOKEN_MGR_DECLS : {
+    public static void main(String[] args)
+    {
+        StringBuilder fileString = new StringBuilder();
+        java.io.BufferedReader br = null;
+        try {
+            br = new java.io.BufferedReader(new java.io.FileReader("input.txt"));
+            int i = 0;
+            char[] buffer = new char[1024];
+
+            while ((i = br.read(buffer)) != -1)
+                fileString.append(buffer, 0, i);
+        }
+        catch (java.io.IOException ex) {
+        }
+        finally {
+            try {
+                br.close();
+            }
+            catch (java.io.IOException ex) {
+            }
+        }
+
+        java.io.StringReader sr = new java.io.StringReader(fileString.toString());
+        SimpleCharStream scs = new SimpleCharStream(sr);
+        Assignment5TokenManager mgr = new Assignment5TokenManager(scs);
+
+        while (mgr.getNextToken().kind != EOF) {}
+    }
 }
