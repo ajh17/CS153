@@ -1,0 +1,35 @@
+/* This is a comment. */
+// This is a line comment
+
+/* Here's a comment
+   that spans several
+   source lines. */
+
+Two/*comments in*//***a row***/ here.
+/* Nested comments /* are not allowed */
+// This is not a /* nested */ comment.
+
+{ Not a comment }
+( Also not a comment )
+
+// Word tokens
+Hello world
+For for FOR FoR
+What is GO tehehe?
+
+// String tokens
+`abc`      // raw string literal; No escape chars allowed; same as "abc"
+`ab``cd`   // treated as "ab", immediately followed by "cd"; ` cannot appear inside ` `
+`ab\c`     // treated as "ab\c", backslash has no special meaning
+`\n
+\n`        // multi-line raw string literal; same as "\\n\n\\n"
+"\n"
+""
+"本"	               // unicode characters are allowed in strings
+"\u65e5"           // another unicode char
+"Hello, world!\n"  // interpreted string literals cannot span multiple lines. 
+
+// Special symbol tokens
++ & += &= && == != ( ) - | -= |= || < <= [ ]
+* ^ *= ^= <- > >= { } / << /= <<= ++ = := , ;
+% >> %= >>= -- ! ... . : &^ &^=
