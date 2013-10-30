@@ -83,6 +83,7 @@ TOKEN : {
     | <#OCTAL: "0" (["0"-"7"])*>
     | <#HEXADECIMAL: ("0x"|"0X") (<DIGIT>|<LETTER>)+>
     | <#EXPONENT: ("E"|"e") ("+"|"-")? (<DIGIT>)+>
-    | <#LETTER: ["a"-"z", "A"-"Z"]>
+    // TODO: letters in go can be unicode letters.
+    | <#LETTER: ["a"-"z", "A"-"Z", "_"]>
     | <#DIGIT: ["0"-"9"]>
 }
