@@ -27,8 +27,7 @@ TOKEN_MGR_DECLS : {
         StringBuilder fileString = new StringBuilder();
         java.io.BufferedReader br = null;
         if (args.length != 2) {
-            System.out.println("Did not provide an input file.");
-            System.exit(0);
+            // Javacc doesn't compile with println statements.
         }
         try {
             br = new java.io.BufferedReader(new java.io.FileReader(args[0]));
@@ -63,25 +62,25 @@ TOKEN_MGR_DECLS : {
 // TODO: Implement Go Expressions and Statements
 TOKEN : {
     <BASIC_LITERAL: <INTEGER_NUMBER> <REAL_NUMBER> <IMAGINARY_NUMBER> <STRING>>
+        { debugStream.println("BASIC_LITERAL token: " + matchedToken.image); }
     |
     <SIMPLE_SATEMENT: "" | <ASSIGNMENT_STATEMENT> | <EXPRESSION> | <SHORT_VAR_DECLR> | <INCDEC_STATEMENT>>
+        { debugStream.println("SIMPLE_STATEMENT token: " + matchedToken.image); }
     |
     <ASSIGNMENT_STATEMENT: <EXPRESSION_LIST> <ASSIGN_OPER> <EXPRESSION_LIST>>
+        { debugStream.println("ASSIGNMENT_STATEMENT token: " + matchedToken.image); }
     |
     <ASSIGN_OPER: (<ADD_OP> | <MUL_OP>)? "=">
+        { debugStream.println("ASSIGN_OPER token: " + matchedToken.image); }
     |
     <SHORT_VAR_DECLR: <IDENTIFIER> ":=" <EXPRESSION_LIST>>
-    |
-    <EXPRESSION_LIST: <EXPRESSION> ("," <EXPRESSION>)*>
-    |
-    <IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
+        { debugStream.println("SHORT_VAR_DECLR token: " + matchedToken.image); }
     |
     <RESERVED_WORD: 
     "break" | "default" | "func" | "interface" | "select" | "case" | "defer"
     | "go" | "map" | "struct" | "chan" | "else" | "goto" | "package" | "switch"
     | "const" | "fallthrough" | "if" | "range" | "type" | "continue"
-    | "for" | "import" | "return" | "var"
-    >
+    | "for" | "import" | "return" | "var">
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
     |
     <SPECIAL_SYMBOL:
@@ -90,8 +89,7 @@ TOKEN : {
     | "*" | "^" | "*=" | "^=" | "<-" | ">" | ">=" | "{"  | "}"
     | "/" | "<<" | "/=" | "<<=" | "++" | "=" | ":=" | "," | ";"
     | "%" | ">>" | "%=" | ">>=" | "--" | "!" | "..." |  "." | ":"
-    | "&^" | "&^="
-    >
+    | "&^" | "&^=">
         { debugStream.println("SPECIAL_SYMBOL token: " + matchedToken.image); }
     | <INTEGER_NUMBER: <DECIMAL> | <OCTAL> | <HEXADECIMAL>>
         { debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
@@ -111,4 +109,6 @@ TOKEN : {
     | <#MUL_OP: ["*", "/", "%" , "<<", ">>", "&", "&^"]>
     | <#REL_OP: ["==", "!=", "<", "<=", ">", ">="] >
     | <#INCDEC_STATEMENT: <EXPRESSION> ("++" | "--")>
+    | <#EXPRESSION_LIST: <EXPRESSION> ("," <EXPRESSION>)*>
+    | <#IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
 }
