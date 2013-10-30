@@ -60,8 +60,14 @@ TOKEN_MGR_DECLS : {
 // TODO: Decide whether we want to implement Unicode at all. If so, change appropriate tokens.
 // TODO: Implement string token. Go has "" type strings and `` type strings (`` are raw strings)
 // TODO: Go also has "rune" that's (as far as I know) is aliased to int16. 
+// TODO: Implement Go Expressions and Statements
 TOKEN : {
     <BASIC_LITERAL: <INTEGER_NUMBER> <REAL_NUMBER> <IMAGINARY_NUMBER> <STRING>>
+    |
+    <ASSIGNMENT_STATEMENT: <EXPRESSION_LIST> <ASSIGN_OPER> <EXPRESSION_LIST>>
+    |
+    <ASSIGN_OPER: (<ADD_OP> | <MUL_OP>)? "=">
+    |
     <RESERVED_WORD: 
     "break" | "default" | "func" | "interface" | "select" | "case" | "defer"
     | "go" | "map" | "struct" | "chan" | "else" | "goto" | "package" | "switch"
@@ -93,4 +99,6 @@ TOKEN : {
     | <#LETTER: ["a"-"z", "A"-"Z"]>
     | <#DIGIT: ["0"-"9"]>
     | <#DECIMAL: <DIGIT> (<DIGIT>)*>
+    | <#ADD_OP: ["+", "-", "|", "^"]>
+    | <#MUL_OP: ["*", "/", "%" , "<<", ">>", "&", "&^"]>
 }
