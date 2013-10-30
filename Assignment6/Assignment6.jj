@@ -51,3 +51,24 @@ TOKEN_MGR_DECLS : {
         while (mgr.getNextToken().kind != EOF) {}
     }
 }
+
+TOKEN : {
+    // TODO: At the moment, this is a full reserved word list.
+    // Some tokens may be removed depending on the subset 
+    // of Go we will choose.
+    <RESERVED_WORD: 
+    "break" | "default" | "func" | "interface" | "select" | "case" | "defer"
+    | "go" | "map" | "struct" | "chan" | "else" | "goto" | "package" | "switch"
+    | "const" | "fallthrough" | "if" | "range" | "type" | "continue"
+    | "for" | "import" | "return" | "var"
+    >
+        { debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
+    | <INTEGER_NUMBER: <DECIMAL> | <OCTAL> | <HEXADECIMAL>>
+        { debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
+    | <#DECIMAL: ["1"-"9"] (["0"-"9"])*>
+    | <#OCTAL: "0" (["0"-"7"])*>
+    | <#HEXADECIMAL: ("0x"|"0X") (<DIGIT>|<LETTER>)+>
+    | <#EXPONENT: ("E"|"e") ("+"|"-")? (<DIGIT>)+>
+    | <#LETTER: ["a"-"z", "A"-"Z"]>
+    | <#DIGIT: ["0"-"9"]>
+}
