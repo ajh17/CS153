@@ -65,7 +65,7 @@ TOKEN : {
     | "const" | "fallthrough" | "if" | "range" | "type" | "continue"
     | "for" | "import" | "return" | "var"
     >
-         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
     |
     <SPECIAL_SYMBOL:
     "+" | "&" | "+=" | "&=" | "&&" | "==" | "!=" | "(" | ")"
@@ -74,11 +74,12 @@ TOKEN : {
     | "/" | "<<" | "/=" | "<<=" | "++" | "=" | ":=" | "," | ";"
     | "%" | ">>" | "%=" | ">>=" | "--" | "!" | "..." |  "." | ":"
     | "&^" | "&^="
+    >
         { debugStream.println("SPECIAL_SYMBOL token: " + matchedToken.image); }
     | <INTEGER_NUMBER: <DECIMAL> | <OCTAL> | <HEXADECIMAL>>
         { debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
     | <REAL_NUMBER: <DECIMAL> "." (<DECIMAL>)? (<EXPONENT>)?) | (<DECIMAL> <EXPONENT>) 
-        | ("." <DECIMAL> (<EXPONENT>)?)>
+    | ("." <DECIMAL> (<EXPONENT>)?)>
         { debugStream.println("REAL_NUMBER token: " + matchedToken.image); }
     | <IMAGINARY_NUMBER ( (<DIGIT>)+ | <REAL_NUMBER>) "i">
     | <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT> | "_")*>
