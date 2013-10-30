@@ -1,5 +1,7 @@
 // Expressions with numeric constants and scalar variables
 a = 1
+aa = 0xFaE5A2 // this is a hex digit
+aaa = 0600 // this is an octal digit
 b = 2 + 3.0
 c = 3 / 3
 d = 3 / 3.0
