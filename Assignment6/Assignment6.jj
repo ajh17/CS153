@@ -27,7 +27,7 @@ TOKEN_MGR_DECLS : {
         StringBuilder fileString = new StringBuilder();
         java.io.BufferedReader br = null;
         try {
-            br = new java.io.BufferedReader(new java.io.FileReader("input.txt"));
+            br = new java.io.BufferedReader(new java.io.FileReader("input1.txt"));
             int i = 0;
             char[] buffer = new char[1024];
 
