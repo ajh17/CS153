@@ -84,11 +84,11 @@ TOKEN : {
     // TODO: Impletment all Unicode Letters and digits. Or decide whether we want to implement Unicode at all.  
     | <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT> | "_")*>
         { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
-    | <#DECIMAL: <DIGIT> (<DIGIT>)*>
     | <#OCTAL: "0" (["0"-"7"])*>
-    | <#HEXADECIMAL: ("0x"|"0X") (<DIGIT>|<LETTER>)+>
-    | <#EXPONENT: ("E"|"e") ("+"|"-")? (<DIGIT>)+>
+    | <#HEXADECIMAL: ("0x"|"0X") (["A-F", "a-f", <DIGIT>])+>
+    | <#EXPONENT: ("E"|"e") ("+"|"-")? <DECIMAL>>
     // TODO: letters in go can be unicode letters.
     | <#LETTER: ["a"-"z", "A"-"Z"]>
     | <#DIGIT: ["0"-"9"]>
+    | <#DECIMAL: <DIGIT> (<DIGIT>)*>
 }
