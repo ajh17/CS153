@@ -62,7 +62,7 @@ TOKEN : {
     | "const" | "fallthrough" | "if" | "range" | "type" | "continue"
     | "for" | "import" | "return" | "var"
     >
-         { debugStream.println("SPECIAL_SYMBOL token: " + matchedToken.image); }
+         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
     <SPECIAL_SYMBOL:
     "+" | "&" | "+=" | "&=" | "&&" | "==" | "!=" | "(" | ")"
     | "-" | "|" | "-=" | "|=" | "||" | "<" | "<=" | "[" | "]"
@@ -70,7 +70,7 @@ TOKEN : {
     | "/" | "<<" | "/=" | "<<=" | "++" | "=" | ":=" | "," | ";"
     | "%" | ">>" | "%=" | ">>=" | "--" | "!" | "..." |  "." | ":"
     | "&^" | "&^="
-        { >.println("SPECIAL_SYMBOL token: " + matchedToken.image); }
+        { debugStream.println("SPECIAL_SYMBOL token: " + matchedToken.image); }
     | <INTEGER_NUMBER: <DECIMAL> | <OCTAL> | <HEXADECIMAL>>
         { debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
     | <#DECIMAL: ["1"-"9"] (["0"-"9"])*>
