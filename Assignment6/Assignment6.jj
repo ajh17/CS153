@@ -67,6 +67,7 @@ TOKEN : {
     | "for" | "import" | "return" | "var"
     >
          { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+    |
     <SPECIAL_SYMBOL:
     "+" | "&" | "+=" | "&=" | "&&" | "==" | "!=" | "(" | ")"
     | "-" | "|" | "-=" | "|=" | "||" | "<" | "<=" | "[" | "]"
