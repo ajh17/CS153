@@ -64,9 +64,17 @@ TOKEN_MGR_DECLS : {
 TOKEN : {
     <BASIC_LITERAL: <INTEGER_NUMBER> <REAL_NUMBER> <IMAGINARY_NUMBER> <STRING>>
     |
+    <SIMPLE_SATEMENT: "" | <ASSIGNMENT_STATEMENT> | <EXPRESSION> | <SHORT_VAR_DECLR> | <INCDEC_STATEMENT>>
+    |
     <ASSIGNMENT_STATEMENT: <EXPRESSION_LIST> <ASSIGN_OPER> <EXPRESSION_LIST>>
     |
     <ASSIGN_OPER: (<ADD_OP> | <MUL_OP>)? "=">
+    |
+    <SHORT_VAR_DECLR: <IDENTIFIER> ":=" <EXPRESSION_LIST>>
+    |
+    <EXPRESSION_LIST: <EXPRESSION> ("," <EXPRESSION>)*>
+    |
+    <IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
     |
     <RESERVED_WORD: 
     "break" | "default" | "func" | "interface" | "select" | "case" | "defer"
@@ -101,4 +109,6 @@ TOKEN : {
     | <#DECIMAL: <DIGIT> (<DIGIT>)*>
     | <#ADD_OP: ["+", "-", "|", "^"]>
     | <#MUL_OP: ["*", "/", "%" , "<<", ">>", "&", "&^"]>
+    | <#REL_OP: ["==", "!=", "<", "<=", ">", ">="] >
+    | <#INCDEC_STATEMENT: <EXPRESSION> ("++" | "--")>
 }
