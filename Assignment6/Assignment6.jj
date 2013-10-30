@@ -58,7 +58,10 @@ TOKEN_MGR_DECLS : {
 
 // TODO: Reserved word tokens may be removed depending on the subset of Go we choose.
 // TODO: Decide whether we want to implement Unicode at all. If so, change appropriate tokens.
+// TODO: Implement string token. Go has "" type strings and `` type strings (`` are raw strings)
+// TODO: Go also has "rune" that's (as far as I know) is aliased to int16. 
 TOKEN : {
+    <BASIC_LITERAL: <INTEGER_NUMBER> <REAL_NUMBER> <IMAGINARY_NUMBER> <STRING>>
     <RESERVED_WORD: 
     "break" | "default" | "func" | "interface" | "select" | "case" | "defer"
     | "go" | "map" | "struct" | "chan" | "else" | "goto" | "package" | "switch"
@@ -79,7 +82,7 @@ TOKEN : {
     | <INTEGER_NUMBER: <DECIMAL> | <OCTAL> | <HEXADECIMAL>>
         { debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
     | <REAL_NUMBER: <DECIMAL> "." (<DECIMAL>)? (<EXPONENT>)?) | (<DECIMAL> <EXPONENT>) 
-    | ("." <DECIMAL> (<EXPONENT>)?)>
+            | ("." <DECIMAL> (<EXPONENT>)?)>
         { debugStream.println("REAL_NUMBER token: " + matchedToken.image); }
     | <IMAGINARY_NUMBER ( (<DIGIT>)+ | <REAL_NUMBER>) "i">
     | <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT> | "_")*>
