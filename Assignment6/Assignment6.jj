@@ -73,6 +73,12 @@ TOKEN : {
         { debugStream.println("SPECIAL_SYMBOL token: " + matchedToken.image); }
     | <INTEGER_NUMBER: <DECIMAL> | <OCTAL> | <HEXADECIMAL>>
         { debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
+    | <REAL_NUMBER: <DIGIT> "." ((<DIGIT>)? (<EXPONENT>)?) | (<DIGIT><EXPONENT>) 
+        | ("." <DIGIT> (<DIGIT>)?)>
+        { debugStream.println("REAL_NUMBER token: " + matchedToken.image); }
+    // TODO: Impletment all Unicode Letters and digits. Or decide whether we want to implement Unicode at all.  
+    | <IDENTIFIER: <LETTER> (<LETTER> | <UNICODE_DIGIT>)*>
+        { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
     | <#DECIMAL: ["1"-"9"] (["0"-"9"])*>
     | <#OCTAL: "0" (["0"-"7"])*>
     | <#HEXADECIMAL: ("0x"|"0X") (<DIGIT>|<LETTER>)+>
