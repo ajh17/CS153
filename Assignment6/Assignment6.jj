@@ -26,8 +26,12 @@ TOKEN_MGR_DECLS : {
     {
         StringBuilder fileString = new StringBuilder();
         java.io.BufferedReader br = null;
+        if (args.length != 2) {
+            System.out.println("Did not provide an input file.");
+            System.exit(0);
+        }
         try {
-            br = new java.io.BufferedReader(new java.io.FileReader("input1.txt"));
+            br = new java.io.BufferedReader(new java.io.FileReader(args[0]));
             int i = 0;
             char[] buffer = new char[1024];
 
