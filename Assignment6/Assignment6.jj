@@ -69,7 +69,7 @@ TOKEN : {
     <BASIC_LITERAL: <INTEGER_NUMBER> <REAL_NUMBER> <IMAGINARY_NUMBER> <STRING>>
         { debugStream.println("BASIC_LITERAL token: " + matchedToken.image); }
     |
-     <SIMPLE_STATEMENT: "" | <ASSIGNMENT_STATEMENT> | <EXPRESSION> | <SHORT_VAR_DECLR> | <INCDEC_STATEMENT>>
+     <SIMPLE_STATEMENT: (<ASSIGNMENT_STATEMENT> | <EXPRESSION> | <SHORT_VAR_DECLR> | <INCDEC_STATEMENT>)?>
         { debugStream.println("SIMPLE_STATEMENT token: " + matchedToken.image); }
     |
     <ASSIGNMENT_STATEMENT: <EXPRESSION_LIST> <ASSIGN_OPER> <EXPRESSION_LIST>>
@@ -84,15 +84,18 @@ TOKEN : {
     |
     <METHOD_NAME: <IDENTIFIER>>
     |
-    <TYPE_NAME: <IDENTIFIER> | <QUALIFIED_IDENTIFIER>>
-    |
     <QUALIFIED_IDENTIFIER: <IDENTIFIER> "." <IDENTIFIER>>
     |
-    <EXPRESSION: <UNARY_EXPRESSION> | (<EXPRESSION> <BINARY_OP> <EXPRESSION>)>
+    <EXPRESSION: <UNARY_EXPRESSION> | (<EXPRESSION> <BINARY_OP> <UNARY_EXPRESSION>)>
     |
-    <UNARY_EXPRESSION: <PRIMARY_EXPRESSION> | <UNARY_OP> <UNARY_EXPRESSION>>
+    <UNARY_EXPRESSION: <PRIMARY_EXPRESSION> | (<UNARY_OP> <UNARY_EXPRESSION>)>
     |
-    <PRIMARY_EXPRESSION: <OPERAND> | <CONVERSION> | <BUILTIN_CALL>>
+    <PRIMARY_EXPRESSION: <OPERAND> | <CONVERSION> | <BUILTIN_CALL> | (<PRIMARY_EXPRESSION> <SELECTOR>)
+                                   | (<PRIMARY_EXPRESSION> <INDEX>)>
+    |
+    <INDEX: "[" <EXPRESSION> "]">
+    |
+    <SELECTOR: "." <IDENTIFIER>>
     |
     <BUILTIN_CALL: <IDENTIFIER> "(" (<BUILTIN_ARGS> (",")?)? ")">
     |
@@ -106,7 +109,19 @@ TOKEN : {
     |
     <CONVERSION: <TYPE> "(" <EXPRESSION> (",")? ")">
     |
-    <TYPE: <TYPE_NAME> | ("(" <TYPE> ")")>
+    <TYPE: <TYPE_NAME> | <TYPE_LITERAL> | ("(" <TYPE> ")")>
+    |
+    <TYPE_NAME: <IDENTIFIER> | <QUALIFIED_IDENTIFIER>>
+    |
+    <TYPE_LITERAL: <ARRAY_TYPE> | <STRUCT_TYPE>>
+    |
+    <ARRAY_TYPE: "[" <EXPRESSION> "]" <TYPE>>
+    |
+    <STRUCT_TYPE: "struct" "{" (<FIELD_DECL> ";")* "}">
+    |
+    <FIELD_DECL: ((<IDENTIFIER_LIST> <TYPE>) | <ANONYMOUS_FIELD>) (<STRING>)?>
+    |
+    <ANONYMOUS_FIELD: ("*")? <TYPE_NAME>>
     |
     <SHORT_VAR_DECLR: <IDENTIFIER> ":=" <EXPRESSION_LIST>>
        { debugStream.println("SHORT_VAR_DECLR token: " + matchedToken.image); }
@@ -155,7 +170,7 @@ TOKEN : {
         | "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">" | "," | "." | "/"
         | "?" | ":" | ";" | "\"" | "[" | "]" | "{" | "}" | "|" | "\\") "'" >
     | <#RAW_STRING: "`" (<LETTER> | <DIGIT> | <LITERAL_SYMBOLS> | <NEWLINE>)* "`">
-    | <#INTERPRETED_STRING: "\"" (<UNICODE_VALUE> | <BYTE_VALUE> | "\u672c")* "\"">
+    | <#INTERPRETED_STRING: "\"" (<UNICODE_VALUE> | <BYTE_VALUE>)* "\"">
     | <#UNICODE_CHAR: "\\" (["t", "b", "f", "\\", "\"", "'"])
         | (["u", "U"] "+" <UNICODE_CODE_PT>)>
     | <#UNICODE_CODE_PT:
@@ -175,7 +190,7 @@ TOKEN : {
     | <#INCDEC_STATEMENT: <EXPRESSION> ("++" | "--")>
     | <#EXPRESSION_LIST: <EXPRESSION> ("," <EXPRESSION>)*>
     | <#IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
-    | <#FOR_STATEMENT: "for" (<EXPRESSION> | <FOR_CLAUSE> | <RANGE_CLAUSE>) >
+    | <#FOR_STATEMENT: "for" (<EXPRESSION> | <FOR_CLAUSE> | <RANGE_CLAUSE>)? >
     | <#FOR_CLAUSE: <SIMPLE_STATEMENT> ";" <EXPRESSION> ";" <SIMPLE_STATEMENT> >
     | <#RANGE_CLAUSE: ( <EXPRESSION_LIST> "=" | <IDENTIFIER_LIST> ":=" ) "range" <EXPRESSION>>
 }
