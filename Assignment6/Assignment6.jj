@@ -61,21 +61,21 @@ TOKEN_MGR_DECLS : {
 // TODO: Go also has "rune" that's (as far as I know) is aliased to int16. 
 // TODO: Implement Go Expressions and Statements
 TOKEN : {
-    <BASIC_LITERAL: <INTEGER_NUMBER> <REAL_NUMBER> <IMAGINARY_NUMBER> <STRING>>
-        { debugStream.println("BASIC_LITERAL token: " + matchedToken.image); }
-    |
-    <SIMPLE_SATEMENT: "" | <ASSIGNMENT_STATEMENT> | <EXPRESSION> | <SHORT_VAR_DECLR> | <INCDEC_STATEMENT>>
-        { debugStream.println("SIMPLE_STATEMENT token: " + matchedToken.image); }
-    |
-    <ASSIGNMENT_STATEMENT: <EXPRESSION_LIST> <ASSIGN_OPER> <EXPRESSION_LIST>>
-        { debugStream.println("ASSIGNMENT_STATEMENT token: " + matchedToken.image); }
-    |
+    // <BASIC_LITERAL: <INTEGER_NUMBER> <REAL_NUMBER> <IMAGINARY_NUMBER> <STRING>>
+    //    { debugStream.println("BASIC_LITERAL token: " + matchedToken.image); }
+    //|
+    // <SIMPLE_STATEMENT: "" | <ASSIGNMENT_STATEMENT> | <EXPRESSION> | <SHORT_VAR_DECLR> | <INCDEC_STATEMENT>>
+    //    { debugStream.println("SIMPLE_STATEMENT token: " + matchedToken.image); }
+    //|
+    //<ASSIGNMENT_STATEMENT: <EXPRESSION_LIST> <ASSIGN_OPER> <EXPRESSION_LIST>>
+    //    { debugStream.println("ASSIGNMENT_STATEMENT token: " + matchedToken.image); }
+    //|
     <ASSIGN_OPER: (<ADD_OP> | <MUL_OP>)? "=">
         { debugStream.println("ASSIGN_OPER token: " + matchedToken.image); }
     |
-    <SHORT_VAR_DECLR: <IDENTIFIER> ":=" <EXPRESSION_LIST>>
-        { debugStream.println("SHORT_VAR_DECLR token: " + matchedToken.image); }
-    |
+    //<SHORT_VAR_DECLR: <IDENTIFIER> ":=" <EXPRESSION_LIST>>
+    //    { debugStream.println("SHORT_VAR_DECLR token: " + matchedToken.image); }
+    //|
     <RESERVED_WORD: 
     "break" | "default" | "func" | "interface" | "select" | "case" | "defer"
     | "go" | "map" | "struct" | "chan" | "else" | "goto" | "package" | "switch"
@@ -93,22 +93,23 @@ TOKEN : {
         { debugStream.println("SPECIAL_SYMBOL token: " + matchedToken.image); }
     | <INTEGER_NUMBER: <DECIMAL> | <OCTAL> | <HEXADECIMAL>>
         { debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
-    | <REAL_NUMBER: <DECIMAL> "." (<DECIMAL>)? (<EXPONENT>)?) | (<DECIMAL> <EXPONENT>) 
+    | <REAL_NUMBER: <DECIMAL> "." (<DECIMAL>)? (<EXPONENT>)? | (<DECIMAL> <EXPONENT>)
             | ("." <DECIMAL> (<EXPONENT>)?)>
         { debugStream.println("REAL_NUMBER token: " + matchedToken.image); }
-    | <IMAGINARY_NUMBER ( (<DIGIT>)+ | <REAL_NUMBER>) "i">
+    | <IMAGINARY_NUMBER: ((<DIGIT>)+ | <REAL_NUMBER>) "i">
+        { debugStream.println("IMAGINARY_NUMBER token: " + matchedToken.image); }
     | <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT> | "_")*>
         { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
     | <#OCTAL: "0" (["0"-"7"])*>
-    | <#HEXADECIMAL: ("0x"|"0X") (["A-F", "a-f", <DIGIT>])+>
+    | <#HEXADECIMAL: ("0x"|"0X") (["A"-"F", "a"-"f", "0"-"9"])+>
     | <#EXPONENT: ("E"|"e") ("+"|"-")? <DECIMAL>>
     | <#LETTER: ["a"-"z", "A"-"Z"]>
     | <#DIGIT: ["0"-"9"]>
     | <#DECIMAL: <DIGIT> (<DIGIT>)*>
     | <#ADD_OP: ["+", "-", "|", "^"]>
-    | <#MUL_OP: ["*", "/", "%" , "<<", ">>", "&", "&^"]>
-    | <#REL_OP: ["==", "!=", "<", "<=", ">", ">="] >
-    | <#INCDEC_STATEMENT: <EXPRESSION> ("++" | "--")>
-    | <#EXPRESSION_LIST: <EXPRESSION> ("," <EXPRESSION>)*>
-    | <#IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
+    | <#MUL_OP: ("*" | "/" | "%" | "<<" | ">>" | "&" | "&^")>
+    | <#REL_OP: ("==" | "!=" | "<" | "<=" | ">" | ">=") >
+    //| <#INCDEC_STATEMENT: <EXPRESSION> ("++" | "--")>
+    // | <#EXPRESSION_LIST: <EXPRESSION> ("," <EXPRESSION>)*>
+    // | <#IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
 }
