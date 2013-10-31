@@ -15,7 +15,7 @@ Two/*comments in*//***a row***/ here.
 // Word tokens
 Hello world
 For for FOR FoR
-What is GO tehehe?
+What is GO tehehe
 
 // String tokens
 `abc`      // raw string literal; No escape chars allowed; same as "abc"
