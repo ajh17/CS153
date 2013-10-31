@@ -49,7 +49,7 @@ TOKEN_MGR_DECLS : {
 
         java.io.StringReader sr = new java.io.StringReader(fileString.toString());
         SimpleCharStream scs = new SimpleCharStream(sr);
-        Assignment5TokenManager mgr = new Assignment5TokenManager(scs);
+        Assignment6TokenManager mgr = new Assignment6TokenManager(scs);
 
         while (mgr.getNextToken().kind != EOF) {}
     }
