@@ -1,6 +1,7 @@
 options {
-    BUILD_PARSER=false;
+    BUILD_PARSER=true;
     OUTPUT_DIRECTORY="src/";
+    UNICODE_INPUT=true;
 }
 
 PARSER_BEGIN(Assignment6)
@@ -91,6 +92,9 @@ TOKEN : {
     | "%" | ">>" | "%=" | ">>=" | "--" | "!" | "..." |  "." | ":"
     | "&^" | "&^=">
         { debugStream.println("SPECIAL_SYMBOL token: " + matchedToken.image); }
+    |
+    <STRING: <RAW_STRING> | <INTERPRETED_STRING>>
+        { debugStream.println("STRING token: " + matchedToken.image); }
     | <INTEGER_NUMBER: <DECIMAL> | <OCTAL> | <HEXADECIMAL>>
         { debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
     | <REAL_NUMBER: <DECIMAL> "." (<DECIMAL>)? (<EXPONENT>)? | (<DECIMAL> <EXPONENT>)
@@ -109,6 +113,16 @@ TOKEN : {
     | <#ADD_OP: ["+", "-", "|", "^"]>
     | <#MUL_OP: ("*" | "/" | "%" | "<<" | ">>" | "&" | "&^")>
     | <#REL_OP: ("==" | "!=" | "<" | "<=" | ">" | ">=") >
+    | <#RAW_STRING: "`" (<UNICODE_CHAR>) | (<NEWLINE>) "`">
+    | <#INTERPRETED_STRING: "\"" (<LETTER> | " " | <DIGIT> | <NEWLINE>)* "\"">
+    | <#UNICODE_CHAR: "\\" (["t", "b", "f", "\\", "\"", "'"])
+        | (["u", "U"] "+" <UNICODE_CODE_PT>)>
+    | <#UNICODE_CODE_PT:
+        ["0"-"9", "A"-"F", "a"-"f"]
+        ["0"-"9", "A"-"F", "a"-"f"]
+        ["0"-"9", "A"-"F", "a"-"f"]
+        ["0"-"9", "A"-"F", "a"-"f"]>
+    | <#NEWLINE: ["\r", "\n"]>
     //| <#INCDEC_STATEMENT: <EXPRESSION> ("++" | "--")>
     // | <#EXPRESSION_LIST: <EXPRESSION> ("," <EXPRESSION>)*>
     // | <#IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
