@@ -80,7 +80,7 @@ TOKEN : {
     |
     <METHOD_EXPRESSION: <RECEIVER_TYPE> "." <METHOD_NAME>>
     |
-    <RECEIVER_TYPE: <TYPE_NAME> | ("(" "*" <TYPE_NAME> ")") | ("(" <RECEIVER_TYPE> ")")>
+    <RECEIVER_TYPE: (<TYPE_NAME> | ("(" "*" <TYPE_NAME> ")"))+>
     |
     <METHOD_NAME: <IDENTIFIER>>
     |
