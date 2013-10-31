@@ -2,6 +2,7 @@ options {
     BUILD_PARSER=true;
     OUTPUT_DIRECTORY="src/";
     UNICODE_INPUT=true;
+    DEBUG_TOKEN_MANAGER=true;
 }
 
 PARSER_BEGIN(Assignment6)
@@ -60,7 +61,7 @@ TOKEN_MGR_DECLS : {
 // TODO: Reserved word tokens may be removed depending on the subset of Go we choose.
 // TODO: Decide whether we want to implement Unicode at all. If so, change appropriate tokens.
 // TODO: Implement string token. Go has "" type strings and `` type strings (`` are raw strings)
-// TODO: Go also has "rune" that's (as far as I know) is aliased to int16. 
+// TODO: Go also has "rune" that's (as far as I know) is aliased to int16.
 // TODO: Implement Go Expressions and Statements
 TOKEN : {
     <LITERAL: <BASIC_LITERAL>>
@@ -68,20 +69,36 @@ TOKEN : {
     <BASIC_LITERAL: <INTEGER_NUMBER> <REAL_NUMBER> <IMAGINARY_NUMBER> <STRING>>
         { debugStream.println("BASIC_LITERAL token: " + matchedToken.image); }
     |
-    // <SIMPLE_STATEMENT: "" | <ASSIGNMENT_STATEMENT> | <EXPRESSION> | <SHORT_VAR_DECLR> | <INCDEC_STATEMENT>>
-    //    { debugStream.println("SIMPLE_STATEMENT token: " + matchedToken.image); }
-    //|
-    //<ASSIGNMENT_STATEMENT: <EXPRESSION_LIST> <ASSIGN_OPER> <EXPRESSION_LIST>>
-    //    { debugStream.println("ASSIGNMENT_STATEMENT token: " + matchedToken.image); }
-    //|
+     <SIMPLE_STATEMENT: "" | <ASSIGNMENT_STATEMENT> | <EXPRESSION> | <SHORT_VAR_DECLR> | <INCDEC_STATEMENT>>
+        { debugStream.println("SIMPLE_STATEMENT token: " + matchedToken.image); }
+    |
+    <ASSIGNMENT_STATEMENT: <EXPRESSION_LIST> <ASSIGN_OPER> <EXPRESSION_LIST>>
+        { debugStream.println("ASSIGNMENT_STATEMENT token: " + matchedToken.image); }
+    |
     <ASSIGN_OPER: (<ADD_OP> | <MUL_OP>)? "=">
         { debugStream.println("ASSIGN_OPER token: " + matchedToken.image); }
     |
+    <METHOD_EXPRESSION: <RECEIVER_TYPE> "." <METHOD_NAME>>
+    |
+    <RECEIVER_TYPE: <TYPE_NAME> | ("(" "*" <TYPE_NAME> ")") | ("(" <RECEIVER_TYPE> ")")>
+    |
+    <METHOD_NAME: <IDENTIFIER>>
+    |
+    <TYPE_NAME: <IDENTIFIER> | <QUALIFIED_IDENTIFIER>>
+    |
     <QUALIFIED_IDENTIFIER: <IDENTIFIER> "." <IDENTIFIER>>
     |
-    //<SHORT_VAR_DECLR: <IDENTIFIER> ":=" <EXPRESSION_LIST>>
-    //    { debugStream.println("SHORT_VAR_DECLR token: " + matchedToken.image); }
-    //|
+    <EXPRESSION: <UNARY_EXPRESSION> | (<EXPRESSION> <BINARY_OP> <EXPRESSION>)>
+    |
+    <UNARY_EXPRESSION: <PRIMARY_EXPRESSION> | <UNARY_OP> <UNARY_EXPRESSION>>
+    |
+    <PRIMARY_EXPRESSION: <OPERAND> | <CONVERSION>>
+    |
+    <OPERAND: <LITERAL> | <OPERAND_NAME> | ("(" <EXPRESSION> ")")>
+    |
+    <SHORT_VAR_DECLR: <IDENTIFIER> ":=" <EXPRESSION_LIST>>
+       { debugStream.println("SHORT_VAR_DECLR token: " + matchedToken.image); }
+    |
     <RESERVED_WORD: 
     "break" | "default" | "func" | "interface" | "select" | "case" | "defer"
     | "go" | "map" | "struct" | "chan" | "else" | "goto" | "package" | "switch"
@@ -126,7 +143,7 @@ TOKEN : {
         | "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">" | "," | "." | "/"
         | "?" | ":" | ";" | "\"" | "[" | "]" | "{" | "}" | "|" | "\\") >
     | <#RAW_STRING: "`" (<LETTER> | <DIGIT> | <LITERAL_SYMBOLS> | <NEWLINE>)* "`">
-    | <#INTERPRETED_STRING: "\"" (<UNICODE_VALUE> | <BYTE_VALUE>)* "\"">
+    | <#INTERPRETED_STRING: "\"" (<UNICODE_VALUE> | <BYTE_VALUE> | "\u672c")* "\"">
     | <#UNICODE_CHAR: "\\" (["t", "b", "f", "\\", "\"", "'"])
         | (["u", "U"] "+" <UNICODE_CODE_PT>)>
     | <#UNICODE_CODE_PT:
@@ -143,7 +160,7 @@ TOKEN : {
     | <#HEX_BYTE: "\\" "x" <HEXADECIMAL> <HEXADECIMAL>>
     | <#NEWLINE: ["\r", "\n"]>
     | <#ESCAPED_CHAR: "\\" ("a" | "b" | "f" | "n" | "r" | "t" | "v" | "\\" | "'" | "\"")>
-    //| <#INCDEC_STATEMENT: <EXPRESSION> ("++" | "--")>
-    // | <#EXPRESSION_LIST: <EXPRESSION> ("," <EXPRESSION>)*>
-    // | <#IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
+    | <#INCDEC_STATEMENT: <EXPRESSION> ("++" | "--")>
+    | <#EXPRESSION_LIST: <EXPRESSION> ("," <EXPRESSION>)*>
+    | <#IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
 }
