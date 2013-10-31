@@ -170,7 +170,7 @@ TOKEN : {
         | "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">" | "," | "." | "/"
         | "?" | ":" | ";" | "\"" | "[" | "]" | "{" | "}" | "|" | "\\") "'" >
     | <#RAW_STRING: "`" (<LETTER> | <DIGIT> | <LITERAL_SYMBOLS> | <NEWLINE>)* "`">
-    | <#INTERPRETED_STRING: "\"" (<UNICODE_VALUE> | <BYTE_VALUE> | "\u672c")* "\"">
+    | <#INTERPRETED_STRING: "\"" (<UNICODE_VALUE> | <BYTE_VALUE>)* "\"">
     | <#UNICODE_CHAR: "\\" (["t", "b", "f", "\\", "\"", "'"])
         | (["u", "U"] "+" <UNICODE_CODE_PT>)>
     | <#UNICODE_CODE_PT:
