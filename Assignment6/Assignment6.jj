@@ -100,6 +100,8 @@ TOKEN : {
     | <REAL_NUMBER: <DECIMAL> "." (<DECIMAL>)? (<EXPONENT>)? | (<DECIMAL> <EXPONENT>)
             | ("." <DECIMAL> (<EXPONENT>)?)>
         { debugStream.println("REAL_NUMBER token: " + matchedToken.image); }
+    | <RUNE_LITERAL: "'" (<UNICODE_VALUE> | <BYTE_VALUE>) "'">
+        { debugStream.println("RUNE_LITERAL token: " + matchedToken.image); }
     | <IMAGINARY_NUMBER: ((<DIGIT>)+ | <REAL_NUMBER>) "i">
         { debugStream.println("IMAGINARY_NUMBER token: " + matchedToken.image); }
     | <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT> | "_")*>
@@ -122,7 +124,15 @@ TOKEN : {
         ["0"-"9", "A"-"F", "a"-"f"]
         ["0"-"9", "A"-"F", "a"-"f"]
         ["0"-"9", "A"-"F", "a"-"f"]>
+    | <#UNICODE_VALUE: (<UNICODE_CHAR> | <LITTLE_U_VALUE> | <BIG_U_VALUE> | <ESCAPED_CHAR>)>
+    | <#LITTLE_U_VALUE: "\\" "u" <HEXADECIMAL> <HEXADECIMAL> <HEXADECIMAL> <HEXADECIMAL>>
+    | <#BIG_U_VALUE: "\\" "U" <HEXADECIMAL> <HEXADECIMAL> <HEXADECIMAL> <HEXADECIMAL>
+                              <HEXADECIMAL> <HEXADECIMAL> <HEXADECIMAL> <HEXADECIMAL>>
+    | <#BYTE_VALUE: <OCTAL_BYTE> <HEX_BYTE>>
+    | <#OCTAL_BYTE: "\\" <OCTAL> <OCTAL> <OCTAL>>
+    | <#HEX_BYTE: "\\" "x" <HEXADECIMAL> <HEXADECIMAL>>
     | <#NEWLINE: ["\r", "\n"]>
+    | <#ESCAPED_CHAR: "\\" ("a" | "b" | "f" | "n" | "r" | "t" | "v" | "\\" | "'" | "\"")>
     //| <#INCDEC_STATEMENT: <EXPRESSION> ("++" | "--")>
     // | <#EXPRESSION_LIST: <EXPRESSION> ("," <EXPRESSION>)*>
     // | <#IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
