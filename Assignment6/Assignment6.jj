@@ -94,7 +94,13 @@ TOKEN : {
     |
     <PRIMARY_EXPRESSION: <OPERAND> | <CONVERSION>>
     |
-    <OPERAND: <LITERAL> | <OPERAND_NAME> | ("(" <EXPRESSION> ")")>
+    <OPERAND: <LITERAL> | <OPERAND_NAME> | <METHOD_EXPRESSION> | ("(" <EXPRESSION> ")")>
+    |
+    <OPERAND_NAME: <IDENTIFIER> | <QUALIFIED_IDENTIFIER>>
+    |
+    <CONVERSION: <TYPE> "(" <EXPRESSION> (",")? ")">
+    |
+    <TYPE: <TYPE_NAME> | ("(" <TYPE> ")")>
     |
     <SHORT_VAR_DECLR: <IDENTIFIER> ":=" <EXPRESSION_LIST>>
        { debugStream.println("SHORT_VAR_DECLR token: " + matchedToken.image); }
