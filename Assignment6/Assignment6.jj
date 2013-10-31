@@ -116,7 +116,10 @@ TOKEN : {
     | <#ADD_OP: ["+", "-", "|", "^"]>
     | <#MUL_OP: ("*" | "/" | "%" | "<<" | ">>" | "&" | "&^")>
     | <#REL_OP: ("==" | "!=" | "<" | "<=" | ">" | ">=") >
-    | <#RAW_STRING: "`" (<UNICODE_CHAR>) | (<NEWLINE>) "`">
+    | <#LITERAL_SYMBOLS: ("~" | "!" | "@" | "#" | "$" | "%" | "^" | "&" | "*"
+        | "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">" | "," | "." | "/"
+        | "?" | ":" | ";" | "\"" | "[" | "]" | "{" | "}" | "|" | "\\") >
+    | <#RAW_STRING: "`" (<LETTER> | <DIGIT> | <LITERAL_SYMBOLS> | <NEWLINE>)* "`">
     | <#INTERPRETED_STRING: "\"" (<UNICODE_VALUE> | <BYTE_VALUE>)* "\"">
     | <#UNICODE_CHAR: "\\" (["t", "b", "f", "\\", "\"", "'"])
         | (["u", "U"] "+" <UNICODE_CODE_PT>)>
