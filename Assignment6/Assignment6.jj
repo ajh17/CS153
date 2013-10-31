@@ -147,7 +147,7 @@ TOKEN : {
     | <#BINARY_OP: "||" | "&&" | <REL_OP> | <ADD_OP> | <MUL_OP>>
     | <#LITERAL_SYMBOLS: ("~" | "!" | "@" | "#" | "$" | "%" | "^" | "&" | "*"
         | "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">" | "," | "." | "/"
-        | "?" | ":" | ";" | "\"" | "[" | "]" | "{" | "}" | "|" | "\\") >
+        | "?" | ":" | ";" | "\"" | "[" | "]" | "{" | "}" | "|" | "\\") "'" >
     | <#RAW_STRING: "`" (<LETTER> | <DIGIT> | <LITERAL_SYMBOLS> | <NEWLINE>)* "`">
     | <#INTERPRETED_STRING: "\"" (<UNICODE_VALUE> | <BYTE_VALUE> | "\u672c")* "\"">
     | <#UNICODE_CHAR: "\\" (["t", "b", "f", "\\", "\"", "'"])
@@ -169,4 +169,7 @@ TOKEN : {
     | <#INCDEC_STATEMENT: <EXPRESSION> ("++" | "--")>
     | <#EXPRESSION_LIST: <EXPRESSION> ("," <EXPRESSION>)*>
     | <#IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
+    | <#FOR_STATEMENT: "for" (<EXPRESSION> | <FOR_CLAUSE> | <RANGE_CLAUSE>) >
+    | <#FOR_CLAUSE: <SIMPLE_STATEMENT> ";" <EXPRESSION> ";" <SIMPLE_STATEMENT> >
+    | <#RANGE_CLAUSE: ( <EXPRESSION_LIST> "=" | <IDENTIFIER_LIST> ":=" ) "range" <EXPRESSION>>
 }
