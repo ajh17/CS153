@@ -1,7 +1,6 @@
 options {
     BUILD_PARSER=true;
     OUTPUT_DIRECTORY="src/";
-    UNICODE_INPUT=true;
     DEBUG_TOKEN_MANAGER=true;
 }
 
@@ -59,7 +58,6 @@ TOKEN_MGR_DECLS : {
 }
 
 // TODO: Reserved word tokens may be removed depending on the subset of Go we choose.
-// TODO: Decide whether we want to implement Unicode at all. If so, change appropriate tokens.
 // TODO: Implement string token. Go has "" type strings and `` type strings (`` are raw strings)
 // TODO: Go also has "rune" that's (as far as I know) is aliased to int16.
 // TODO: Implement Go Expressions and Statements
@@ -149,8 +147,6 @@ TOKEN : {
     | <REAL_NUMBER: <DECIMAL> "." (<DECIMAL>)? (<EXPONENT>)? | (<DECIMAL> <EXPONENT>)
             | ("." <DECIMAL> (<EXPONENT>)?)>
         { debugStream.println("REAL_NUMBER token: " + matchedToken.image); }
-    | <RUNE_LITERAL: "'" (<UNICODE_VALUE> | <BYTE_VALUE>) "'">
-        { debugStream.println("RUNE_LITERAL token: " + matchedToken.image); }
     | <IMAGINARY_NUMBER: ((<DIGIT>)+ | <REAL_NUMBER>) "i">
         { debugStream.println("IMAGINARY_NUMBER token: " + matchedToken.image); }
     | <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT> | "_")*>
@@ -170,21 +166,7 @@ TOKEN : {
         | "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">" | "," | "." | "/"
         | "?" | ":" | ";" | "\"" | "[" | "]" | "{" | "}" | "|" | "\\") "'" >
     | <#RAW_STRING: "`" (<LETTER> | <DIGIT> | <LITERAL_SYMBOLS> | <NEWLINE>)* "`">
-    | <#INTERPRETED_STRING: "\"" (<UNICODE_VALUE> | <BYTE_VALUE>)* "\"">
-    | <#UNICODE_CHAR: "\\" (["t", "b", "f", "\\", "\"", "'"])
-        | (["u", "U"] "+" <UNICODE_CODE_PT>)>
-    | <#UNICODE_CODE_PT:
-        ["0"-"9", "A"-"F", "a"-"f"]
-        ["0"-"9", "A"-"F", "a"-"f"]
-        ["0"-"9", "A"-"F", "a"-"f"]
-        ["0"-"9", "A"-"F", "a"-"f"]>
-    | <#UNICODE_VALUE: (<UNICODE_CHAR> | <LITTLE_U_VALUE> | <BIG_U_VALUE> | <ESCAPED_CHAR>)>
-    | <#LITTLE_U_VALUE: "\\" "u" <HEXADECIMAL> <HEXADECIMAL> <HEXADECIMAL> <HEXADECIMAL>>
-    | <#BIG_U_VALUE: "\\" "U" <HEXADECIMAL> <HEXADECIMAL> <HEXADECIMAL> <HEXADECIMAL>
-                              <HEXADECIMAL> <HEXADECIMAL> <HEXADECIMAL> <HEXADECIMAL>>
-    | <#BYTE_VALUE: <OCTAL_BYTE> <HEX_BYTE>>
-    | <#OCTAL_BYTE: "\\" <OCTAL> <OCTAL> <OCTAL>>
-    | <#HEX_BYTE: "\\" "x" <HEXADECIMAL> <HEXADECIMAL>>
+    | <#INTERPRETED_STRING: "\"" (<LETTER> | <DIGIT> | <ESCAPED_CHAR> | <LITERAL_SYMBOLS>)* "\"">
     | <#NEWLINE: ["\r", "\n"]>
     | <#ESCAPED_CHAR: "\\" ("a" | "b" | "f" | "n" | "r" | "t" | "v" | "\\" | "'" | "\"")>
     | <#INCDEC_STATEMENT: <EXPRESSION> ("++" | "--")>
