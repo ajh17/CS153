@@ -104,6 +104,7 @@ TOKEN : {
 
         | <#LETTER: ["a"-"z", "A"-"Z"]>
         | <#DIGIT: ["0"-"9"]>
+        | <#ALPHANUMERIC: (<LETTER> | <DIGIT>)+>
         | <#ADD_OP: ["+", "-"]>
         | <#MUL_OP: ("*" | "/" | "%")>
         | <#REL_OP: ("==" | "!=" | "<" | "<=" | ">" | ">=") >
@@ -117,10 +118,11 @@ TOKEN : {
     |
     <STRING: <RAW_STRING> | <INTERPRETED_STRING>>
         { debugStream.println("STRING token: " + matchedToken.image); }
-        | <#RAW_STRING: "`" (<LETTER> | <DIGIT> | <LITERAL_SYMBOL> | <NEWLINE>)* "`">
-        | <#INTERPRETED_STRING: "\"" (<LETTER> | <DIGIT> | <ESCAPED_CHAR> | <LITERAL_SYMBOL>)* "\"">
+        | <#RAW_STRING: "`" (<ALPHANUMERIC> | <LITERAL_SYMBOL> | <NEWLINE>)* "`">
+        | <#INTERPRETED_STRING: "\"" (<ALPHANUMERIC> | <ESCAPED_CHAR> | <LITERAL_SYMBOL> | <WHITE_SPACE>)* "\"">
         | <#NEWLINE: ["\r", "\n"]>
         | <#ESCAPED_CHAR: "\\" ("a" | "b" | "f" | "n" | "r" | "t" | "v" | "\\" | "'" | "\"")>
+        | <#WHITE_SPACE: <NEWLINE> | "\t" | " ">
 
     |
     <FOR_STATEMENT: "for" (<EXPRESSION> | <FOR_CLAUSE> | <RANGE_CLAUSE>)? >
