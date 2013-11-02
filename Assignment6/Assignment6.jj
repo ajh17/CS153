@@ -70,16 +70,15 @@ TOKEN : {
     <SIMPLE_STATEMENT: <ASSIGNMENT_STATEMENT> | <EXPRESSION>>
         { debugStream.println("SIMPLE_STATEMENT token: " + matchedToken.image); }
     |
-    <ASSIGNMENT_STATEMENT: <IDENTIFIER> <ASSIGN_OPER> <EXPRESSION>>
+    <ASSIGNMENT_STATEMENT: <IDENTIFIER> <ASSIGN_OP> <EXPRESSION>>
         { debugStream.println("ASSIGNMENT_STATEMENT token: " + matchedToken.image); }
-    |
-    <ASSIGN_OPER: (<ADD_OP> | <MUL_OP>)? "=">
-        { debugStream.println("ASSIGN_OPER token: " + matchedToken.image); }
+        | <#ASSIGN_OP: (<ADD_OP> | <MUL_OP>)? "=">
+        | <#OPERAND: <IDENTIFIER> | <LITERAL>>
     |
 
 
     //TODO: Need to implement expressions
-    <EXPRESSION: "jjiji">
+    <EXPRESSION: <OPERAND>>
 
 
     |
