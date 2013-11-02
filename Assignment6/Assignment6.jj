@@ -76,8 +76,11 @@ TOKEN : {
     <ASSIGN_OPER: (<ADD_OP> | <MUL_OP>)? "=">
         { debugStream.println("ASSIGN_OPER token: " + matchedToken.image); }
     |
-    TODO: Need to implement expressions
-    <EXPRESSION: "">
+
+
+    //TODO: Need to implement expressions
+    <EXPRESSION: "jjiji">
+
 
     |
     <INTEGER_NUMBER: <DIGIT> (<DIGIT>)*>
@@ -106,7 +109,7 @@ TOKEN : {
         | <#REL_OP: ("==" | "!=" | "<" | "<=" | ">" | ">=") >
         | <#UNARY_OP: ("+" | "-" | "!" | "^" | "*" | "&")>
         | <#BINARY_OP: "||" | "&&">
-        // Literal symbols only does not contain SINGLE_QUOTE used to start raw string literals
+        // Literal symbols only does not contain SINGLE_QUOTE used to start and end raw string literals
         | <#LITERAL_SYMBOL: ("~" | "!" | "@" | "#" | "$" | "%" | "^" | "&" | "*"
             | "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">" | "," | "." | "/"
             | "?" | ":" | ";" | "\"" | "[" | "]" | "{" | "}" | "|" | "\\")>
