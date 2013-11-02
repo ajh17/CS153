@@ -70,20 +70,19 @@ TOKEN : {
     <SIMPLE_STATEMENT: <ASSIGNMENT_STATEMENT> | <EXPRESSION>>
         { debugStream.println("SIMPLE_STATEMENT token: " + matchedToken.image); }
     |
-    <ASSIGNMENT_STATEMENT: <IDENTIFIER> <ASSIGN_OPER> <EXPRESSION>>
+    <ASSIGNMENT_STATEMENT: <IDENTIFIER> <ASSIGN_OP> <EXPRESSION>>
         { debugStream.println("ASSIGNMENT_STATEMENT token: " + matchedToken.image); }
-    |
-    <ASSIGN_OPER: (<ADD_OP> | <MUL_OP>)? "=">
-        { debugStream.println("ASSIGN_OPER token: " + matchedToken.image); }
+        | <#ASSIGN_OP: (<ADD_OP> | <MUL_OP>)? "=">
+        | <#OPERAND: <IDENTIFIER> | <LITERAL>>
     |
 
 
     //TODO: Need to implement expressions
-    <EXPRESSION: "jjiji">
+    <EXPRESSION: <OPERAND>>
 
 
     |
-    <INTEGER_NUMBER: <DIGIT> (<DIGIT>)*>
+    <INTEGER_NUMBER: (<DIGIT>)+>
         { debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
     |
     <REAL_NUMBER: <INTEGER_NUMBER> "." (<INTEGER_NUMBER>)?>
@@ -126,6 +125,7 @@ TOKEN : {
 
     |
     <FOR_STATEMENT: "for" (<EXPRESSION> | <FOR_CLAUSE> | <RANGE_CLAUSE>)? >
+        { debugStream.println("FOR_STATEMENT token: " + matchedToken.image); }
         | <#FOR_CLAUSE: <SIMPLE_STATEMENT> ";" <EXPRESSION> ";" <SIMPLE_STATEMENT> >
         | <#RANGE_CLAUSE: ( <EXPRESSION> "=" | <IDENTIFIER> ":=" ) "range" <EXPRESSION>>
 }
