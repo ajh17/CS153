@@ -133,5 +133,5 @@ TOKEN : {
     <SWITCH_STATEMENT: "switch" (<SIMPLE_STATEMENT> ";")? (<EXPRESSION>)? "{" (<CASE_CLAUSE>)* "}">
         {debugStream.println("SWITCH_STATEMENT token: " + matchedToken.image); }
         // TODO: complete case clause. Needs statement token.
-        <#CASE_CLAUSE: ("case" (<EXPRESSION> ";")* | "default") ":" >
+        | <#CASE_CLAUSE: ("case" (<EXPRESSION> ";")* | "default") ":" >
 }
