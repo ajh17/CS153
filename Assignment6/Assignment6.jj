@@ -106,7 +106,7 @@ TOKEN : {
         | <#REL_OP: ("==" | "!=" | "<" | "<=" | ">" | ">=") >
         | <#UNARY_OP: ("+" | "-" | "!" | "^" | "*" | "&")>
         | <#BINARY_OP: "||" | "&&">
-        // Literal symbols only does not contain SINGLE_QUOTE used by raw string literals
+        // Literal symbols only does not contain SINGLE_QUOTE used to start raw string literals
         | <#LITERAL_SYMBOL: ("~" | "!" | "@" | "#" | "$" | "%" | "^" | "&" | "*"
             | "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">" | "," | "." | "/"
             | "?" | ":" | ";" | "\"" | "[" | "]" | "{" | "}" | "|" | "\\")>
