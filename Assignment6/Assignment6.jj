@@ -78,9 +78,9 @@ TOKEN : {
 
 
     //TODO: Need to implement expressions
-    <EXPRESSION: <OPERAND>>
-
-
+    <EXPRESSION: <OPERAND> | <COMPARISON>>
+        | <#COMPARISON: <OPERAND> <REL_OP> <OPERAND>>
+        | <#ARITHMETIC: <OPERAND> ( (<ADD_OP> | <MUL_OP>) <OPERAND> )*>
     |
     <INTEGER_NUMBER: <DIGIT> (<DIGIT>)*>
         { debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
