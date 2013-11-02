@@ -64,12 +64,10 @@ TOKEN : {
         | "for" | "import" | "return" | "var">
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
     |
-    <LITERAL: <BASIC_LITERAL>>
-    |
-    <BASIC_LITERAL: <INTEGER_NUMBER> <REAL_NUMBER> <STRING>>
+    <LITERAL: <INTEGER_NUMBER> | <REAL_NUMBER> | <STRING>>
         { debugStream.println("BASIC_LITERAL token: " + matchedToken.image); }
     |
-    <SIMPLE_STATEMENT: (<ASSIGNMENT_STATEMENT> | <EXPRESSION>)?>
+    <SIMPLE_STATEMENT: <ASSIGNMENT_STATEMENT> | <EXPRESSION>>
         { debugStream.println("SIMPLE_STATEMENT token: " + matchedToken.image); }
     |
     <ASSIGNMENT_STATEMENT: <IDENTIFIER> <ASSIGN_OPER> <EXPRESSION>>
@@ -108,9 +106,10 @@ TOKEN : {
         | <#REL_OP: ("==" | "!=" | "<" | "<=" | ">" | ">=") >
         | <#UNARY_OP: ("+" | "-" | "!" | "^" | "*" | "&")>
         | <#BINARY_OP: "||" | "&&">
+        // Literal symbols only does not contain SINGLE_QUOTE used by raw string literals
         | <#LITERAL_SYMBOL: ("~" | "!" | "@" | "#" | "$" | "%" | "^" | "&" | "*"
             | "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">" | "," | "." | "/"
-            | "?" | ":" | ";" | "\"" | "[" | "]" | "{" | "}" | "|" | "\\") "'" >
+            | "?" | ":" | ";" | "\"" | "[" | "]" | "{" | "}" | "|" | "\\")>
 
     |
     <STRING: <RAW_STRING> | <INTERPRETED_STRING>>
