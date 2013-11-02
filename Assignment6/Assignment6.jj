@@ -128,4 +128,10 @@ TOKEN : {
     <FOR_STATEMENT: "for" (<EXPRESSION> | <FOR_CLAUSE> | <RANGE_CLAUSE>)? >
         | <#FOR_CLAUSE: <SIMPLE_STATEMENT> ";" <EXPRESSION> ";" <SIMPLE_STATEMENT> >
         | <#RANGE_CLAUSE: ( <EXPRESSION> "=" | <IDENTIFIER> ":=" ) "range" <EXPRESSION>>
+
+    |
+    <SWITCH_STATEMENT: "switch" (<SIMPLE_STATEMENT> ";")? (<EXPRESSION>)? "{" (<CASE_CLAUSE>)* "}">
+        {debugStream.println("SWITCH_STATEMENT token: " + matchedToken.image); }
+        // TODO: complete case clause. Needs statement token.
+        <#CASE_CLAUSE: ("case" (<EXPRESSION> ";")* | "default") ":" >
 }
