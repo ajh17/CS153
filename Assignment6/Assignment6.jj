@@ -32,7 +32,7 @@ TOKEN_MGR_DECLS : {
         }
         try {
             br = new java.io.BufferedReader(new java.io.InputStreamReader(new
-                        java.io.FileInputStream(args[0]), "UTF-16"));
+                        java.io.FileInputStream(args[0])));
             int i = 0;
             char[] buffer = new char[1024];
 
