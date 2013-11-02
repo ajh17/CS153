@@ -65,7 +65,7 @@ TOKEN : {
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
     |
     <LITERAL: <INTEGER_NUMBER> | <REAL_NUMBER> | <STRING>>
-        { debugStream.println("BASIC_LITERAL token: " + matchedToken.image); }
+        { debugStream.println("LITERAL token: " + matchedToken.image); }
     |
     <SIMPLE_STATEMENT: <ASSIGNMENT_STATEMENT> | <EXPRESSION>>
         { debugStream.println("SIMPLE_STATEMENT token: " + matchedToken.image); }
