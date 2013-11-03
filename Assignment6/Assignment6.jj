@@ -57,6 +57,10 @@ TOKEN_MGR_DECLS : {
     }
 }
 
+/*************************
+  -- Production Rules --
+*************************/
+
 void for_statement() : {}
 {
     "for" (<EXPRESSION> | <FOR_CLAUSE> | <RANGE_CLAUSE>)?
@@ -65,6 +69,16 @@ void for_statement() : {}
 void unaryExpr() : {}
 {
     primaryExpr() | <UNARY_OP> unaryExpr()
+}
+
+void assignmentStatement() : {}
+{
+    expressionList() <ASSIGN_OP> expressionList()
+}
+
+void simpleStatement() : {}
+{
+    expressions() | assignment()
 }
 
 void primaryExpr() : {}
@@ -77,6 +91,16 @@ void expressions() : {}
     unaryExpr() | expressions() <BINARY_OP> unaryExpr()
 }
 
+void expressionList() : {}
+{
+    expressions() ("," expressions())*
+}
+
+
+/********************
+    -- Tokens --
+********************/
+
 TOKEN : {
     <RESERVED_WORD: "break" | "default" | "func" | "interface" | "select" | "case" | "defer"
         | "go" | "map" | "struct" | "chan" | "else" | "goto" | "package" | "switch"
@@ -86,14 +110,6 @@ TOKEN : {
     |
     <LITERAL: <INTEGER_NUMBER> | <REAL_NUMBER> | <STRING>>
         { debugStream.println("LITERAL token: " + matchedToken.image); }
-    |
-    <SIMPLE_STATEMENT: <ASSIGNMENT_STATEMENT> | <EXPRESSION>>
-        { debugStream.println("SIMPLE_STATEMENT token: " + matchedToken.image); }
-    |
-    <ASSIGNMENT_STATEMENT: <IDENTIFIER> <ASSIGN_OP> <EXPRESSION>>
-        { debugStream.println("ASSIGNMENT_STATEMENT token: " + matchedToken.image); }
-        | <#ASSIGN_OP: (<ADD_OP> | <MUL_OP>)? "=">
-        | <OPERAND: <IDENTIFIER> | <LITERAL>>
     |
     <INTEGER_NUMBER: <DIGIT> (<DIGIT>)*>
         { debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
@@ -121,6 +137,7 @@ TOKEN : {
         | <#REL_OP: ("==" | "!=" | "<" | "<=" | ">" | ">=") >
         | <UNARY_OP: ("+" | "-" | "!" | "^" | "*" | "&")>
         | <BINARY_OP: "||" | "&&">
+        | <ASSIGN_OP: (<ADD_OP> | <MUL_OP>)? "=">
         // Literal symbols only does not contain SINGLE_QUOTE used to start and end raw string literals
         | <#LITERAL_SYMBOL: ("~" | "!" | "@" | "#" | "$" | "%" | "^" | "&" | "*"
             | "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">" | "," | "." | "/"
