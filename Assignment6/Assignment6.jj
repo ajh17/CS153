@@ -136,8 +136,8 @@ TOKEN : {
         | <#MUL_OP: ("*" | "/" | "%")>
         | <#REL_OP: ("==" | "!=" | "<" | "<=" | ">" | ">=") >
         | <UNARY_OP: ("+" | "-" | "!" | "^" | "*" | "&")>
-        | <BINARY_OP: "||" | "&&">
         | <ASSIGN_OP: (<ADD_OP> | <MUL_OP>)? "=">
+        | <BINARY_OP: "||" | "&&" | <REL_OP> | <ADD_OP>| <MUL_OP>>
         // Literal symbols only does not contain SINGLE_QUOTE used to start and end raw string literals
         | <#LITERAL_SYMBOL: ("~" | "!" | "@" | "#" | "$" | "%" | "^" | "&" | "*"
             | "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">" | "," | "." | "/"
