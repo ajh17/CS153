@@ -61,14 +61,24 @@ TOKEN_MGR_DECLS : {
   -- Production Rules --
 *************************/
 
-void for_statement() : {}
-{
-    "for" (<EXPRESSION> | <FOR_CLAUSE> | <RANGE_CLAUSE>)?
-}
-
 void unaryExpr() : {}
 {
     primaryExpr() | <UNARY_OP> unaryExpr()
+}
+
+void statement() : {}
+{
+    simpleStatement() | forStatement() | ifStatement()
+}
+
+void block() : {}
+{
+    "{" statementList() "}"
+}
+
+void statementList() : {}
+{
+    (statement() ";")*
 }
 
 void assignmentStatement() : {}
@@ -76,9 +86,29 @@ void assignmentStatement() : {}
     expressionList() <ASSIGN_OP> expressionList()
 }
 
+void forStatement() : {}
+{
+    "for" (expressions() | forClause() | rangeClause())?
+}
+
+void forClause() : {}
+{
+    simpleStatement() ";" expressions() ";" simpleStatement()
+}
+
+void rangeClause() : {}
+{
+    (expressions() "=" | <IDENTIFIER> ":=") "range" expressions()
+}
+
+void ifStatement() : {}
+{
+    "if" (simpleStatement() ";")? expressions() block() ("else" (ifStatement() | block()))
+}
+
 void simpleStatement() : {}
 {
-    expressions() | assignment()
+    expressions() | assignmentStatement()
 }
 
 void primaryExpr() : {}
@@ -95,7 +125,6 @@ void expressionList() : {}
 {
     expressions() ("," expressions())*
 }
-
 
 /********************
     -- Tokens --
@@ -150,6 +179,4 @@ TOKEN : {
         | <#NEWLINE: ["\r", "\n"]>
         | <#ESCAPED_CHAR: "\\" ("a" | "b" | "f" | "n" | "r" | "t" | "v" | "\\" | "'" | "\"")>
         | <#WHITE_SPACE: <NEWLINE> | "\t" | " ">
-    | <FOR_CLAUSE: <SIMPLE_STATEMENT> ";" <EXPRESSION> ";" <SIMPLE_STATEMENT> >
-    | <RANGE_CLAUSE: ( <EXPRESSION> "=" | <IDENTIFIER> ":=" ) "range" <EXPRESSION>>
 }
