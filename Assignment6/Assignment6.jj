@@ -137,6 +137,11 @@ void typeSwitchStmt() : {}
 
 }
 
+void exprSwitchStatement() : {}
+{
+    "switch" (simpleStatement() ";")? (expression)? "{" (exprCaseClause())* "}"
+}
+
 void exprCaseClause() : {}
 {
    ("case" expressionList() | "default") ":" statementList()
