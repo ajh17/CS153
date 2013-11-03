@@ -69,7 +69,7 @@ void unaryExpr() : {}
 
 void primaryExpr() : {}
 {
-
+    <OPERAND>
 }
 
 void expressions() : {}
@@ -93,7 +93,7 @@ TOKEN : {
     <ASSIGNMENT_STATEMENT: <IDENTIFIER> <ASSIGN_OP> <EXPRESSION>>
         { debugStream.println("ASSIGNMENT_STATEMENT token: " + matchedToken.image); }
         | <#ASSIGN_OP: (<ADD_OP> | <MUL_OP>)? "=">
-        | <#OPERAND: <IDENTIFIER> | <LITERAL>>
+        | <OPERAND: <IDENTIFIER> | <LITERAL>>
     |
     <INTEGER_NUMBER: <DIGIT> (<DIGIT>)*>
         { debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
@@ -103,7 +103,6 @@ TOKEN : {
     |
     <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT> | "_")*>
         { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
-
     |
     <SPECIAL_SYMBOL:
         "+" | "&" | "+=" | "&=" | "&&" | "==" | "!=" | "(" | ")"
@@ -120,8 +119,8 @@ TOKEN : {
         | <#ADD_OP: ["+", "-"]>
         | <#MUL_OP: ("*" | "/" | "%")>
         | <#REL_OP: ("==" | "!=" | "<" | "<=" | ">" | ">=") >
-        | <#UNARY_OP: ("+" | "-" | "!" | "^" | "*" | "&")>
-        | <#BINARY_OP: "||" | "&&">
+        | <UNARY_OP: ("+" | "-" | "!" | "^" | "*" | "&")>
+        | <BINARY_OP: "||" | "&&">
         // Literal symbols only does not contain SINGLE_QUOTE used to start and end raw string literals
         | <#LITERAL_SYMBOL: ("~" | "!" | "@" | "#" | "$" | "%" | "^" | "&" | "*"
             | "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">" | "," | "." | "/"
