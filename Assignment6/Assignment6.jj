@@ -133,7 +133,7 @@ void switchStatement() : {}
 
 void exprSwitchStatement() : {}
 {
-    "switch" (simpleStatement() ";")? (expression)? "{" (exprCaseClause())* "}"
+    "switch" (simpleStatement() ";")? (expressions())? "{" (exprCaseClause())* "}"
 }
 
 void exprCaseClause() : {}
