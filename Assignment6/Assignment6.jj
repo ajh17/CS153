@@ -129,7 +129,7 @@ void expressionList() : {}
 //TODO: still need TypeSwitchStmt
 void switchStatement() : {}
 {
-    exprCaseClause() | typeSwitchStmt()
+    exprSwitchStatement() | typeSwitchStmt()
 }
 
 void typeSwitchStmt() : {}
