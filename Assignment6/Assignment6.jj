@@ -62,6 +62,21 @@ void for_statement() : {}
     "for" (<EXPRESSION> | <FOR_CLAUSE> | <RANGE_CLAUSE>)?
 }
 
+void unaryExpr() : {}
+{
+    primaryExpr() | <UNARY_OP> unaryExpr()
+}
+
+void primaryExpr() : {}
+{
+
+}
+
+void expressions() : {}
+{
+    unaryExpr() | expressions() <BINARY_OP> unaryExpr()
+}
+
 TOKEN : {
     <RESERVED_WORD: "break" | "default" | "func" | "interface" | "select" | "case" | "defer"
         | "go" | "map" | "struct" | "chan" | "else" | "goto" | "package" | "switch"
@@ -79,13 +94,6 @@ TOKEN : {
         { debugStream.println("ASSIGNMENT_STATEMENT token: " + matchedToken.image); }
         | <#ASSIGN_OP: (<ADD_OP> | <MUL_OP>)? "=">
         | <#OPERAND: <IDENTIFIER> | <LITERAL>>
-    |
-
-
-    //TODO: Need to implement expressions
-    <EXPRESSION: <OPERAND> | <COMPARISON>>
-        | <#COMPARISON: <OPERAND> <REL_OP> <OPERAND>>
-        | <#ARITHMETIC: <OPERAND> ( (<ADD_OP> | <MUL_OP>) <OPERAND> )*>
     |
     <INTEGER_NUMBER: <DIGIT> (<DIGIT>)*>
         { debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
@@ -118,7 +126,6 @@ TOKEN : {
         | <#LITERAL_SYMBOL: ("~" | "!" | "@" | "#" | "$" | "%" | "^" | "&" | "*"
             | "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">" | "," | "." | "/"
             | "?" | ":" | ";" | "\"" | "[" | "]" | "{" | "}" | "|" | "\\")>
-
     |
     <STRING: <RAW_STRING> | <INTERPRETED_STRING>>
         { debugStream.println("STRING token: " + matchedToken.image); }
@@ -129,10 +136,4 @@ TOKEN : {
         | <#WHITE_SPACE: <NEWLINE> | "\t" | " ">
     | <FOR_CLAUSE: <SIMPLE_STATEMENT> ";" <EXPRESSION> ";" <SIMPLE_STATEMENT> >
     | <RANGE_CLAUSE: ( <EXPRESSION> "=" | <IDENTIFIER> ":=" ) "range" <EXPRESSION>>
-
-    |
-    <SWITCH_STATEMENT: "switch" (<SIMPLE_STATEMENT> ";")? (<EXPRESSION>)? "{" (<CASE_CLAUSE>)* "}">
-        {debugStream.println("SWITCH_STATEMENT token: " + matchedToken.image); }
-        // TODO: complete case clause. Needs statement token.
-        | <#CASE_CLAUSE: ("case" (<EXPRESSION> ";")* | "default") ":" >
 }
