@@ -57,6 +57,11 @@ TOKEN_MGR_DECLS : {
     }
 }
 
+void for_statement() : {}
+{
+    "for" (<EXPRESSION> | <FOR_CLAUSE> | <RANGE_CLAUSE>)?
+}
+
 TOKEN : {
     <RESERVED_WORD: "break" | "default" | "func" | "interface" | "select" | "case" | "defer"
         | "go" | "map" | "struct" | "chan" | "else" | "goto" | "package" | "switch"
@@ -122,11 +127,8 @@ TOKEN : {
         | <#NEWLINE: ["\r", "\n"]>
         | <#ESCAPED_CHAR: "\\" ("a" | "b" | "f" | "n" | "r" | "t" | "v" | "\\" | "'" | "\"")>
         | <#WHITE_SPACE: <NEWLINE> | "\t" | " ">
-
-    |
-    <FOR_STATEMENT: "for" (<EXPRESSION> | <FOR_CLAUSE> | <RANGE_CLAUSE>)? >
-        | <#FOR_CLAUSE: <SIMPLE_STATEMENT> ";" <EXPRESSION> ";" <SIMPLE_STATEMENT> >
-        | <#RANGE_CLAUSE: ( <EXPRESSION> "=" | <IDENTIFIER> ":=" ) "range" <EXPRESSION>>
+    | <FOR_CLAUSE: <SIMPLE_STATEMENT> ";" <EXPRESSION> ";" <SIMPLE_STATEMENT> >
+    | <RANGE_CLAUSE: ( <EXPRESSION> "=" | <IDENTIFIER> ":=" ) "range" <EXPRESSION>>
 
     |
     <SWITCH_STATEMENT: "switch" (<SIMPLE_STATEMENT> ";")? (<EXPRESSION>)? "{" (<CASE_CLAUSE>)* "}">
