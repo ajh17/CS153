@@ -108,12 +108,22 @@ void ifStatement() : {}
 
 void simpleStatement() : {}
 {
-    expressions() | assignmentStatement()
+    expressions() | assignmentStatement() | shortVarDecl() | incDecStatement()
+}
+
+void incDecStatement() : {}
+{
+    expressions() ("++" | "--")
 }
 
 void primaryExpr() : {}
 {
     <OPERAND>
+}
+
+void shortVarDecl() : {}
+{
+    <IDENTIFIER_LIST> ":=" expressionList()
 }
 
 void expressions() : {}
@@ -163,6 +173,8 @@ TOKEN : {
     |
     <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT> | "_")*>
         { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
+        |
+        <IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
     |
     <SPECIAL_SYMBOL:
         "+" | "&" | "+=" | "&=" | "&&" | "==" | "!=" | "(" | ")"
