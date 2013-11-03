@@ -126,15 +126,9 @@ void expressionList() : {}
     expressions() ("," expressions())*
 }
 
-//TODO: still need TypeSwitchStmt
 void switchStatement() : {}
 {
-    exprSwitchStatement() | typeSwitchStmt()
-}
-
-void typeSwitchStmt() : {}
-{
-
+    exprSwitchStatement()
 }
 
 void exprSwitchStatement() : {}
