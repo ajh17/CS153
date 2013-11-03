@@ -127,24 +127,19 @@ void expressionList() : {}
 }
 
 //TODO: still need TypeSwitchStmt
-void SwitchStatement() : {}
+void switchStatement() : {}
 {
-    ExprSwitchStmt() | TypeSwitchStmt()
+    exprCaseClause() | typeSwitchStmt()
 }
 
-void ExprSwitchStmt() : {}
+void typeSwitchStmt() : {}
 {
-    "switch" (simpleStatement() ";")? (expression())? "{" (ExprCaseClause())* "}"
+
 }
 
-void ExprCaseClause() : {}
+void exprCaseClause() : {}
 {
-    ExprSwitchCase() ":" statementList()
-}
-
-void ExprSwitchCase() : {}
-{
-    "case" expressionList() | "default"
+   ("case" expressionList() | "default") ":" statementList()
 }
 
 /********************
