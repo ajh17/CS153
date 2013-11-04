@@ -128,7 +128,7 @@ void shortVarDecl() : {}
 
 void expressions() : {}
 {
-    unaryExpr() | expressions() <BINARY_OP> unaryExpr()
+    unaryExpr() (<BINARY_OP> unaryExpr())*
 }
 
 void expressionList() : {}
