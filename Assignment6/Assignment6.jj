@@ -116,9 +116,14 @@ void incDecStatement() : {}
     expressions() ("++" | "--")
 }
 
+void operand():{}
+{
+  <LITERAL> | <IDENTIFIER > |  "(" expressions() ")"
+}
+
 void primaryExpr() : {}
 {
-    <OPERAND>
+    operand()
 }
 
 void shortVarDecl() : {}
