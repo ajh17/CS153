@@ -178,10 +178,11 @@ TOKEN : {
     <REAL_NUMBER: <INTEGER_NUMBER> "." (<INTEGER_NUMBER>)?>
         { debugStream.println("REAL_NUMBER token: " + matchedToken.image); }
     |
-    <RAW_STRING: "`" (<ALPHANUMERIC> | <LITERAL_SYMBOL> | <NEWLINE>)* "`">
+    <RAW_STRING: "`" (<ALPHANUMERIC> | <RAW_LITERAL_SYMBOL> | <NEWLINE>)* "`">
         { debugStream.println("RAW_STRING token: " + matchedToken.image); }
     |
-    <INTERPRETED_STRING: "\"" (<ALPHANUMERIC> | <ESCAPED_CHAR> | <LITERAL_SYMBOL> | <WHITE_SPACE>)* "\"">
+    <INTERPRETED_STRING: "\"" (<ALPHANUMERIC> | <ESCAPED_CHAR>
+            | <INTERPRETED_LITERAL_SYMBOL> | <WHITE_SPACE>)* "\"">
         { debugStream.println("INTERPRETED_STRING token: " + matchedToken.image); }
 
         | <#NEWLINE: ["\r", "\n"]>
@@ -211,9 +212,10 @@ TOKEN : {
         | <UNARY_OP: ("+" | "-" | "!" | "^" | "*" | "&")>
         | <ASSIGN_OP: (<ADD_OP> | <MUL_OP>)? "=">
         | <BINARY_OP: "||" | "&&" | <REL_OP> | <ADD_OP>| <MUL_OP>>
-        // Literal symbols only does not contain SINGLE_QUOTE used to start and end raw string literals
-        | <#LITERAL_SYMBOL: ("~" | "!" | "@" | "#" | "$" | "%" | "^" | "&" | "*"
-            | "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">" | "," | "." | "/"
-            | "?" | ":" | ";" | "\"" | "[" | "]" | "{" | "}" | "|" | "\\")>
+        | <#COMMON_LITERAL_SYMBOL: ("~" | "!" | "@" | "#" | "$" | "%" | "^"
+            | "&" | "*"| "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">"
+            | "," | "." | "/"| "?" | ":" | ";" | "[" | "]" | "{" | "}" | "|")>
+        | <#RAW_LITERAL_SYMBOL: (<COMMON_LITERAL_SYMBOL> | "\"" | "\\")>
+        | <#INTERPRETED_LITERAL_SYMBOL: (<COMMON_LITERAL_SYMBOL> | "'")>
 
 }
