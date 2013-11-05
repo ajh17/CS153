@@ -145,7 +145,7 @@ void forStatement() : {}
 {
     "for" (LOOKAHEAD(3) expressions()
     | LOOKAHEAD(3) forClause()
-    | rangeClause() )
+    | rangeClause())?
 }
 
 void forClause() : {}
