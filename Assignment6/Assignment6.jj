@@ -116,22 +116,14 @@ void incDecStatement() : {}
     expressions() ("++" | "--")
 }
 
-void operand(StringBuffer buf):{}
+void operand():{}
 {
-    <INTEGER_NUMBER> { buf.append(token.image); } |
-    <REAL_NUMBER> { buf.append(token.image); }
-    | <RAW_STRING>  { buf.append(token.image); }
-    | <INTERPRETED_STRING> { buf.append(token.image); }
-    | <IDENTIFIER >  { buf.append(token.image); }
-    |  "(" expressions() ")"
+    <INTEGER_NUMBER> | <REAL_NUMBER> | <RAW_STRING> | <INTERPRETED_STRING> | <IDENTIFIER > |  "(" expressions() ")"
 }
 
-void primaryExpr() : {
-    StringBuffer sb = new StringBuffer();
-}
+void primaryExpr() : {}
 {
-    operand(sb)
-        { System.out.println("Operand: " + sb.toString()); }
+    operand()
 }
 
 void shortVarDecl() : {}
