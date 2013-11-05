@@ -88,7 +88,7 @@ void assignmentStatement() : {}
 
 void forStatement() : {}
 {
-    "for" (expressions() | forClause() | rangeClause())?
+    "for" (LOOKAHEAD(3) expressions() | LOOKAHEAD(3) forClause() | rangeClause())?
 }
 
 void forClause() : {}
@@ -98,17 +98,17 @@ void forClause() : {}
 
 void rangeClause() : {}
 {
-    (expressions() "=" | <IDENTIFIER> ":=") "range" expressions()
+    (LOOKAHEAD(2) expressions() "=" | <IDENTIFIER> ":=") "range" expressions()
 }
 
 void ifStatement() : {}
 {
-    "if" (simpleStatement() ";")? expressions() block() ("else" (ifStatement() | block()))
+    "if" (LOOKAHEAD(2) simpleStatement() ";")? expressions() block() ("else" (ifStatement() | block()))
 }
 
 void simpleStatement() : {}
 {
-    expressions() | assignmentStatement() | shortVarDecl() | incDecStatement()
+    LOOKAHEAD(3) expressions() | LOOKAHEAD(3) assignmentStatement() | shortVarDecl() | incDecStatement()
 }
 
 void incDecStatement() : {}
@@ -148,7 +148,7 @@ void switchStatement() : {}
 
 void exprSwitchStatement() : {}
 {
-    "switch" (simpleStatement() ";")? (expressions())? "{" (exprCaseClause())* "}"
+    "switch" (LOOKAHEAD(2) simpleStatement() ";")? (expressions())? "{" (exprCaseClause())* "}"
 }
 
 void exprCaseClause() : {}
