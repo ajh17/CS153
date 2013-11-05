@@ -47,7 +47,7 @@ void unaryExpr() : {}
 
 void statement() : {}
 {
-    simpleStatement() | forStatement() | ifStatement()
+    simpleStatement() | forStatement() | ifStatement() | switchStatement()
 }
 
 void block() : {}
@@ -57,10 +57,19 @@ void block() : {}
 
 void Assignment6() : {}
 {
-    <PACKAGE_NAME>
-    <EOF>
+    goStart()
+    goEnd()
 }
 
+void goStart() : {}
+{
+    <PACKAGE_NAME>
+}
+
+void goEnd() : {}
+{
+    <EOF>
+}
 
 void statementList() : {}
 {
@@ -181,6 +190,7 @@ TOKEN : {
         <IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
     |
     <PACKAGE_NAME: "package" <IDENTIFIER>>
+        { debugStream.println("PACKAGE_NAME token: " + matchedToken.image); }
     |
     <SPECIAL_SYMBOL:
         "+" | "&" | "+=" | "&=" | "&&" | "==" | "!=" | "(" | ")"
