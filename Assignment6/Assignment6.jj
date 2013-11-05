@@ -7,13 +7,13 @@ options {
 PARSER_BEGIN(Assignment6Parser)
 import java.io.*;
     public class Assignment6Parser {
-        public static void main(String[] args)
+        public static void main(String[] args) throws FileNotFoundException
         {
-            Reader sr = new StringReader(args[0]);
-            Assignment6Parser parser = new Assignment6Parser(sr);
+            FileReader fr = new FileReader(args[0]);
+            Assignment6Parser parser = new Assignment6Parser(fr);
 
             try {
-                parser.Assignment6Parser();
+                parser.Assignment6();
             }
             catch (ParseException ex) {
                 ex.printStackTrace();
@@ -54,6 +54,13 @@ void block() : {}
 {
     "{" statementList() "}"
 }
+
+void Assignment6() : {}
+{
+    <PACKAGE_NAME>
+    <EOF>
+}
+
 
 void statementList() : {}
 {
@@ -172,6 +179,8 @@ TOKEN : {
         { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
         |
         <IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
+    |
+    <PACKAGE_NAME: "package" <IDENTIFIER>>
     |
     <SPECIAL_SYMBOL:
         "+" | "&" | "+=" | "&=" | "&&" | "==" | "!=" | "(" | ")"
