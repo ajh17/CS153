@@ -1,0 +1,219 @@
+options {
+    BUILD_PARSER=true;
+    OUTPUT_DIRECTORY="src";
+    //DEBUG_PARSER=true;
+    //DEBUG_TOKEN_MANAGER=true;
+}
+
+PARSER_BEGIN(GoParser)
+import java.io.*;
+
+public class GoParser
+{
+    public static void main(String[] args)
+    {
+        StringBuilder fileString = new StringBuilder();
+        java.io.BufferedReader br = null;
+
+        try {
+            br = new java.io.BufferedReader(new java.io.InputStreamReader(new
+                        java.io.FileInputStream(args[0])));
+            int i = 0;
+            char[] buffer = new char[1024];
+
+            while ((i = br.read(buffer)) != -1)
+                fileString.append(buffer, 0, i);
+
+        } catch (java.io.IOException ex) {}
+        finally {
+            try {
+                br.close();
+            }
+            catch (java.io.IOException ex) {}
+        }
+
+        java.io.StringReader sr = new java.io.StringReader(fileString.toString());
+        SimpleCharStream scs = new SimpleCharStream(sr);
+        GoParserTokenManager mgr = new GoParserTokenManager(scs);
+        while (mgr.getNextToken().kind != EOF) {}
+    }
+}
+PARSER_END(GoParser)
+
+SKIP : {
+   <IGNORE : [" ", "\r", "\n", "\t"]>
+   | <"//" (~["\n", "\r"])*>
+   | <"/*"> : MULTI_LINE_COMMENT
+}
+
+<MULTI_LINE_COMMENT> SKIP: {
+    "*/" : DEFAULT
+}
+
+<MULTI_LINE_COMMENT> MORE: {
+    <~[]>
+}
+
+/********************
+    -- Tokens --
+********************/
+
+TOKEN : {
+    <RESERVED_WORD: "break" | "default" | "func" | "interface" | "select" | "case" | "defer"
+        | "go" | "map" | "struct" | "chan" | "else" | "goto" | "package" | "switch"
+        | "const" | "fallthrough" | "if" | "range" | "type" | "continue"
+        | "for" | "import" | "return" | "var">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+    |
+    <INTEGER_NUMBER: <DIGIT> (<DIGIT>)*>
+        { debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
+    |
+    <REAL_NUMBER: <INTEGER_NUMBER> "." (<INTEGER_NUMBER>)?>
+        { debugStream.println("REAL_NUMBER token: " + matchedToken.image); }
+    |
+    <RAW_STRING: "`" (<ALPHANUMERIC> | <RAW_LITERAL_SYMBOL> | <NEWLINE>)* "`">
+        { debugStream.println("RAW_STRING token: " + matchedToken.image); }
+    |
+    <INTERPRETED_STRING: "\"" (<ALPHANUMERIC> | <ESCAPED_CHAR>
+            | <INTERPRETED_LITERAL_SYMBOL> | <WHITE_SPACE>)* "\"">
+        { debugStream.println("INTERPRETED_STRING token: " + matchedToken.image); }
+
+        | <#NEWLINE: ["\r", "\n"]>
+        | <#ESCAPED_CHAR: "\\" ("a" | "b" | "f" | "n" | "r" | "t" | "v" | "\\" | "'" | "\"")>
+        | <#WHITE_SPACE: <NEWLINE> | "\t" | " ">
+    |
+    <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT> | "_")*>
+        { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
+        |
+        <IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
+    |
+    <SPECIAL_SYMBOL:
+        "+" | "&" | "+=" | "&=" | "&&" | "==" | "!=" | "(" | ")"
+        | "-" | "|" | "-=" | "|=" | "||" | "<" | "<=" | "[" | "]"
+        | "*" | "^" | "*=" | "^=" | "<-" | ">" | ">=" | "{"  | "}"
+        | "/" | "<<" | "/=" | "<<=" | "++" | "=" | ":=" | "," | ";"
+        | "%" | ">>" | "%=" | ">>=" | "--" | "!" | "..." |  "." | ":"
+        | "&^" | "&^=">
+        { debugStream.println("SPECIAL_SYMBOL token: " + matchedToken.image); }
+
+        | <#LETTER: ["a"-"z", "A"-"Z"]>
+        | <#DIGIT: ["0"-"9"]>
+        | <#ALPHANUMERIC: (<LETTER> | <DIGIT>)+>
+        | <#ADD_OP: ["+", "-"]>
+        | <#MUL_OP: ("*" | "/" | "%")>
+        | <#REL_OP: ("==" | "!=" | "<" | "<=" | ">" | ">=") >
+        | <UNARY_OP: ("+" | "-" | "!" | "^" | "*" | "&")>
+        | <ASSIGN_OP: (<ADD_OP> | <MUL_OP>)? "=">
+        | <BINARY_OP: "||" | "&&" | <REL_OP> | <ADD_OP>| <MUL_OP>>
+        | <#COMMON_LITERAL_SYMBOL: ("~" | "!" | "@" | "#" | "$" | "%" | "^"
+            | "&" | "*"| "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">"
+            | "," | "." | "/"| "?" | ":" | ";" | "[" | "]" | "{" | "}" | "|")>
+        | <#RAW_LITERAL_SYMBOL: (<COMMON_LITERAL_SYMBOL> | "\"" | "\\")>
+        | <#INTERPRETED_LITERAL_SYMBOL: (<COMMON_LITERAL_SYMBOL> | "'")>
+}
+
+/*************************
+  -- Production Rules --
+*************************/
+
+void unaryExpr() : {}
+{
+    primaryExpr() | <UNARY_OP> unaryExpr()
+}
+
+void statement() : {}
+{
+    simpleStatement() | forStatement() | ifStatement()
+}
+
+void block() : {}
+{
+    "{" statementList() "}"
+}
+
+void statementList() : {}
+{
+    (statement() ";")*
+}
+
+void assignmentStatement() : {}
+{
+    expressionList() <ASSIGN_OP> expressionList()
+}
+
+void forStatement() : {}
+{
+    "for" (LOOKAHEAD(3) expressions()
+    | LOOKAHEAD(3) forClause()
+    | rangeClause() )
+}
+
+void forClause() : {}
+{
+    simpleStatement() ";" expressions() ";" simpleStatement()
+}
+
+void rangeClause() : {}
+{
+    (LOOKAHEAD(2) expressions() "=" | <IDENTIFIER> ":=") "range" expressions()
+}
+
+void ifStatement() : {}
+{
+    "if" (LOOKAHEAD(2) simpleStatement() ";")? expressions() block() ("else" (ifStatement() | block()))
+}
+
+void simpleStatement() : {}
+{
+    LOOKAHEAD(3) expressions() | LOOKAHEAD(3) assignmentStatement() | shortVarDecl() | incDecStatement()
+}
+
+void incDecStatement() : {}
+{
+    expressions() ("++" | "--")
+}
+
+void operand():{}
+{
+    <INTEGER_NUMBER> | <REAL_NUMBER> | <RAW_STRING> | <INTERPRETED_STRING> | <IDENTIFIER > |  "(" expressions() ")"
+}
+
+void primaryExpr() : {}
+{
+    operand()
+}
+
+void shortVarDecl() : {}
+{
+    <IDENTIFIER_LIST> ":=" expressionList()
+}
+
+void expressions() : {}
+{
+    unaryExpr() (<BINARY_OP> unaryExpr())*
+}
+
+void expressionList() : {}
+{
+    expressions() ("," expressions())*
+}
+
+void switchStatement() : {}
+{
+    exprSwitchStatement()
+}
+
+void exprSwitchStatement() : {}
+{
+    "switch" (LOOKAHEAD(2) simpleStatement() ";")? (expressions())? "{" (exprCaseClause())* "}"
+}
+
+void exprCaseClause() : {}
+{
+   exprSwitchCase() ":" statementList()
+}
+
+void exprSwitchCase() : {}
+{
+    "case" expressionList() | "default"
+}
