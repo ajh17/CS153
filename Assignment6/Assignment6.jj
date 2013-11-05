@@ -1,26 +1,12 @@
 options {
     BUILD_PARSER=true;
     OUTPUT_DIRECTORY="src/";
-    DEBUG_PARSER=true;
+    //DEBUG_TOKEN_MANAGER=true;
 }
 
-PARSER_BEGIN(Assignment6Parser)
-import java.io.*;
-    public class Assignment6Parser {
-        public static void main(String[] args) throws FileNotFoundException
-        {
-            FileReader fr = new FileReader(args[0]);
-            Assignment6Parser parser = new Assignment6Parser(fr);
-
-            try {
-                parser.Assignment6();
-            }
-            catch (ParseException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-PARSER_END(Assignment6Parser)
+PARSER_BEGIN(Assignment6)
+    public class Assignment6 {}
+PARSER_END(Assignment6)
 
 SKIP : {
    <IGNORE : [" ", "\r", "\n", "\t"]>
@@ -36,6 +22,41 @@ SKIP : {
     <~[]>
 }
 
+TOKEN_MGR_DECLS : {
+    public static void main(String[] args)
+    {
+        StringBuilder fileString = new StringBuilder();
+        java.io.BufferedReader br = null;
+        if (args.length != 2) {
+            // Javacc doesn't compile with println statements.
+        }
+        try {
+            br = new java.io.BufferedReader(new java.io.InputStreamReader(new
+                        java.io.FileInputStream(args[0])));
+            int i = 0;
+            char[] buffer = new char[1024];
+
+            while ((i = br.read(buffer)) != -1)
+                fileString.append(buffer, 0, i);
+        }
+        catch (java.io.IOException ex) {
+        }
+        finally {
+            try {
+                br.close();
+            }
+            catch (java.io.IOException ex) {
+            }
+        }
+
+        java.io.StringReader sr = new java.io.StringReader(fileString.toString());
+        SimpleCharStream scs = new SimpleCharStream(sr);
+        Assignment6TokenManager mgr = new Assignment6TokenManager(scs);
+
+        while (mgr.getNextToken().kind != EOF) {}
+    }
+}
+
 /*************************
   -- Production Rules --
 *************************/
@@ -47,28 +68,12 @@ void unaryExpr() : {}
 
 void statement() : {}
 {
-    simpleStatement() | forStatement() | ifStatement() | switchStatement()
+    simpleStatement() | forStatement() | ifStatement()
 }
 
 void block() : {}
 {
     "{" statementList() "}"
-}
-
-void Assignment6() : {}
-{
-    goStart()
-    goEnd()
-}
-
-void goStart() : {}
-{
-    <PACKAGE_NAME>
-}
-
-void goEnd() : {}
-{
-    <EOF>
 }
 
 void statementList() : {}
@@ -188,9 +193,6 @@ TOKEN : {
         { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
         |
         <IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
-    |
-    <PACKAGE_NAME: "package" <IDENTIFIER>>
-        { debugStream.println("PACKAGE_NAME token: " + matchedToken.image); }
     |
     <SPECIAL_SYMBOL:
         "+" | "&" | "+=" | "&=" | "&&" | "==" | "!=" | "(" | ")"
