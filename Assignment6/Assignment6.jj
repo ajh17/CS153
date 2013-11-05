@@ -153,7 +153,12 @@ void exprSwitchStatement() : {}
 
 void exprCaseClause() : {}
 {
-   ("case" expressionList() | "default") ":" statementList()
+   exprSwitchCase() ":" statementList()
+}
+
+void exprSwitchCase() : {}
+{
+    "case" expressionList() | "default"
 }
 
 /********************
