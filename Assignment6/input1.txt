@@ -27,6 +27,13 @@ What is GO tehehe
 ""
 "Hello, world!\n"  // interpreted string literals cannot span multiple lines.
 
+// Numbers tokens
+1
+123
+15.0
+12.
+52.00001
+
 // Special symbol tokens
 + & += &= && == != ( ) - | -= |= || < <= [ ]
 * ^ *= ^= <- > >= { } / << /= <<= ++ = := , ;
