@@ -1,3 +1,4 @@
+package main
 // Expressions with numeric constants and scalar variables
 a = 1
 b = 2 + 3.0
