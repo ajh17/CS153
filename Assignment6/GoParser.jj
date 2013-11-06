@@ -12,30 +12,23 @@ public class GoParser
 {
     public static void main(String[] args)
     {
-        StringBuilder fileString = new StringBuilder();
-        java.io.BufferedReader br = null;
+        BufferedReader br = null;
 
         try {
-            br = new java.io.BufferedReader(new java.io.InputStreamReader(new
-                        java.io.FileInputStream(args[0])));
-            int i = 0;
-            char[] buffer = new char[1024];
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(args[0])));
+            GoParser parser = new GoParser(br);
 
-            while ((i = br.read(buffer)) != -1)
-                fileString.append(buffer, 0, i);
+            try {
+                parser.start();
+            } catch (ParseException ex) {}
 
         } catch (java.io.IOException ex) {}
         finally {
+
             try {
                 br.close();
-            }
-            catch (java.io.IOException ex) {}
+            } catch (java.io.IOException ex) {}
         }
-
-        java.io.StringReader sr = new java.io.StringReader(fileString.toString());
-        SimpleCharStream scs = new SimpleCharStream(sr);
-        GoParserTokenManager mgr = new GoParserTokenManager(scs);
-        while (mgr.getNextToken().kind != EOF) {}
     }
 }
 PARSER_END(GoParser)
@@ -57,6 +50,20 @@ SKIP : {
 /*************************
   -- Production Rules --
 *************************/
+
+void start() : {}
+{
+    any() <EOF>
+}
+
+void any(): {}
+{
+    (unaryExpr() | statement() | block() | statementList() | assignmentStatement()
+    | forStatement() | forClause() | rangeClause() | ifStatement() | simpleStatement()
+    | incDecStatement() | operand() | primaryExpr() | shortVarDecl() | expressions()
+    | expressionList() | switchStatement() | exprSwitchStatement() | exprCaseClause()
+    | exprSwitchCase())+
+}
 
 void unaryExpr() : {}
 {
@@ -83,11 +90,15 @@ void assignmentStatement() : {}
     expressionList() <ASSIGN_OP> expressionList()
 }
 
-void forStatement() : {}
+void forStatement() : { StringBuilder sb = new StringBuilder(); }
 {
-    "for" (LOOKAHEAD(3) expressions()
-    | LOOKAHEAD(3) forClause()
-    | rangeClause())?
+    { sb.append("FOR LOOP: for "); }
+
+    "for" (LOOKAHEAD(3) expressions() { sb.append(token.image); }
+    | LOOKAHEAD(3) forClause() { sb.append(token.image); }
+    | rangeClause() { sb.append(token.image); })?
+
+    { System.out.println(sb.toString()); }
 }
 
 void forClause() : {}
@@ -152,7 +163,7 @@ void exprSwitchStatement() : {}
 
 void exprCaseClause() : {}
 {
-   exprSwitchCase() ":" statementList()
+    exprSwitchCase() ":" statementList()
 }
 
 void exprSwitchCase() : {}
