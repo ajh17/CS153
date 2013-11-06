@@ -53,16 +53,19 @@ SKIP : {
 
 void start() : {}
 {
-    any() <EOF>
+    "package" <IDENTIFIER>
+    any()
+    end()
+}
+
+void end() : {}
+{
+    <EOF>
 }
 
 void any(): {}
 {
-    (unaryExpr() | statement() | block() | statementList() | assignmentStatement()
-    | forStatement() | forClause() | rangeClause() | ifStatement() | simpleStatement()
-    | incDecStatement() | operand() | primaryExpr() | shortVarDecl() | expressions()
-    | expressionList() | switchStatement() | exprSwitchStatement() | exprCaseClause()
-    | exprSwitchCase())+
+    (expressions() | statement())+
 }
 
 void unaryExpr() : {}
