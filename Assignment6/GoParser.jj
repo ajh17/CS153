@@ -1,7 +1,7 @@
 options {
     BUILD_PARSER=true;
     OUTPUT_DIRECTORY="src";
-    //DEBUG_PARSER=true;
+    DEBUG_PARSER=true;
     //DEBUG_TOKEN_MANAGER=true;
 }
 
@@ -65,7 +65,7 @@ void end() : {}
 
 void any(): {}
 {
-    (expressions() | statement())+
+    (LOOKAHEAD(10) expressions() | LOOKAHEAD(10) statement())*
 }
 
 void unaryExpr() : {}
