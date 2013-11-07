@@ -1,7 +1,7 @@
 options {
     BUILD_PARSER=true;
     OUTPUT_DIRECTORY="src";
-    DEBUG_PARSER=true;
+    //DEBUG_PARSER=true;
     //DEBUG_TOKEN_MANAGER=true;
 }
 
@@ -53,125 +53,84 @@ SKIP : {
 
 void start() : {}
 {
-    "package" <IDENTIFIER>
-    any()
-    end()
-}
+    { System.out.println("STARTING TO PARSE!!!!"); }
 
-void end() : {}
-{
+    (
+        { System.out.println("BEGIN STATEMENT!"); }
+        statement()
+        { System.out.println("FINISHED STATEMENT!"); }
+    )*
+
     <EOF>
-}
-
-void any(): {}
-{
-    (LOOKAHEAD(10) expressions() | LOOKAHEAD(10) statement())*
-}
-
-void unaryExpr() : {}
-{
-    primaryExpr() | <UNARY_OP> unaryExpr()
 }
 
 void statement() : {}
 {
-    simpleStatement() | forStatement() | ifStatement()
-}
-
-void block() : {}
-{
-    "{" statementList() "}"
+    assignmentStatement() | forStatement()
 }
 
 void statementList() : {}
 {
-    (statement() ";")*
+    (statement() ";" { System.out.print(token.image); })*
+}
+
+void block() : {}
+{
+    "{" { System.out.print(token.image); }
+    statementList()
+    "}" { System.out.print(token.image); }
 }
 
 void assignmentStatement() : {}
 {
-    expressionList() <ASSIGN_OP> expressionList()
+    operand() ( (("=" | ":=") { System.out.print(token.image); } operand())
+              | incOrDec()
+
+    )
 }
 
-void forStatement() : { StringBuilder sb = new StringBuilder(); }
+void incOrDec() : {}
 {
-    { sb.append("FOR LOOP: for "); }
+    ("++" | "--") { System.out.print(token.image); }
+}
 
-    "for" (LOOKAHEAD(3) expressions() { sb.append(token.image); }
-    | LOOKAHEAD(3) forClause() { sb.append(token.image); }
-    | rangeClause() { sb.append(token.image); })?
+void forStatement() : {}
+{
+    { System.out.println("***FOR LOOP***"); }
 
-    { System.out.println(sb.toString()); }
+    "for" { System.out.print(token.image + " "); }
+    forClause()
+
+    { System.out.println("\n***END FOR LOOP***"); }
 }
 
 void forClause() : {}
 {
-    simpleStatement() ";" expressions() ";" simpleStatement()
+    assignmentStatement() ";" { System.out.print(token.image + " "); }
+    expressions() ";" { System.out.print(token.image + " "); }
+    assignmentStatement()
 }
 
 void rangeClause() : {}
 {
-    (LOOKAHEAD(2) expressions() "=" | <IDENTIFIER> ":=") "range" expressions()
+    (LOOKAHEAD(2) expressions() "=" { System.out.print(token.image); }
+    | <IDENTIFIER> { System.out.print(token.image); }
+    ":=" { System.out.print(token.image); })
+    "range" { System.out.print(token.image); } expressions()
 }
 
-void ifStatement() : {}
+void operand(): {}
 {
-    "if" (LOOKAHEAD(2) simpleStatement() ";")? expressions() block() ("else" (ifStatement() | block()))
-}
-
-void simpleStatement() : {}
-{
-    LOOKAHEAD(3) expressions() | LOOKAHEAD(3) assignmentStatement() | shortVarDecl() | incDecStatement()
-}
-
-void incDecStatement() : {}
-{
-    expressions() ("++" | "--")
-}
-
-void operand():{}
-{
-    <INTEGER_NUMBER> | <REAL_NUMBER> | <RAW_STRING> | <INTERPRETED_STRING> | <IDENTIFIER > |  "(" expressions() ")"
-}
-
-void primaryExpr() : {}
-{
-    operand()
-}
-
-void shortVarDecl() : {}
-{
-    <IDENTIFIER_LIST> ":=" expressionList()
+    ((<INTEGER_NUMBER> | <REAL_NUMBER> | <RAW_STRING> | <INTERPRETED_STRING>
+    | <IDENTIFIER >) { System.out.print(token.image); })
+    |  ("(" { System.out.print(token.image); }
+    expressions()
+    ")" { System.out.print(token.image); })
 }
 
 void expressions() : {}
 {
-    unaryExpr() (<BINARY_OP> unaryExpr())*
-}
-
-void expressionList() : {}
-{
-    expressions() ("," expressions())*
-}
-
-void switchStatement() : {}
-{
-    exprSwitchStatement()
-}
-
-void exprSwitchStatement() : {}
-{
-    "switch" (LOOKAHEAD(2) simpleStatement() ";")? (expressions())? "{" (exprCaseClause())* "}"
-}
-
-void exprCaseClause() : {}
-{
-    exprSwitchCase() ":" statementList()
-}
-
-void exprSwitchCase() : {}
-{
-    "case" expressionList() | "default"
+    operand() (<BINARY_OP> { System.out.print(token.image); } operand())*
 }
 
 /********************
@@ -186,7 +145,7 @@ TOKEN : {
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
     |
     <INTEGER_NUMBER: <DIGIT> (<DIGIT>)*>
-        { debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
+        //{ debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
     |
     <REAL_NUMBER: <INTEGER_NUMBER> "." (<INTEGER_NUMBER>)?>
         { debugStream.println("REAL_NUMBER token: " + matchedToken.image); }
@@ -203,9 +162,10 @@ TOKEN : {
         | <#WHITE_SPACE: <NEWLINE> | "\t" | " ">
     |
     <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT> | "_")*>
-        { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
+        // { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
         |
         <IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
+    /*
     |
     <SPECIAL_SYMBOL:
         "+" | "&" | "+=" | "&=" | "&&" | "==" | "!=" | "(" | ")"
@@ -215,20 +175,20 @@ TOKEN : {
         | "%" | ">>" | "%=" | ">>=" | "--" | "!" | "..." |  "." | ":"
         | "&^" | "&^=">
         { debugStream.println("SPECIAL_SYMBOL token: " + matchedToken.image); }
-
+    */
         | <#LETTER: ["a"-"z", "A"-"Z"]>
         | <#DIGIT: ["0"-"9"]>
         | <#ALPHANUMERIC: (<LETTER> | <DIGIT>)+>
         | <#ADD_OP: ["+", "-"]>
         | <#MUL_OP: ("*" | "/" | "%")>
-        | <#REL_OP: ("==" | "!=" | "<" | "<=" | ">" | ">=") >
-        | <UNARY_OP: ("+" | "-" | "!" | "^" | "*" | "&")>
+        | <#REL_OP: "==" | "!=" | "<" | "<=" | ">" | ">=">
+        | <UNARY_OP: "+" | "-" | "!" | "^" | "*" | "&">
         | <ASSIGN_OP: (<ADD_OP> | <MUL_OP>)? "=">
         | <BINARY_OP: "||" | "&&" | <REL_OP> | <ADD_OP>| <MUL_OP>>
-        | <#COMMON_LITERAL_SYMBOL: ("~" | "!" | "@" | "#" | "$" | "%" | "^"
+        | <#COMMON_LITERAL_SYMBOL: "~" | "!" | "@" | "#" | "$" | "%" | "^"
             | "&" | "*"| "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">"
-            | "," | "." | "/"| "?" | ":" | ";" | "[" | "]" | "{" | "}" | "|")>
-        | <#RAW_LITERAL_SYMBOL: (<COMMON_LITERAL_SYMBOL> | "\"" | "\\")>
-        | <#INTERPRETED_LITERAL_SYMBOL: (<COMMON_LITERAL_SYMBOL> | "'")>
+            | "," | "." | "/"| "?" | ":" | ";" | "[" | "]" | "{" | "}" | "|">
+        | <#RAW_LITERAL_SYMBOL: <COMMON_LITERAL_SYMBOL> | "\"" | "\\">
+        | <#INTERPRETED_LITERAL_SYMBOL: <COMMON_LITERAL_SYMBOL> | "'">
 }
 
