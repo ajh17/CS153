@@ -66,7 +66,7 @@ void start() : {}
 
 void statement() : {}
 {
-    (assignmentStatement() ";" { System.out.print(token.image); })
+    (assignmentStatement() { System.out.print(token.image); })
     | forStatement()
 }
 
