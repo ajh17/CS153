@@ -84,8 +84,9 @@ void block() : {}
 
 void assignmentStatement() : {}
 {
-    operand() ( (("=" | ":=") { System.out.print(token.image); } operand())
-              | incOrDec())
+    <IDENTIFIER> { System.out.print(token.image); }
+    ( (("=" | ":=") { System.out.print(token.image); } operand())
+      | incOrDec())
 }
 
 void incOrDec() : {}
@@ -99,6 +100,7 @@ void forStatement() : {}
 
     "for" { System.out.print(token.image + " "); }
     forClause()
+    block()
 
     { System.out.println("\n***END FOR LOOP***"); }
 }
@@ -122,9 +124,10 @@ void operand(): {}
 {
     ((<INTEGER_NUMBER> | <REAL_NUMBER> | <RAW_STRING> | <INTERPRETED_STRING>
     | <IDENTIFIER >) { System.out.print(token.image); })
-    |  ("(" { System.out.print(token.image); }
-    expressions()
-    ")" { System.out.print(token.image); })
+        |
+        ("(" { System.out.print(token.image); }
+        expressions()
+        ")" { System.out.print(token.image); })
 }
 
 void expressions() : {}
