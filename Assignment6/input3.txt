@@ -1,16 +1,15 @@
 // regular for loop
 for i := 0; i < 10; i++  {
-    fmt.Println("i is:", i)
+
+
 }
 
 // no middle condition
 for i := 0; ; i++ {
-    fmt.Println("i is :", i)
 }
 
 // no incrementing of i
 for i := 0; i < 10;  {
-    fmt.Println("i is :", i)
 }
 
 // a while loop equiv in Go
@@ -33,46 +32,46 @@ for {
 
 // always true if statement
 if true {
-    fmt.Println("the true block is executed")
+
 } 
 
 // if else-if else statement
 a, b, c:= 4, 5, 10
 if a < b {
-    fmt.Println("a < b")
+
 } else if a > b {
-    fmt.Println("a > b")
+
 } else {
-    fmt.Println("a == b")
+
 }  
 
 // some relational ops and a break and parens around expression
 if (a == b && b == c){
-    fmt.Println("all the same")
+
     break
 }
 else if (b <= a || b <= c){
-    fmt.Println("b not the largest")
+
 }
 
 //switch statement with no expression
 switch {
-    case true: fmt.Println("always this")
-    case false: fmt.Println("never this")
-    default: fmt.Println("default")
+    case true: 
+	case false: 
+    default: 
 }
 
 // regular switch statement but no default 
 i := 5
 switch i {
-    case 4: fmt.Println("4")
-    case 5:fmt.Println("5")
-    case 6: fmt.Println("6")
+    case 4: 
+    case 5: 
+    case 6:
 }
 
 // switch with multiple cases in one line and a fallthrough
 j := 4
 switch j {
-    case 1,3,5,7,9: fmt.Println("Odd num"); fallthrough;
-    default: fmt.Println("Got here")
+    case 1,3,5,7,9: ; fallthrough;
+    default:
 }
