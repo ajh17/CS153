@@ -1,6 +1,6 @@
 options {
     BUILD_PARSER=true;
-    //OUTPUT_DIRECTORY="src";
+    OUTPUT_DIRECTORY="src";
     //DEBUG_PARSER=true;
     //DEBUG_TOKEN_MANAGER=true;
 }
@@ -106,8 +106,7 @@ void forStatement() : {}
     { System.out.println("***FOR LOOP***"); }
 
     "for" { System.out.print(token.image + " "); }
-     (
-       forClause())?
+     (forClause())?
     block()
 
     { System.out.println("\n***END FOR LOOP***"); }
@@ -160,7 +159,6 @@ void operand(): {}
 
 void expressions() : {}
 {
-
       operand() (<BINARY_OP> operand())? { System.out.print(token.image); }
 }
 
