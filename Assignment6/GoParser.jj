@@ -83,11 +83,12 @@ void block() : {}
 
 void assignmentStatement() : {}
 {
+  
     <IDENTIFIER> { System.out.print(token.image); }
     (
         (
             ("=" | ":=") { System.out.print(token.image); }
-            operand() ";" { System.out.print(token.image); }
+            operand() (";")? { System.out.print(token.image); }
         )
         |
             incOrDec()
@@ -152,7 +153,6 @@ void operand(): {}
 
 void expressions() : {}
 { 
- 
       operand() (<BINARY_OP> { System.out.print(token.image); } operand())*
 }
 
