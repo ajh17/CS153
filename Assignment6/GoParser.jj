@@ -66,13 +66,13 @@ void start() : {}
 
 void statement() : {}
 {
-    (assignmentStatement() ";" { System.out.print(token.image); })
+    assignmentStatement() { System.out.print(token.image); }
     | forStatement()
 }
 
 void statementList() : {}
 {
-    (statement() ";" { System.out.print(token.image); })*
+    (statement() ";")*
 }
 
 void block() : {}
@@ -144,27 +144,27 @@ TOKEN : {
         | "go" | "map" | "struct" | "chan" | "else" | "goto" | "package" | "switch"
         | "const" | "fallthrough" | "if" | "range" | "type" | "continue"
         | "for" | "import" | "return" | "var">
-        { debugStream.println("\nRESERVED_WORD token: " + matchedToken.image); }
+        //{ debugStream.println("\nRESERVED_WORD token: " + matchedToken.image); }
     |
     <INTEGER_NUMBER: <DIGIT> (<DIGIT>)*>
         //{ debugStream.println("\nINTEGER_NUMBER token: " + matchedToken.image); }
     |
     <REAL_NUMBER: <INTEGER_NUMBER> "." (<INTEGER_NUMBER>)?>
-        { debugStream.println("\nREAL_NUMBER token: " + matchedToken.image); }
+        //{ debugStream.println("\nREAL_NUMBER token: " + matchedToken.image); }
     |
     <RAW_STRING: "`" (<ALPHANUMERIC> | <RAW_LITERAL_SYMBOL> | <NEWLINE>)* "`">
-        { debugStream.println("\nRAW_STRING token: " + matchedToken.image); }
+        //{ debugStream.println("\nRAW_STRING token: " + matchedToken.image); }
     |
     <INTERPRETED_STRING: "\"" (<ALPHANUMERIC> | <ESCAPED_CHAR>
             | <INTERPRETED_LITERAL_SYMBOL> | <WHITE_SPACE>)* "\"">
-        { debugStream.println("\nINTERPRETED_STRING token: " + matchedToken.image); }
+        //{ debugStream.println("\nINTERPRETED_STRING token: " + matchedToken.image); }
 
         | <#NEWLINE: ["\r", "\n"]>
         | <#ESCAPED_CHAR: "\\" ("a" | "b" | "f" | "n" | "r" | "t" | "v" | "\\" | "'" | "\"")>
         | <#WHITE_SPACE: <NEWLINE> | "\t" | " ">
     |
     <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT> | "_")*>
-         { debugStream.println("\nIDENTIFIER token: " + matchedToken.image); }
+         //{ debugStream.println("\nIDENTIFIER token: " + matchedToken.image); }
         |
         <IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
     /*
