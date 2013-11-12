@@ -1,0 +1,198 @@
+options {
+    BUILD_PARSER=true;
+    JJTREE_OUTPUT_DIRECTORY="src/wci/frontend";
+    NODE_EXTENDS="wci.intermediate.icodeimpl.ICodeNodeImpl";
+    //OUTPUT_DIRECTORY="src";
+    //DEBUG_PARSER=true;
+    //DEBUG_TOKEN_MANAGER=true;
+}
+
+PARSER_BEGIN(GoParser)
+import java.io.*;
+
+public class GoParser
+{
+    public static void main(String[] args)
+    {
+        BufferedReader br = null;
+
+        try {
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(args[0])));
+            GoParser parser = new GoParser(br);
+
+            try {
+                parser.start();
+            } catch (ParseException ex) {}
+
+        } catch (java.io.IOException ex) {}
+        finally {
+
+            try {
+                br.close();
+            } catch (java.io.IOException ex) {}
+        }
+    }
+}
+PARSER_END(GoParser)
+
+SKIP : {
+   <IGNORE : [" ", "\r", "\n", "\t"]>
+   | <"//" (~["\n", "\r"])*>
+   | <"/*"> : MULTI_LINE_COMMENT
+}
+
+<MULTI_LINE_COMMENT> SKIP: {
+    "*/" : DEFAULT
+}
+
+<MULTI_LINE_COMMENT> MORE: {
+    <~[]>
+}
+
+/*************************
+  -- Production Rules --
+*************************/
+
+void start() : {}
+{
+    { System.out.println("STARTING TO PARSE!!!!"); }
+
+    (
+        { System.out.println("\nBEGIN STATEMENT!"); }
+        statement()
+        { System.out.println("\nFINISHED STATEMENT!"); }
+    )*
+
+    <EOF>
+}
+
+void statement() : {}
+{
+    (assignmentStatement() { System.out.print(token.image); })
+    | forStatement()
+}
+
+void statementList() : {}
+{
+    (statement() ";" { System.out.print(token.image); })*
+}
+
+void block() : {}
+{
+    "{" { System.out.print(token.image); }
+    statementList()
+    "}" { System.out.print(token.image); }
+}
+
+void assignmentStatement() : {}
+{
+    <IDENTIFIER> { System.out.print(token.image); }
+    ( (("=" | ":=") { System.out.print(token.image); } operand())
+      | incOrDec())
+}
+
+void incOrDec() : {}
+{
+    ("++" | "--") { System.out.print(token.image); }
+}
+
+void forStatement() : {}
+{
+    { System.out.println("***FOR LOOP***"); }
+
+    "for" { System.out.print(token.image + " "); }
+    forClause()
+    block()
+
+    { System.out.println("\n***END FOR LOOP***"); }
+}
+
+void forClause() : {}
+{
+    assignmentStatement() ";" { System.out.print(token.image + " "); }
+    expressions() ";" { System.out.print(token.image + " "); }
+    assignmentStatement()
+}
+
+void rangeClause() : {}
+{
+    (LOOKAHEAD(2) expressions() "=" { System.out.print(token.image); }
+    | <IDENTIFIER> { System.out.print(token.image); }
+    ":=" { System.out.print(token.image); })
+    "range" { System.out.print(token.image); } expressions()
+}
+
+void operand(): {}
+{
+    ((<INTEGER_NUMBER> | <REAL_NUMBER> | <RAW_STRING> | <INTERPRETED_STRING>
+    | <IDENTIFIER >) { System.out.print(token.image); })
+        |
+        ("(" { System.out.print(token.image); }
+        expressions()
+        ")" { System.out.print(token.image); })
+}
+
+void expressions() : {}
+{
+    operand() (<BINARY_OP> { System.out.print(token.image); } operand())*
+}
+
+/********************
+    -- Tokens --
+********************/
+
+TOKEN : {
+    <RESERVED_WORD: "break" | "default" | "func" | "interface" | "select" | "case" | "defer"
+        | "go" | "map" | "struct" | "chan" | "else" | "goto" | "package" | "switch"
+        | "const" | "fallthrough" | "if" | "range" | "type" | "continue"
+        | "for" | "import" | "return" | "var">
+        { debugStream.println("\nRESERVED_WORD token: " + matchedToken.image); }
+    |
+    <INTEGER_NUMBER: <DIGIT> (<DIGIT>)*>
+        //{ debugStream.println("\nINTEGER_NUMBER token: " + matchedToken.image); }
+    |
+    <REAL_NUMBER: <INTEGER_NUMBER> "." (<INTEGER_NUMBER>)?>
+        { debugStream.println("\nREAL_NUMBER token: " + matchedToken.image); }
+    |
+    <RAW_STRING: "`" (<ALPHANUMERIC> | <RAW_LITERAL_SYMBOL> | <NEWLINE>)* "`">
+        { debugStream.println("\nRAW_STRING token: " + matchedToken.image); }
+    |
+    <INTERPRETED_STRING: "\"" (<ALPHANUMERIC> | <ESCAPED_CHAR>
+            | <INTERPRETED_LITERAL_SYMBOL> | <WHITE_SPACE>)* "\"">
+        { debugStream.println("\nINTERPRETED_STRING token: " + matchedToken.image); }
+
+        | <#NEWLINE: ["\r", "\n"]>
+        | <#ESCAPED_CHAR: "\\" ("a" | "b" | "f" | "n" | "r" | "t" | "v" | "\\" | "'" | "\"")>
+        | <#WHITE_SPACE: <NEWLINE> | "\t" | " ">
+    |
+    <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT> | "_")*>
+         { debugStream.println("\nIDENTIFIER token: " + matchedToken.image); }
+        |
+        <IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
+    /*
+    |
+    <SPECIAL_SYMBOL:
+        "+" | "&" | "+=" | "&=" | "&&" | "==" | "!=" | "(" | ")"
+        | "-" | "|" | "-=" | "|=" | "||" | "<" | "<=" | "[" | "]"
+        | "*" | "^" | "*=" | "^=" | "<-" | ">" | ">=" | "{"  | "}"
+        | "/" | "<<" | "/=" | "<<=" | "++" | "=" | ":=" | "," | ";"
+        | "%" | ">>" | "%=" | ">>=" | "--" | "!" | "..." |  "." | ":"
+        | "&^" | "&^=">
+        { debugStream.println("\nSPECIAL_SYMBOL token: " + matchedToken.image); }
+    */
+        | <#LETTER: ["a"-"z", "A"-"Z"]>
+        | <#DIGIT: ["0"-"9"]>
+        | <#ALPHANUMERIC: (<LETTER> | <DIGIT>)+>
+        | <#ADD_OP: ["+", "-"]>
+        | <#MUL_OP: ("*" | "/" | "%")>
+        | <#REL_OP: "==" | "!=" | "<" | "<=" | ">" | ">=">
+        | <UNARY_OP: "+" | "-" | "!" | "^" | "*" | "&">
+        | <ASSIGN_OP: (<ADD_OP> | <MUL_OP>)? "=">
+        | <BINARY_OP: "||" | "&&" | <REL_OP> | <ADD_OP>| <MUL_OP>>
+        | <#COMMON_LITERAL_SYMBOL: "~" | "!" | "@" | "#" | "$" | "%" | "^"
+            | "&" | "*"| "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">"
+            | "," | "." | "/"| "?" | ":" | ";" | "[" | "]" | "{" | "}" | "|">
+        | <#RAW_LITERAL_SYMBOL: <COMMON_LITERAL_SYMBOL> | "\"" | "\\">
+        | <#INTERPRETED_LITERAL_SYMBOL: <COMMON_LITERAL_SYMBOL> | "'">
+}
+
