@@ -66,27 +66,27 @@ void start() : {}
 
 void statement() : {}
 {
-    assignmentStatement() { System.out.print(token.image); }
-    | forStatement()
+    assignmentStatement() | forStatement()
 }
 
 void statementList() : {}
 {
-    (statement() ";")*
+    (statement())*
 }
 
 void block() : {}
 {
-    "{" { System.out.print(token.image); }
+    "{" { System.out.print(" " + token.image + "\n\t"); }
     statementList()
-    "}" { System.out.print(token.image); }
+    "}" { System.out.print("\n" + token.image + "\n"); }
 }
 
 void assignmentStatement() : {}
 {
     <IDENTIFIER> { System.out.print(token.image); }
-    ( (("=" | ":=") { System.out.print(token.image); } operand())
+    ( (("=" | ":=") { System.out.print(token.image); } operand() ";" { System.out.print(token.image); })
       | incOrDec())
+
 }
 
 void incOrDec() : {}
@@ -107,8 +107,8 @@ void forStatement() : {}
 
 void forClause() : {}
 {
-    assignmentStatement() ";" { System.out.print(token.image + " "); }
-    expressions() ";" { System.out.print(token.image + " "); }
+    assignmentStatement()
+    expressions() ";" { System.out.print(token.image); }
     assignmentStatement()
 }
 
@@ -122,12 +122,18 @@ void rangeClause() : {}
 
 void operand(): {}
 {
-    ((<INTEGER_NUMBER> | <REAL_NUMBER> | <RAW_STRING> | <INTERPRETED_STRING>
-    | <IDENTIFIER >) { System.out.print(token.image); })
+    (
+        (
+            (<INTEGER_NUMBER> | <REAL_NUMBER> | <RAW_STRING> | <INTERPRETED_STRING>
+            | <IDENTIFIER >) { System.out.print(token.image); }
+        )
         |
-        ("(" { System.out.print(token.image); }
-        expressions()
-        ")" { System.out.print(token.image); })
+        (
+            "(" { System.out.print(token.image); }
+            expressions()
+            ")" { System.out.print(token.image); }
+        )
+    )
 }
 
 void expressions() : {}
