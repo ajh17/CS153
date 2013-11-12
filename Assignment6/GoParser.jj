@@ -84,8 +84,14 @@ void block() : {}
 void assignmentStatement() : {}
 {
     <IDENTIFIER> { System.out.print(token.image); }
-    ( (("=" | ":=") { System.out.print(token.image); } operand() ";" { System.out.print(token.image); })
-      | incOrDec())
+    (
+        (
+            ("=" | ":=") { System.out.print(token.image); }
+            operand() ";" { System.out.print(token.image); }
+        )
+        |
+            incOrDec()
+    )
 
 }
 
@@ -114,9 +120,16 @@ void forClause() : {}
 
 void rangeClause() : {}
 {
-    (LOOKAHEAD(2) expressions() "=" { System.out.print(token.image); }
-    | <IDENTIFIER> { System.out.print(token.image); }
-    ":=" { System.out.print(token.image); })
+    (
+        LOOKAHEAD(2)
+
+        expressions() "=" { System.out.print(token.image); }
+        |
+        <IDENTIFIER> { System.out.print(token.image); }
+
+        ":=" { System.out.print(token.image); }
+    )
+
     "range" { System.out.print(token.image); } expressions()
 }
 
