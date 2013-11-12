@@ -105,7 +105,7 @@ void forStatement() : {}
     { System.out.println("***FOR LOOP***"); }
 
     "for" { System.out.print(token.image + " "); }
-    forClause()
+    (forClause())?
     block()
 
     { System.out.println("\n***END FOR LOOP***"); }
@@ -113,9 +113,9 @@ void forStatement() : {}
 
 void forClause() : {}
 {
-    assignmentStatement()
-    expressions() ";" { System.out.print(token.image); }
-    assignmentStatement()
+    ( assignmentStatement())? 
+    (expressions())? ";" { System.out.print(token.image); }
+    ( assignmentStatement())?
 }
 
 void rangeClause() : {}
@@ -135,6 +135,7 @@ void rangeClause() : {}
 
 void operand(): {}
 {
+  
     (
         (
             (<INTEGER_NUMBER> | <REAL_NUMBER> | <RAW_STRING> | <INTERPRETED_STRING>
@@ -150,8 +151,9 @@ void operand(): {}
 }
 
 void expressions() : {}
-{
-    operand() (<BINARY_OP> { System.out.print(token.image); } operand())*
+{ 
+ 
+      operand() (<BINARY_OP> { System.out.print(token.image); } operand())*
 }
 
 /********************
