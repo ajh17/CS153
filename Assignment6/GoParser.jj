@@ -68,7 +68,8 @@ void statement() : {}
     ({ System.out.println("\n==========ASSIGNMENT========="); } assignmentStatement())
     | ({ System.out.println("\n==========SWITCH STATEMENT========="); } switchStatement())
     | ({ System.out.println("\n==========IF STATEMENT========="); } ifStatement())
-    | loopStatement()
+    | ({ System.out.println("\n==========FOR STATEMENT========="); } forStatement())
+    | (";" { System.out.print(token.image); })
 }
 
 void statementList() : {}
@@ -95,7 +96,7 @@ void ifStatement() : {}
 void switchStatement() : {}
 {
     "switch" { System.out.print(token.image + " "); }
-    expression() (";" { System.out.print(token.image + " "); })?
+    (expression())?
     switchBlock()
 }
 
@@ -111,7 +112,7 @@ void caseGroup() : {}
     (
         "case" { System.out.print(token.image + " "); }
         expressionList()
-        ":" { System.out.print(token.image + " "); }
+        ":" { System.out.println(token.image); }
         statementList()
     )*
 
@@ -140,31 +141,17 @@ void incOrDec() : {}
     ("++" | "--") { System.out.print(token.image); }
 }
 
-void loopStatement() : {}
-{
-    ({ System.out.println("\n==========WHILE LOOP========="); } whileStatement())
-    |
-    ({ System.out.println("\n==========FOR LOOP========="); } forStatement())
-}
-
-void whileStatement() : {}
-{
-    "while" { System.out.print(token.image + " "); }
-    (expression() (";" { System.out.print(token.image + " "); })? )?
-    block()
-}
-
 void forStatement() : {}
 {
     "for" { System.out.print(token.image + " "); }
-    (forClause())?
+    forClause()
     block()
 }
 
 void forClause() : {}
 {
     (LOOKAHEAD(2) assignmentStatement())?
-    (expression())? ";" { System.out.print(token.image); }
+    (LOOKAHEAD(2) expression())? (";" { System.out.print(token.image); })?
     (assignmentStatement())?
 }
 
@@ -189,7 +176,7 @@ void operand(): {}
     (
         (
             (<INTEGER_NUMBER> | <REAL_NUMBER> | <RAW_STRING> | <INTERPRETED_STRING>
-            | <IDENTIFIER>) { System.out.print(token.image + " "); }
+            | <IDENTIFIER>) { System.out.print(token.image); }
         )
         |
         (
