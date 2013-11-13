@@ -128,7 +128,7 @@ void assignmentStatement() : {}
     (
         (
             ("=" | ":=") { System.out.print(token.image); }
-            operand()
+            operand()((<ADD_OP>|< MUL_OP >) { System.out.print(token.image + " "); } operand())*
             (LOOKAHEAD(2) ";")?
         )
         |
@@ -243,8 +243,8 @@ TOKEN : {
         | <#LETTER: ["a"-"z", "A"-"Z"]>
         | <#DIGIT: ["0"-"9"]>
         | <#ALPHANUMERIC: (<LETTER> | <DIGIT>)+>
-        | <#ADD_OP: ["+", "-"]>
-        | <#MUL_OP: ("*" | "/" | "%")>
+        | <ADD_OP: ["+", "-"]>
+        | <MUL_OP: ("*" | "/" | "%")>
         | <#REL_OP: "==" | "!=" | "<" | "<=" | ">" | ">=">
         | <UNARY_OP: "+" | "-" | "!" | "^" | "*" | "&">
         | <ASSIGN_OP: (<ADD_OP> | <MUL_OP>)? "=">

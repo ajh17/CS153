@@ -40,19 +40,19 @@ for i := 0; i < 10;  {
 // infinite loop.
 s := ""
 for {
-    //s = s + "a"
+    s = s + "a"
 }
 
 // a while loop equiv in Go
 s := ""
 for s != "aaaaa"; {
-    //s = s + "a"
+    s = s + "a"
 }
 
 // another version of a for loop in Go
 s := ""
 for s != "aaaaa" {
-    //s = s + "a"
+    s = s + "a"
 }
 
 // always true if statement
