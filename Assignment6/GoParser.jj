@@ -60,7 +60,7 @@ void start() : {}
     )*
 
     <EOF>
-    { System.out.println("\nFINISHED STATEMENT!"); }
+    { System.out.println("\nFINISHED PARSING!!!!!"); }
 }
 
 void statement() : {}
