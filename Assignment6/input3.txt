@@ -1,12 +1,12 @@
 if i == 0 {
-
+    a:= 4
 }
 
 if i != 0 {
-
+    answer := 42
 }
 else if j == 0 {
-
+    answer := 0
 }
 
 if i == 0 {
@@ -24,12 +24,12 @@ else {
 
 // regular for loop
 for i := 0; i < 10; i++  {
-
-
+    array_index := i
 }
 
 // no middle condition
 for i := 0; ; i++ {
+    middle := 4
 }
 
 // no incrementing of i
