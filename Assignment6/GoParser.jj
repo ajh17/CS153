@@ -110,14 +110,14 @@ void switchBlock() : {}
 void caseGroup() : {}
 {
     (
-        "case" { System.out.print(token.image + " "); }
+        "case" { System.out.print("\n" + token.image + " "); }
         expressionList()
-        ":" { System.out.println(token.image); }
+        ":" { System.out.print(token.image); }
         statementList()
     )*
 
     (
-        "default" { System.out.print(token.image); } ":" { System.out.print(token.image + " "); }
+        "default" { System.out.print("\n" + token.image); } ":" { System.out.print(token.image + " "); }
         statementList()
     )?
 }
@@ -129,7 +129,7 @@ void assignmentStatement() : {}
         (
             ("=" | ":=") { System.out.print(token.image); }
             operand()
-            (LOOKAHEAD(2) ";")? { System.out.print(token.image); }
+            (LOOKAHEAD(2) ";")?
         )
         |
             incOrDec()
@@ -155,7 +155,7 @@ void forClause() : {}
     (assignmentStatement())?
 }
 
-// TODO: Not current used. Delete or use it?
+// TODO: Not currently used. Delete or use it?
 void rangeClause() : {}
 {
     (
