@@ -160,20 +160,20 @@ void operand(): {}
     (
         (
             (<INTEGER_NUMBER> | <REAL_NUMBER> | <RAW_STRING> | <INTERPRETED_STRING>
-            | <IDENTIFIER >) { System.out.print(token.image); }
+            | <IDENTIFIER >) { System.out.print(token.image + " "); }
         )
         |
         (
-            "(" { System.out.print(token.image); }
+            "(" { System.out.print(token.image + " "); }
             expression()
-            ")" { System.out.print(token.image); }
+            ")" { System.out.print(token.image + " "); }
         )
     )
 }
 
 void expression() : {}
 {
-      operand() (<BINARY_OP> { System.out.print(token.image); } operand())?
+      operand() (<BINARY_OP> { System.out.print(token.image + " "); } operand())*
 }
 
 /********************s
