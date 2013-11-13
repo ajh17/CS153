@@ -66,8 +66,9 @@ void start() : {}
 void statement() : {}
 {
     ({ System.out.println("\n==========ASSIGNMENT========="); } assignmentStatement())
-    | loopStatement()
+    | ({ System.out.println("\n==========SWITCH STATEMENT========="); } switchStatement())
     | ({ System.out.println("\n==========IF STATEMENT========="); } ifStatement())
+    | loopStatement()
 }
 
 void statementList() : {}
@@ -89,6 +90,35 @@ void ifStatement() : {}
     block()
     (LOOKAHEAD(2) "else" { System.out.print(token.image + " "); } "if" { System.out.print(token.image + " "); } expression() block())*
     ("else" { System.out.print(token.image + " "); } block())?
+}
+
+void switchStatement() : {}
+{
+    "switch" { System.out.print(token.image + " "); }
+    expression() (";" { System.out.print(token.image + " "); })?
+    switchBlock()
+}
+
+void switchBlock() : {}
+{
+    "{" { System.out.print(" " + token.image + "\n\t"); }
+    caseGroup()
+    "}" { System.out.print("\n" + token.image + "\n"); }
+}
+
+void caseGroup() : {}
+{
+    (
+        "case" { System.out.print(token.image + " "); }
+        expressionList()
+        ":" { System.out.print(token.image + " "); }
+        statementList()
+    )*
+
+    (
+        "default" { System.out.print(token.image); } ":" { System.out.print(token.image + " "); }
+        statementList()
+    )?
 }
 
 void assignmentStatement() : {}
@@ -131,7 +161,6 @@ void forStatement() : {}
     block()
 }
 
-
 void forClause() : {}
 {
     (LOOKAHEAD(2) assignmentStatement())?
@@ -160,7 +189,7 @@ void operand(): {}
     (
         (
             (<INTEGER_NUMBER> | <REAL_NUMBER> | <RAW_STRING> | <INTERPRETED_STRING>
-            | <IDENTIFIER >) { System.out.print(token.image + " "); }
+            | <IDENTIFIER>) { System.out.print(token.image + " "); }
         )
         |
         (
@@ -173,7 +202,12 @@ void operand(): {}
 
 void expression() : {}
 {
-      operand() (<BINARY_OP> { System.out.print(token.image + " "); } operand())*
+    operand() (<BINARY_OP> { System.out.print(token.image + " "); } operand())*
+}
+
+void expressionList() : {}
+{
+    expression() ("," { System.out.print(token.image + " "); } expression())*
 }
 
 /********************s
