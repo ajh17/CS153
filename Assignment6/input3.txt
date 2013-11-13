@@ -36,22 +36,22 @@ for i := 0; ; i++ {
 for i := 0; i < 10;  {
 }
 
+// infinite loop.
+s := ""
+for {
+    //s = s + "a"
+}
+
 // a while loop equiv in Go
 s := ""
-for ; s != "aaaaa";  {
-    s = s + "a"
+while s != "aaaaa"; {
+    //s = s + "a"
 }
 
 // another version of a while loop in Go
 s := ""
-for s != "aaaaa"  {
-    s = s + "a"
-}
-
-// infinite loop. 
-s := ""
-for {
-    s = s + "a"
+while s != "aaaaa" {
+    //s = s + "a"
 }
 
 // always true if statement
@@ -60,7 +60,10 @@ if true {
 } 
 
 // if else-if else statement
-a, b, c:= 4, 5, 10
+
+// CANT PARSE FOLLOWING LINE YET
+//a, b, c:= 4, 5, 10
+
 if a < b {
 
 } else if a > b {
