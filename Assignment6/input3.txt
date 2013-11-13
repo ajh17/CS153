@@ -1,3 +1,27 @@
+if i == 0 {
+
+}
+
+if i != 0 {
+
+}
+else if j == 0 {
+
+}
+
+if i == 0 {
+
+}
+else if j == 0 {
+
+}
+else if k < 6 {
+
+}
+else {
+
+}
+
 // regular for loop
 for i := 0; i < 10; i++  {
 

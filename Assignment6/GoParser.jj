@@ -66,7 +66,7 @@ void start() : {}
 
 void statement() : {}
 {
-    assignmentStatement() | forStatement()
+    assignmentStatement() | forStatement() | ifStatement()
 }
 
 void statementList() : {}
@@ -81,6 +81,15 @@ void block() : {}
     "}" { System.out.print("\n" + token.image + "\n"); }
 }
 
+void ifStatement() : {}
+{
+    "if" { System.out.print(token.image + " "); }
+    expression()
+    block()
+    (LOOKAHEAD(2) "else" { System.out.print(token.image + " "); } "if" { System.out.print(token.image + " "); } expression() block())*
+    ("else" { System.out.print(token.image + " "); } block())?
+}
+
 void assignmentStatement() : {}
 {
   
@@ -88,7 +97,8 @@ void assignmentStatement() : {}
     (
         (
             ("=" | ":=") { System.out.print(token.image); }
-            operand() (";")? { System.out.print(token.image); }
+            operand()
+            (LOOKAHEAD(2) ";")? { System.out.print(token.image); }
         )
         |
             incOrDec()
@@ -115,15 +125,15 @@ void forStatement() : {}
 
 void forClause() : {}
 {
-    (assignmentStatement() | whileClause())? 
-    (expressions())? ";" { System.out.print(token.image); }
-    ( assignmentStatement())?
+    (assignmentStatement() | whileClause())?
+    (expression())? ";" { System.out.print(token.image); }
+    (assignmentStatement())?
 }
 
 
 void whileClause() : {}
 {
-(";")? expressions()
+    (";")? expression()
 }
 
 void rangeClause() : {}
@@ -131,14 +141,14 @@ void rangeClause() : {}
     (
         LOOKAHEAD(2)
 
-        expressions() "=" { System.out.print(token.image); }
+        expression() "=" { System.out.print(token.image); }
         |
         <IDENTIFIER> { System.out.print(token.image); }
 
         ":=" { System.out.print(token.image); }
     )
 
-    "range" { System.out.print(token.image); } expressions()
+    "range" { System.out.print(token.image); } expression()
 }
 
 void operand(): {}
@@ -151,15 +161,15 @@ void operand(): {}
         |
         (
             "(" { System.out.print(token.image); }
-            expressions()
+            expression()
             ")" { System.out.print(token.image); }
         )
     )
 }
 
-void expressions() : {}
+void expression() : {}
 {
-      operand() (<BINARY_OP> operand())? { System.out.print(token.image); }
+      operand() (<BINARY_OP> { System.out.print(token.image); } operand())?
 }
 
 /********************s
