@@ -40,7 +40,7 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
 
         // Parse a Go program.
         Reader reader = new FileReader(sourceFilePath);
-        PclParser parser = new PclParser(reader);
+        GoParser parser = new GoParser(reader);
         SimpleNode rootNode = parser.start();
 
         // Print the cross-reference table.
@@ -64,17 +64,18 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
 /*************************
   -- Production Rules --
 *************************/
-  static final public void start() throws ParseException {
+  static final public SimpleNode start() throws ParseException {
+                             SimpleNode rootNode = null;
     try {
       label_1:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case 6:
-        case 9:
-        case 11:
+        case 8:
+        case 10:
+        case 16:
         case 17:
         case 18:
-        case 19:
+        case SEMICOLON:
         case IDENTIFIER:
           ;
           break;
@@ -90,26 +91,27 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
         handleError(ex);
         {if (true) return null;}
     }
+    throw new Error("Missing return statement in function");
   }
 
   static final public void statement() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case 16:
     case 17:
-    case 18:
     case IDENTIFIER:
       assignmentStatement();
       break;
-    case 11:
+    case 10:
       switchStatement();
       break;
-    case 9:
+    case 8:
       ifStatement();
       break;
-    case 19:
+    case 18:
       forStatement();
       break;
-    case 6:
-      jj_consume_token(6);
+    case SEMICOLON:
+      jj_consume_token(SEMICOLON);
       break;
     default:
       jj_la1[1] = jj_gen;
@@ -122,12 +124,12 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
     label_2:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 6:
-      case 9:
-      case 11:
+      case 8:
+      case 10:
+      case 16:
       case 17:
       case 18:
-      case 19:
+      case SEMICOLON:
       case IDENTIFIER:
         ;
         break;
@@ -145,9 +147,9 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
-      jj_consume_token(7);
+      jj_consume_token(6);
       statementList();
-      jj_consume_token(8);
+      jj_consume_token(7);
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -170,7 +172,7 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
   }
 
   static final public void ifStatement() throws ParseException {
-    jj_consume_token(9);
+    jj_consume_token(8);
     expression();
     block();
     label_3:
@@ -180,14 +182,14 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
       } else {
         break label_3;
       }
-      jj_consume_token(10);
       jj_consume_token(9);
+      jj_consume_token(8);
       expression();
       block();
     }
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case 10:
-      jj_consume_token(10);
+    case 9:
+      jj_consume_token(9);
       block();
       break;
     default:
@@ -197,9 +199,9 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
   }
 
   static final public void switchStatement() throws ParseException {
-    jj_consume_token(11);
+    jj_consume_token(10);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case 20:
+    case 19:
     case INTEGER_NUMBER:
     case REAL_NUMBER:
     case RAW_STRING:
@@ -215,31 +217,31 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
   }
 
   static final public void switchBlock() throws ParseException {
-    jj_consume_token(7);
+    jj_consume_token(6);
     caseGroup();
-    jj_consume_token(8);
+    jj_consume_token(7);
   }
 
   static final public void caseGroup() throws ParseException {
     label_4:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 12:
+      case 11:
         ;
         break;
       default:
         jj_la1[5] = jj_gen;
         break label_4;
       }
-      jj_consume_token(12);
+      jj_consume_token(11);
       expressionList();
-      jj_consume_token(13);
+      jj_consume_token(12);
       statementList();
     }
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case 14:
-      jj_consume_token(14);
+    case 13:
       jj_consume_token(13);
+      jj_consume_token(12);
       statementList();
       break;
     default:
@@ -253,14 +255,14 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
     case IDENTIFIER:
       jj_consume_token(IDENTIFIER);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case 14:
       case 15:
-      case 16:
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case 14:
+          jj_consume_token(14);
+          break;
         case 15:
           jj_consume_token(15);
-          break;
-        case 16:
-          jj_consume_token(16);
           break;
         default:
           jj_la1[7] = jj_gen;
@@ -294,8 +296,8 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
           operand();
         }
         break;
+      case 16:
       case 17:
-      case 18:
         incOrDec();
         break;
       default:
@@ -304,13 +306,13 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
         throw new ParseException();
       }
       if (jj_2_2(2)) {
-        jj_consume_token(6);
+        jj_consume_token(SEMICOLON);
       } else {
         ;
       }
       break;
+    case 16:
     case 17:
-    case 18:
       incOrDec();
       jj_consume_token(IDENTIFIER);
       break;
@@ -323,11 +325,11 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
 
   static final public void incOrDec() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case 16:
+      jj_consume_token(16);
+      break;
     case 17:
       jj_consume_token(17);
-      break;
-    case 18:
-      jj_consume_token(18);
       break;
     default:
       jj_la1[12] = jj_gen;
@@ -337,7 +339,7 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
   }
 
   static final public void forStatement() throws ParseException {
-    jj_consume_token(19);
+    jj_consume_token(18);
     forClause();
     block();
   }
@@ -354,16 +356,16 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
       ;
     }
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case 6:
-      jj_consume_token(6);
+    case SEMICOLON:
+      jj_consume_token(SEMICOLON);
       break;
     default:
       jj_la1[13] = jj_gen;
       ;
     }
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case 16:
     case 17:
-    case 18:
     case IDENTIFIER:
       assignmentStatement();
       break;
@@ -402,10 +404,10 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
         throw new ParseException();
       }
       break;
-    case 20:
-      jj_consume_token(20);
+    case 19:
+      jj_consume_token(19);
       expression();
-      jj_consume_token(21);
+      jj_consume_token(20);
       break;
     default:
       jj_la1[16] = jj_gen;
@@ -436,14 +438,14 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
     label_7:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 22:
+      case 21:
         ;
         break;
       default:
         jj_la1[18] = jj_gen;
         break label_7;
       }
-      jj_consume_token(22);
+      jj_consume_token(21);
       expression();
     }
   }
@@ -501,7 +503,7 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
   }
 
   static private boolean jj_3R_18() {
-    if (jj_scan_token(20)) return true;
+    if (jj_scan_token(19)) return true;
     if (jj_3R_9()) return true;
     return false;
   }
@@ -533,9 +535,9 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
   static private boolean jj_3R_16() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_scan_token(17)) {
+    if (jj_scan_token(16)) {
     jj_scanpos = xsp;
-    if (jj_scan_token(18)) return true;
+    if (jj_scan_token(17)) return true;
     }
     return false;
   }
@@ -577,16 +579,16 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
   }
 
   static private boolean jj_3_2() {
-    if (jj_scan_token(6)) return true;
+    if (jj_scan_token(SEMICOLON)) return true;
     return false;
   }
 
   static private boolean jj_3R_14() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_scan_token(15)) {
+    if (jj_scan_token(14)) {
     jj_scanpos = xsp;
-    if (jj_scan_token(16)) return true;
+    if (jj_scan_token(15)) return true;
     }
     return false;
   }
@@ -618,8 +620,8 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
   }
 
   static private boolean jj_3_1() {
-    if (jj_scan_token(10)) return true;
     if (jj_scan_token(9)) return true;
+    if (jj_scan_token(8)) return true;
     return false;
   }
 
@@ -643,7 +645,7 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0xe0a40,0xe0a40,0xe0a40,0x400,0x1e100000,0x1000,0x4000,0x18000,0x0,0x0,0x78000,0x60000,0x60000,0x40,0x60000,0x1e000000,0x1e100000,0x0,0x400000,};
+      jj_la1_0 = new int[] {0x470500,0x470500,0x470500,0x200,0x1e080000,0x800,0x2000,0xc000,0x0,0x0,0x3c000,0x30000,0x30000,0x400000,0x30000,0x1e000000,0x1e080000,0x0,0x200000,};
    }
    private static void jj_la1_init_1() {
       jj_la1_1 = new int[] {0x1,0x1,0x1,0x0,0x1,0x0,0x0,0x0,0x60,0x60,0x0,0x1,0x0,0x0,0x1,0x1,0x1,0x400,0x0,};

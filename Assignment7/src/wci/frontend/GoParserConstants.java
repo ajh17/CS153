@@ -13,6 +13,8 @@ public interface GoParserConstants {
   /** RegularExpression Id. */
   int IGNORE = 1;
   /** RegularExpression Id. */
+  int SEMICOLON = 22;
+  /** RegularExpression Id. */
   int ERROR = 23;
   /** RegularExpression Id. */
   int RESERVED_WORD = 24;
@@ -72,7 +74,6 @@ public interface GoParserConstants {
     "\"/*\"",
     "\"*/\"",
     "<token of kind 5>",
-    "\";\"",
     "\"{\"",
     "\"}\"",
     "\"if\"",
@@ -89,6 +90,7 @@ public interface GoParserConstants {
     "\"(\"",
     "\")\"",
     "\",\"",
+    "\";\"",
     "<ERROR>",
     "<RESERVED_WORD>",
     "<INTEGER_NUMBER>",

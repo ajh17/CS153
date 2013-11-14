@@ -52,7 +52,7 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants/*@egen*/
 
         // Parse a Go program.
         Reader reader = new FileReader(sourceFilePath);
-        PclParser parser = new PclParser(reader);
+        GoParser parser = new GoParser(reader);
         SimpleNode rootNode = parser.start();
 
         // Print the cross-reference table.
@@ -93,7 +93,7 @@ SKIP : {
   -- Production Rules --
 *************************/
 
-void start()       : {}
+SimpleNode start()       : { SimpleNode rootNode = null; }
 {
     try {
         (
@@ -115,7 +115,7 @@ void statement()       : {}
     | switchStatement()
     | ifStatement()
     | forStatement()
-    | ";"
+    | <SEMICOLON>
 }
 
 void statementList()       : {}
@@ -209,7 +209,7 @@ void assignmentStatement()       : {}
                     incOrDec()
             )
 
-            (LOOKAHEAD(2) ";" )?
+            (LOOKAHEAD(2) <SEMICOLON>)?
         )
     )
     |
@@ -235,7 +235,7 @@ void forClause()       : {}
 {
     (LOOKAHEAD(2) assignmentStatement())?
     (LOOKAHEAD(2) expression())?
-    (";")?
+    (<SEMICOLON>)?
     (assignmentStatement())?
 }
 
@@ -270,7 +270,9 @@ void expressionList()       : {}
 ********************/
 
 TOKEN : {
-    <ERROR : ~["\r", "\n"]>
+    <SEMICOLON: ";">
+    |
+    <ERROR: ~["\r", "\n"]>
     |
     <RESERVED_WORD: "break" | "default" | "func" | "interface" | "select" | "case" | "defer"
         | "go" | "map" | "struct" | "chan" | "else" | "goto" | "package" | "switch"
