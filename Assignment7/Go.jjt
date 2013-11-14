@@ -1,0 +1,339 @@
+options {
+    IGNORE_CASE=true;
+    JJTREE_OUTPUT_DIRECTORY="src/wci/frontend";
+    NODE_EXTENDS="wci.intermediate.icodeimpl.ICodeNodeImpl";
+    MULTI=true;
+    VISITOR=true;
+}
+
+PARSER_BEGIN(GoParser)
+package wci.frontend;
+
+import java.util.ArrayList;
+import java.io.*;
+
+import wci.intermediate.*;
+import wci.intermediate.symtabimpl.*;
+import wci.backend.*;
+import wci.util.*;
+
+import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
+import static wci.intermediate.symtabimpl.DefinitionImpl.*;
+import static wci.intermediate.symtabimpl.RoutineCodeImpl.*;
+import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
+import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
+
+public class GoParser
+{
+    private static final String SOURCE_SUFFIX = ".go";
+    private static final String OUTPUT_SUFFIX = ".j";
+
+    private static SymTabStack symTabStack;
+    private static SymTabEntry programId;
+
+    public static void main(String[] args)
+        throws Exception
+    {
+        // Create and initialize the symbol table stack.
+        symTabStack = SymTabFactory.createSymTabStack();
+        Predefined.initialize(symTabStack);
+
+        // Process the source file path which ends in .go
+        // and create the output file path which ends in .j
+        String sourceFilePath = args[0];
+        int truncatedLength = sourceFilePath.length() - SOURCE_SUFFIX.length();
+        int suffixIndex = sourceFilePath.lastIndexOf(SOURCE_SUFFIX);
+        String objectFilePath = (suffixIndex == truncatedLength)
+            ? sourceFilePath.substring(0, truncatedLength) + OUTPUT_SUFFIX
+            : sourceFilePath + OUTPUT_SUFFIX;
+
+        // Parse a Go program.
+        Reader reader = new FileReader(sourceFilePath);
+        PclParser parser = new PclParser(reader);
+        SimpleNode rootNode = parser.program();
+
+        // Print the cross-reference table.
+        CrossReferencer crossReferencer = new CrossReferencer();
+        crossReferencer.print(symTabStack);
+
+        // Visit the parse tree nodes to decorate them with type information.
+        TypeSetterVisitor typeVisitor = new TypeSetterVisitor();
+        rootNode.jjtAccept(typeVisitor, null);
+
+        // Create and initialize the ICode wrapper for the parse tree.
+        ICode iCode = ICodeFactory.createICode();
+        iCode.setRoot(rootNode);
+        programId.setAttribute(ROUTINE_ICODE, iCode);
+
+        // Print the parse tree.
+        ParseTreePrinter treePrinter = new ParseTreePrinter(System.out);
+        treePrinter.print(symTabStack);
+    }
+}
+PARSER_END(GoParser)
+
+SKIP : {
+   <IGNORE : [" ", "\r", "\n", "\t"]>
+   | <"//" (~["\n", "\r"])*>
+   | <"/*"> : MULTI_LINE_COMMENT
+}
+
+<MULTI_LINE_COMMENT> SKIP: {
+    "*/" : DEFAULT
+}
+
+<MULTI_LINE_COMMENT> MORE: {
+    <~[]>
+}
+
+/*************************
+  -- Production Rules --
+*************************/
+
+void start() : {}
+{
+    { System.out.println("STARTING TO PARSE!!!!!"); }
+
+    (
+        statement()
+    )*
+
+    <EOF>
+    { System.out.println("\nFINISHED PARSING!!!!!"); }
+}
+
+void statement() : {}
+{
+    ({ System.out.println("\n==========ASSIGNMENT========="); } assignmentStatement())
+    | ({ System.out.println("\n==========SWITCH STATEMENT========="); } switchStatement())
+    | ({ System.out.println("\n==========IF STATEMENT========="); } ifStatement())
+    | ({ System.out.println("\n==========FOR STATEMENT========="); } forStatement())
+    | (";" { System.out.print(token.image); })
+}
+
+void statementList() : {}
+{
+    (statement())*
+}
+
+void block() : {}
+{
+    "{" { System.out.print(" " + token.image + "\n\t"); }
+    statementList()
+    "}" { System.out.print("\n" + token.image + "\n"); }
+}
+
+void ifStatement() : {}
+{
+    "if" { System.out.print(token.image + " "); }
+    expression()
+    block()
+    (LOOKAHEAD(2) "else" { System.out.print(token.image + " "); } "if" { System.out.print(token.image + " "); } expression() block())*
+    ("else" { System.out.print(token.image + " "); } block())?
+}
+
+void switchStatement() : {}
+{
+    "switch" { System.out.print(token.image + " "); }
+    (expression())?
+    switchBlock()
+}
+
+void switchBlock() : {}
+{
+    "{" { System.out.print(" " + token.image + "\n\t"); }
+    caseGroup()
+    "}" { System.out.print("\n" + token.image + "\n"); }
+}
+
+void caseGroup() : {}
+{
+    (
+        "case" { System.out.print("\n" + token.image + " "); }
+        expressionList()
+        ":" { System.out.print(token.image); }
+        statementList()
+    )*
+
+    (
+        "default" { System.out.print("\n" + token.image); } ":" { System.out.print(token.image + " "); }
+        statementList()
+    )?
+}
+
+void assignmentStatement() : {}
+{
+    (
+        <IDENTIFIER> { System.out.print(token.image); }
+        (
+            (
+                (
+                    ("=" | ":=") { System.out.print(token.image); }
+                    operand() ((<ADD_OP> | <MUL_OP>) { System.out.print(token.image + " "); } operand())*
+                )
+                |
+                    incOrDec()
+            )
+
+            (LOOKAHEAD(2) ";" { System.out.print(token.image); })?
+        )
+    )
+    |
+    (
+        incOrDec()
+        <IDENTIFIER> { System.out.print(token.image); }
+    )
+}
+
+void incOrDec() : {}
+{
+    ("++" | "--") { System.out.print(token.image); }
+}
+
+void forStatement() : {}
+{
+    "for" { System.out.print(token.image + " "); }
+    forClause()
+    block()
+}
+
+void forClause() : {}
+{
+    (LOOKAHEAD(2) assignmentStatement())?
+    (LOOKAHEAD(2) expression())? (";" { System.out.print(token.image); })?
+    (assignmentStatement())?
+}
+
+// TODO: Not currently used. Delete or use it?
+void rangeClause() : {}
+{
+    (
+        LOOKAHEAD(2)
+
+        expression() "=" { System.out.print(token.image); }
+        |
+        <IDENTIFIER> { System.out.print(token.image); }
+
+        ":=" { System.out.print(token.image); }
+    )
+
+    "range" { System.out.print(token.image); } expression()
+}
+
+void operand(): {}
+{
+    (
+        (
+            (<INTEGER_NUMBER> | <REAL_NUMBER> | <RAW_STRING> | <INTERPRETED_STRING>
+            | <IDENTIFIER>) { System.out.print(token.image); }
+        )
+        |
+        (
+            "(" { System.out.print(token.image + " "); }
+            expression()
+            ")" { System.out.print(token.image + " "); }
+        )
+    )
+}
+
+void expression() : {}
+{
+    operand() (<BINARY_OP> { System.out.print(token.image + " "); } operand())*
+}
+
+void expressionList() : {}
+{
+    expression() ("," { System.out.print(token.image + " "); } expression())*
+}
+
+/********************s
+    -- Tokens --
+********************/
+
+TOKEN : {
+    <SEMICOLON: ";">
+    |
+    <ERROR : ~["\r", "\n"]>
+    |
+    <RESERVED_WORD: "break" | "default" | "func" | "interface" | "select" | "case" | "defer"
+        | "go" | "map" | "struct" | "chan" | "else" | "goto" | "package" | "switch"
+        | "const" | "fallthrough" | "if" | "range" | "type" | "continue"
+        | "for" | "import" | "return" | "var">
+        //{ debugStream.println("\nRESERVED_WORD token: " + matchedToken.image); }
+    |
+    <INTEGER_NUMBER: <DIGIT> (<DIGIT>)*>
+        //{ debugStream.println("\nINTEGER_NUMBER token: " + matchedToken.image); }
+    |
+    <REAL_NUMBER: <INTEGER_NUMBER> "." (<INTEGER_NUMBER>)?>
+        //{ debugStream.println("\nREAL_NUMBER token: " + matchedToken.image); }
+    |
+    <RAW_STRING: "`" (<ALPHANUMERIC> | <RAW_LITERAL_SYMBOL> | <NEWLINE>)* "`">
+        //{ debugStream.println("\nRAW_STRING token: " + matchedToken.image); }
+    |
+    <INTERPRETED_STRING: "\"" (<ALPHANUMERIC> | <ESCAPED_CHAR>
+            | <INTERPRETED_LITERAL_SYMBOL> | <WHITE_SPACE>)* "\"">
+        //{ debugStream.println("\nINTERPRETED_STRING token: " + matchedToken.image); }
+
+        | <#NEWLINE: ["\r", "\n"]>
+        | <#ESCAPED_CHAR: "\\" ("a" | "b" | "f" | "n" | "r" | "t" | "v" | "\\" | "'" | "\"")>
+        | <#WHITE_SPACE: <NEWLINE> | "\t" | " ">
+    |
+    <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT> | "_")*>
+         //{ debugStream.println("\nIDENTIFIER token: " + matchedToken.image); }
+        |
+        <IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
+    /*
+    |
+    <SPECIAL_SYMBOL:
+        "+" | "&" | "+=" | "&=" | "&&" | "==" | "!=" | "(" | ")"
+        | "-" | "|" | "-=" | "|=" | "||" | "<" | "<=" | "[" | "]"
+        | "*" | "^" | "*=" | "^=" | "<-" | ">" | ">=" | "{"  | "}"
+        | "/" | "<<" | "/=" | "<<=" | "++" | "=" | ":=" | "," | ";"
+        | "%" | ">>" | "%=" | ">>=" | "--" | "!" | "..." |  "." | ":"
+        | "&^" | "&^=">
+        { debugStream.println("\nSPECIAL_SYMBOL token: " + matchedToken.image); }
+    */
+        | <#LETTER: ["a"-"z", "A"-"Z"]>
+        | <#DIGIT: ["0"-"9"]>
+        | <#ALPHANUMERIC: (<LETTER> | <DIGIT>)+>
+        | <ADD_OP: ["+", "-"]>
+        | <MUL_OP: ("*" | "/" | "%")>
+        | <#REL_OP: "==" | "!=" | "<" | "<=" | ">" | ">=">
+        | <UNARY_OP: "+" | "-" | "!" | "^" | "*" | "&">
+        | <ASSIGN_OP: (<ADD_OP> | <MUL_OP>)? "=">
+        | <BINARY_OP: "||" | "&&" | <REL_OP> | <ADD_OP>| <MUL_OP>>
+        | <#COMMON_LITERAL_SYMBOL: "~" | "!" | "@" | "#" | "$" | "%" | "^"
+            | "&" | "*"| "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">"
+            | "," | "." | "/"| "?" | ":" | ";" | "[" | "]" | "{" | "}" | "|">
+        | <#RAW_LITERAL_SYMBOL: <COMMON_LITERAL_SYMBOL> | "\"" | "\\">
+        | <#INTERPRETED_LITERAL_SYMBOL: <COMMON_LITERAL_SYMBOL> | "'">
+}
+
+void Error() #void : {}
+{
+    <ERROR>
+}
+
+JAVACODE
+void processVariableDecl(Token token, int index, ArrayList<SymTabEntry> variableList) #void
+{
+    SymTabEntry variableId = symTabStack.enterLocal(token.image);
+    variableId.setIndex(index);
+    variableId.setDefinition(DefinitionImpl.VARIABLE);
+    variableId.appendLineNumber(token.beginLine);
+    variableList.add(variableId);
+}
+
+JAVACODE
+String handleError(ParseException ex) #void
+{
+    Token token = ex.currentToken;
+    System.out.println(ex.getMessage());
+
+    do {
+    	token = getNextToken();
+    } while (token.kind != SEMICOLON);
+
+	jjtree.popNode();
+    return token.image;
+}
