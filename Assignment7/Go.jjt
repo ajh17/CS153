@@ -109,7 +109,7 @@ void statement() : {}
 {
     ({ System.out.println("\n==========ASSIGNMENT========="); } assignmentStatement())
     | ({ System.out.println("\n==========SWITCH STATEMENT========="); } switchStatement())
-//    | ({ System.out.println("\n==========IF STATEMENT========="); } ifStatement())
+    | ({ System.out.println("\n==========IF STATEMENT========="); } ifStatement())
     | ({ System.out.println("\n==========FOR STATEMENT========="); } forStatement())
     | (";" { System.out.print(token.image); })
 }
@@ -126,7 +126,6 @@ void block() : {}
     "}" { System.out.print("\n" + token.image + "\n"); }
 }
 
-/*
 void ifStatement() : {}
 {
     "if" { System.out.print(token.image + " "); }
@@ -135,7 +134,6 @@ void ifStatement() : {}
     (LOOKAHEAD(2) "else" { System.out.print(token.image + " "); } "if" { System.out.print(token.image + " "); } expression() block())*
     ("else" { System.out.print(token.image + " "); } block())?
 }
-*/
 
 void switchStatement() : {}
 {
