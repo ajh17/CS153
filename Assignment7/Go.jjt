@@ -245,8 +245,6 @@ void Error() #void : {}
 ********************/
 
 TOKEN : {
-    <SEMICOLON: ";">
-    |
     <RESERVED_WORD: "break" | "default" | "func" | "interface" | "select" | "case" | "defer"
         | "go" | "map" | "struct" | "chan" | "else" | "goto" | "package" | "switch"
         | "const" | "fallthrough" | "if" | "range" | "type" | "continue"
@@ -265,6 +263,8 @@ TOKEN : {
         | <#ESCAPED_CHAR: "\\" ("a" | "b" | "f" | "n" | "r" | "t" | "v" | "\\" | "'" | "\"")>
         | <#WHITE_SPACE: <NEWLINE> | "\t" | " ">
     |
+    <SEMICOLON: ";">
+    |
     <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT> | "_")*>
         | <IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
         | <#LETTER: ["a"-"z", "A"-"Z"]>
@@ -281,6 +281,14 @@ TOKEN : {
             | "," | "." | "/"| "?" | ":" | ";" | "[" | "]" | "{" | "}" | "|">
         | <#RAW_LITERAL_SYMBOL: <COMMON_LITERAL_SYMBOL> | "\"" | "\\">
         | <#INTERPRETED_LITERAL_SYMBOL: <COMMON_LITERAL_SYMBOL> | "'">
+    |
+    <SPECIAL_SYMBOL:
+            "+" | "&" | "+=" | "&=" | "&&" | "==" | "!=" | "(" | ")"
+            | "-" | "|" | "-=" | "|=" | "||" | "<" | "<=" | "[" | "]"
+            | "*" | "^" | "*=" | "^=" | "<-" | ">" | ">=" | "{"  | "}"
+            | "/" | "<<" | "/=" | "<<=" | "++" | "=" | ":=" | "," | ";"
+            | "%" | ">>" | "%=" | ">>=" | "--" | "!" | "..." |  "." | ":"
+            | "&^" | "&^=">
     |
     <ERROR: ~["\r", "\n"]>
 }
