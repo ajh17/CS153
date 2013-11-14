@@ -124,15 +124,25 @@ void caseGroup() : {}
 
 void assignmentStatement() : {}
 {
-    <IDENTIFIER> { System.out.print(token.image); }
     (
+        <IDENTIFIER> { System.out.print(token.image); }
         (
-            ("=" | ":=") { System.out.print(token.image); }
-            operand()((<ADD_OP>|< MUL_OP >) { System.out.print(token.image + " "); } operand())*
-            (LOOKAHEAD(2) ";")?
+            (
+                (
+                    ("=" | ":=") { System.out.print(token.image); }
+                    operand() ((<ADD_OP> | <MUL_OP>) { System.out.print(token.image + " "); } operand())*
+                )
+                |
+                    incOrDec()
+            )
+
+            (LOOKAHEAD(2) ";" { System.out.print(token.image); })?
         )
-        |
-            incOrDec()
+    )
+    |
+    (
+        incOrDec()
+        <IDENTIFIER> { System.out.print(token.image); }
     )
 }
 
