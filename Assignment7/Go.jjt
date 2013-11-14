@@ -100,7 +100,7 @@ SimpleNode start() #void : { SimpleNode rootNode = null; }
         }
     }
     catch (ParseException ex) {
-        //handleError(ex);
+        handleError(ex);
         return null;
     }
 }
@@ -235,15 +235,16 @@ void expressionList() #void : {}
     ("," expression())*
 }
 
+void Error() #void : {}
+{
+    <ERROR>
+}
+
 /********************s
     -- Tokens --
 ********************/
 
 TOKEN : {
-    /*
-    <ERROR: ~["\r", "\n"]>
-    |
-    */
     <SEMICOLON: ";">
     |
     <RESERVED_WORD: "break" | "default" | "func" | "interface" | "select" | "case" | "defer"
@@ -273,21 +274,16 @@ TOKEN : {
         | <MUL_OP: ("*" | "/" | "%")>
         | <#REL_OP: "==" | "!=" | "<" | "<=" | ">" | ">=">
         | <UNARY_OP: "+" | "-" | "!" | "^" | "*" | "&">
-        | <ASSIGN_OP: (<ADD_OP> | <MUL_OP>)? "=">
+        | <ASSIGN_OP: (":" | <ADD_OP> | <MUL_OP>)? "=">
         | <BINARY_OP: "||" | "&&" | <REL_OP> | <ADD_OP>| <MUL_OP>>
         | <#COMMON_LITERAL_SYMBOL: "~" | "!" | "@" | "#" | "$" | "%" | "^"
             | "&" | "*"| "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">"
             | "," | "." | "/"| "?" | ":" | ";" | "[" | "]" | "{" | "}" | "|">
         | <#RAW_LITERAL_SYMBOL: <COMMON_LITERAL_SYMBOL> | "\"" | "\\">
         | <#INTERPRETED_LITERAL_SYMBOL: <COMMON_LITERAL_SYMBOL> | "'">
+    |
+    <ERROR: ~["\r", "\n"]>
 }
-
-/*
-void Error() #void : {}
-{
-    <ERROR>
-}
-*/
 
 JAVACODE
 void processVariableDecl(Token token, int index, ArrayList<SymTabEntry> variableList) #void
@@ -299,7 +295,6 @@ void processVariableDecl(Token token, int index, ArrayList<SymTabEntry> variable
     variableList.add(variableId);
 }
 
-/*
 JAVACODE
 String handleError(ParseException ex) #void
 {
@@ -313,4 +308,3 @@ String handleError(ParseException ex) #void
 	jjtree.popNode();
     return token.image;
 }
-*/
