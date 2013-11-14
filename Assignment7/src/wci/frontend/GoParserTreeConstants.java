@@ -7,19 +7,18 @@ public interface GoParserTreeConstants
   public int JJTSTATEMENT = 1;
   public int JJTSTATEMENTLIST = 2;
   public int JJTBLOCK = 3;
-  public int JJTIFSTATEMENT = 4;
-  public int JJTSWITCHSTATEMENT = 5;
-  public int JJTSWITCHBLOCK = 6;
-  public int JJTCASEGROUP = 7;
-  public int JJTASSIGNMENTSTATEMENT = 8;
-  public int JJTINCORDEC = 9;
-  public int JJTFORSTATEMENT = 10;
-  public int JJTFORCLAUSE = 11;
-  public int JJTRANGECLAUSE = 12;
-  public int JJTOPERAND = 13;
-  public int JJTEXPRESSION = 14;
-  public int JJTEXPRESSIONLIST = 15;
-  public int JJTVOID = 16;
+  public int JJTSWITCHSTATEMENT = 4;
+  public int JJTSWITCHBLOCK = 5;
+  public int JJTCASEGROUP = 6;
+  public int JJTASSIGNMENTSTATEMENT = 7;
+  public int JJTINCORDEC = 8;
+  public int JJTFORSTATEMENT = 9;
+  public int JJTFORCLAUSE = 10;
+  public int JJTRANGECLAUSE = 11;
+  public int JJTOPERAND = 12;
+  public int JJTEXPRESSION = 13;
+  public int JJTEXPRESSIONLIST = 14;
+  public int JJTVOID = 15;
 
 
   public String[] jjtNodeName = {
@@ -27,7 +26,6 @@ public interface GoParserTreeConstants
     "statement",
     "statementList",
     "block",
-    "ifStatement",
     "switchStatement",
     "switchBlock",
     "caseGroup",
@@ -42,4 +40,4 @@ public interface GoParserTreeConstants
     "void",
   };
 }
-/* JavaCC - OriginalChecksum=08c134d861e16098f7cad6bb3650b5b5 (do not edit this line) */
+/* JavaCC - OriginalChecksum=6abb43e46e9b80660688968847aa8aa7 (do not edit this line) */

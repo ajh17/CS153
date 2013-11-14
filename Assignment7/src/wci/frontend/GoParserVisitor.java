@@ -8,7 +8,6 @@ public interface GoParserVisitor
   public Object visit(ASTstatement node, Object data);
   public Object visit(ASTstatementList node, Object data);
   public Object visit(ASTblock node, Object data);
-  public Object visit(ASTifStatement node, Object data);
   public Object visit(ASTswitchStatement node, Object data);
   public Object visit(ASTswitchBlock node, Object data);
   public Object visit(ASTcaseGroup node, Object data);
@@ -21,4 +20,4 @@ public interface GoParserVisitor
   public Object visit(ASTexpression node, Object data);
   public Object visit(ASTexpressionList node, Object data);
 }
-/* JavaCC - OriginalChecksum=cb3658843cb3aee302c378f4c0370f29 (do not edit this line) */
+/* JavaCC - OriginalChecksum=97555443bde7eef8b71047ad3b04046c (do not edit this line) */

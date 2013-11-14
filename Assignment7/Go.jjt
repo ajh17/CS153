@@ -1,5 +1,4 @@
 options {
-    IGNORE_CASE=true;
     JJTREE_OUTPUT_DIRECTORY="src/wci/frontend";
     NODE_EXTENDS="wci.intermediate.icodeimpl.ICodeNodeImpl";
     MULTI=true;
@@ -50,7 +49,7 @@ public class GoParser
         // Parse a Go program.
         Reader reader = new FileReader(sourceFilePath);
         PclParser parser = new PclParser(reader);
-        SimpleNode rootNode = parser.program();
+        SimpleNode rootNode = parser.start();
 
         // Print the cross-reference table.
         CrossReferencer crossReferencer = new CrossReferencer();
@@ -92,21 +91,25 @@ SKIP : {
 
 void start() : {}
 {
-    { System.out.println("STARTING TO PARSE!!!!!"); }
-
-    (
-        statement()
-    )*
-
-    <EOF>
-    { System.out.println("\nFINISHED PARSING!!!!!"); }
+    try {
+        (
+            statement()
+        )*
+        <EOF> {
+            return rootNode;
+        }
+    }
+    catch (ParseException ex) {
+        handleError(ex);
+        return null;
+    }
 }
 
 void statement() : {}
 {
     ({ System.out.println("\n==========ASSIGNMENT========="); } assignmentStatement())
     | ({ System.out.println("\n==========SWITCH STATEMENT========="); } switchStatement())
-    | ({ System.out.println("\n==========IF STATEMENT========="); } ifStatement())
+//    | ({ System.out.println("\n==========IF STATEMENT========="); } ifStatement())
     | ({ System.out.println("\n==========FOR STATEMENT========="); } forStatement())
     | (";" { System.out.print(token.image); })
 }
@@ -123,6 +126,7 @@ void block() : {}
     "}" { System.out.print("\n" + token.image + "\n"); }
 }
 
+/*
 void ifStatement() : {}
 {
     "if" { System.out.print(token.image + " "); }
@@ -131,6 +135,7 @@ void ifStatement() : {}
     (LOOKAHEAD(2) "else" { System.out.print(token.image + " "); } "if" { System.out.print(token.image + " "); } expression() block())*
     ("else" { System.out.print(token.image + " "); } block())?
 }
+*/
 
 void switchStatement() : {}
 {
