@@ -6,4 +6,4 @@ workspace.xml
 misc.xml
 .idea/
 *.iml
-Assignment7/src/*
+Assignment7/src/wci/frontend/
