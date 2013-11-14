@@ -100,7 +100,7 @@ SimpleNode start() #void : { SimpleNode rootNode = null; }
         }
     }
     catch (ParseException ex) {
-        handleError(ex);
+        //handleError(ex);
         return null;
     }
 }
@@ -240,9 +240,11 @@ void expressionList() #void : {}
 ********************/
 
 TOKEN : {
-    <SEMICOLON: ";">
-    |
+    /*
     <ERROR: ~["\r", "\n"]>
+    |
+    */
+    <SEMICOLON: ";">
     |
     <RESERVED_WORD: "break" | "default" | "func" | "interface" | "select" | "case" | "defer"
         | "go" | "map" | "struct" | "chan" | "else" | "goto" | "package" | "switch"
@@ -280,10 +282,12 @@ TOKEN : {
         | <#INTERPRETED_LITERAL_SYMBOL: <COMMON_LITERAL_SYMBOL> | "'">
 }
 
+/*
 void Error() #void : {}
 {
     <ERROR>
 }
+*/
 
 JAVACODE
 void processVariableDecl(Token token, int index, ArrayList<SymTabEntry> variableList) #void
@@ -295,6 +299,7 @@ void processVariableDecl(Token token, int index, ArrayList<SymTabEntry> variable
     variableList.add(variableId);
 }
 
+/*
 JAVACODE
 String handleError(ParseException ex) #void
 {
@@ -308,3 +313,4 @@ String handleError(ParseException ex) #void
 	jjtree.popNode();
     return token.image;
 }
+*/

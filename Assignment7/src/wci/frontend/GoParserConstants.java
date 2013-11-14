@@ -15,51 +15,49 @@ public interface GoParserConstants {
   /** RegularExpression Id. */
   int SEMICOLON = 22;
   /** RegularExpression Id. */
-  int ERROR = 23;
+  int RESERVED_WORD = 23;
   /** RegularExpression Id. */
-  int RESERVED_WORD = 24;
+  int INTEGER_NUMBER = 24;
   /** RegularExpression Id. */
-  int INTEGER_NUMBER = 25;
+  int REAL_NUMBER = 25;
   /** RegularExpression Id. */
-  int REAL_NUMBER = 26;
+  int RAW_STRING = 26;
   /** RegularExpression Id. */
-  int RAW_STRING = 27;
+  int INTERPRETED_STRING = 27;
   /** RegularExpression Id. */
-  int INTERPRETED_STRING = 28;
+  int NEWLINE = 28;
   /** RegularExpression Id. */
-  int NEWLINE = 29;
+  int ESCAPED_CHAR = 29;
   /** RegularExpression Id. */
-  int ESCAPED_CHAR = 30;
+  int WHITE_SPACE = 30;
   /** RegularExpression Id. */
-  int WHITE_SPACE = 31;
+  int IDENTIFIER = 31;
   /** RegularExpression Id. */
-  int IDENTIFIER = 32;
+  int IDENTIFIER_LIST = 32;
   /** RegularExpression Id. */
-  int IDENTIFIER_LIST = 33;
+  int LETTER = 33;
   /** RegularExpression Id. */
-  int LETTER = 34;
+  int DIGIT = 34;
   /** RegularExpression Id. */
-  int DIGIT = 35;
+  int ALPHANUMERIC = 35;
   /** RegularExpression Id. */
-  int ALPHANUMERIC = 36;
+  int ADD_OP = 36;
   /** RegularExpression Id. */
-  int ADD_OP = 37;
+  int MUL_OP = 37;
   /** RegularExpression Id. */
-  int MUL_OP = 38;
+  int REL_OP = 38;
   /** RegularExpression Id. */
-  int REL_OP = 39;
+  int UNARY_OP = 39;
   /** RegularExpression Id. */
-  int UNARY_OP = 40;
+  int ASSIGN_OP = 40;
   /** RegularExpression Id. */
-  int ASSIGN_OP = 41;
+  int BINARY_OP = 41;
   /** RegularExpression Id. */
-  int BINARY_OP = 42;
+  int COMMON_LITERAL_SYMBOL = 42;
   /** RegularExpression Id. */
-  int COMMON_LITERAL_SYMBOL = 43;
+  int RAW_LITERAL_SYMBOL = 43;
   /** RegularExpression Id. */
-  int RAW_LITERAL_SYMBOL = 44;
-  /** RegularExpression Id. */
-  int INTERPRETED_LITERAL_SYMBOL = 45;
+  int INTERPRETED_LITERAL_SYMBOL = 44;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -91,7 +89,6 @@ public interface GoParserConstants {
     "\")\"",
     "\",\"",
     "\";\"",
-    "<ERROR>",
     "<RESERVED_WORD>",
     "<INTEGER_NUMBER>",
     "<REAL_NUMBER>",

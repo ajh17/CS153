@@ -88,7 +88,7 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
       jj_consume_token(0);
             {if (true) return rootNode;}
     } catch (ParseException ex) {
-        handleError(ex);
+        //handleError(ex);
         {if (true) return null;}
     }
     throw new Error("Missing return statement in function");
@@ -173,6 +173,7 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
 
   static final public void ifStatement() throws ParseException {
     jj_consume_token(8);
+          System.out.println("ASDADASDADASDASD");
     expression();
     block();
     label_3:
@@ -450,28 +451,12 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
     }
   }
 
-  static final public void Error() throws ParseException {
-    jj_consume_token(ERROR);
-  }
-
   static void processVariableDecl(Token token, int index, ArrayList<SymTabEntry> variableList) throws ParseException {
     SymTabEntry variableId = symTabStack.enterLocal(token.image);
     variableId.setIndex(index);
     variableId.setDefinition(DefinitionImpl.VARIABLE);
     variableId.appendLineNumber(token.beginLine);
     variableList.add(variableId);
-  }
-
-  static String handleError(ParseException ex) throws ParseException {
-    Token token = ex.currentToken;
-    System.out.println(ex.getMessage());
-
-    do {
-        token = getNextToken();
-    } while (token.kind != SEMICOLON);
-
-        jjtree.popNode();
-    return token.image;
   }
 
   static private boolean jj_2_1(int xla) {
@@ -511,15 +496,15 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
   static private boolean jj_3R_17() {
     Token xsp;
     xsp = jj_scanpos;
+    if (jj_scan_token(24)) {
+    jj_scanpos = xsp;
     if (jj_scan_token(25)) {
     jj_scanpos = xsp;
     if (jj_scan_token(26)) {
     jj_scanpos = xsp;
     if (jj_scan_token(27)) {
     jj_scanpos = xsp;
-    if (jj_scan_token(28)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(32)) return true;
+    if (jj_scan_token(31)) return true;
     }
     }
     }
@@ -645,10 +630,10 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x470500,0x470500,0x470500,0x200,0x1e080000,0x800,0x2000,0xc000,0x0,0x0,0x3c000,0x30000,0x30000,0x400000,0x30000,0x1e000000,0x1e080000,0x0,0x200000,};
+      jj_la1_0 = new int[] {0x80470500,0x80470500,0x80470500,0x200,0x8f080000,0x800,0x2000,0xc000,0x0,0x0,0x3c000,0x80030000,0x30000,0x400000,0x80030000,0x8f000000,0x8f080000,0x0,0x200000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x1,0x1,0x1,0x0,0x1,0x0,0x0,0x0,0x60,0x60,0x0,0x1,0x0,0x0,0x1,0x1,0x1,0x400,0x0,};
+      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x30,0x30,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x200,0x0,};
    }
   static final private JJCalls[] jj_2_rtns = new JJCalls[4];
   static private boolean jj_rescan = false;
@@ -858,7 +843,7 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
   /** Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[46];
+    boolean[] la1tokens = new boolean[45];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -875,7 +860,7 @@ public class GoParser/*@bgen(jjtree)*/implements GoParserTreeConstants, GoParser
         }
       }
     }
-    for (int i = 0; i < 46; i++) {
+    for (int i = 0; i < 45; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

@@ -104,7 +104,7 @@ SimpleNode start()       : { SimpleNode rootNode = null; }
         }
     }
     catch (ParseException ex) {
-        handleError(ex);
+        //handleError(ex);
         return null;
     }
 }
@@ -158,7 +158,7 @@ void block() : {/*@bgen(jjtree) block */
 
 void ifStatement()       : {}
 {
-    "if"
+    "if" {System.out.println("ASDADASDADASDASD");}
     expression()
     block()
     (LOOKAHEAD(2) "else" "if" expression() block())*
@@ -270,9 +270,11 @@ void expressionList()       : {}
 ********************/
 
 TOKEN : {
-    <SEMICOLON: ";">
-    |
+    /*
     <ERROR: ~["\r", "\n"]>
+    |
+    */
+    <SEMICOLON: ";">
     |
     <RESERVED_WORD: "break" | "default" | "func" | "interface" | "select" | "case" | "defer"
         | "go" | "map" | "struct" | "chan" | "else" | "goto" | "package" | "switch"
@@ -310,10 +312,12 @@ TOKEN : {
         | <#INTERPRETED_LITERAL_SYMBOL: <COMMON_LITERAL_SYMBOL> | "'">
 }
 
-void Error()       : {}
+/*
+void Error() #void : {}
 {
     <ERROR>
 }
+*/
 
 JAVACODE
 void processVariableDecl(Token token, int index, ArrayList<SymTabEntry> variableList)      
@@ -325,8 +329,9 @@ void processVariableDecl(Token token, int index, ArrayList<SymTabEntry> variable
     variableList.add(variableId);
 }
 
+/*
 JAVACODE
-String handleError(ParseException ex)      
+String handleError(ParseException ex) #void
 {
     Token token = ex.currentToken;
     System.out.println(ex.getMessage());
@@ -338,3 +343,4 @@ String handleError(ParseException ex)
 	jjtree.popNode();
     return token.image;
 }
+*/
