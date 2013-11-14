@@ -1,7 +1,8 @@
 package wci.intermediate;
 
-import wci.frontend.*;
-import wci.intermediate.symtabimpl.*;
+import wci.frontend.ASTassignmentStatement;
+import wci.frontend.SimpleNode;
+import wci.intermediate.symtabimpl.Predefined;
 
 public class TypeSetterVisitor extends GoParserVisitorAdapter
 {

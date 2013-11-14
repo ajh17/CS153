@@ -119,7 +119,7 @@ void statementList() #void : {}
     (statement())*
 }
 
-void block() : {}
+void block() #void : {}
 {
     "{"
     statementList()
@@ -165,7 +165,7 @@ void caseGroup() #void : {}
     )?
 }
 
-void assignmentStatement() #void : {}
+void assignmentStatement() : {}
 {
     (
         <IDENTIFIER>

@@ -1,6 +1,8 @@
 package wci.intermediate;
 
-import wci.intermediate.symtabimpl.*;
+import wci.intermediate.symtabimpl.SymTabEntryImpl;
+import wci.intermediate.symtabimpl.SymTabImpl;
+import wci.intermediate.symtabimpl.SymTabStackImpl;
 
 /**
  * <h1>SymTabFactory</h1>

@@ -1,16 +1,16 @@
 package wci.util;
 
+import wci.frontend.SimpleNode;
+import wci.intermediate.*;
+
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.io.PrintStream;
 
-import wci.frontend.*;
-import wci.intermediate.*;
-
-import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
-import static wci.intermediate.symtabimpl.DefinitionImpl.*;
+import static wci.intermediate.symtabimpl.SymTabKeyImpl.ROUTINE_ICODE;
+import static wci.intermediate.symtabimpl.SymTabKeyImpl.ROUTINE_ROUTINES;
 
 /**
  * <h1>ParseTreePrinter</h1>

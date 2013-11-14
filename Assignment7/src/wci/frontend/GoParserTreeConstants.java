@@ -4,12 +4,12 @@ package wci.frontend;
 public interface GoParserTreeConstants
 {
   public int JJTVOID = 0;
-  public int JJTBLOCK = 1;
+  public int JJTASSIGNMENTSTATEMENT = 1;
 
 
   public String[] jjtNodeName = {
     "void",
-    "block",
+    "assignmentStatement",
   };
 }
-/* JavaCC - OriginalChecksum=e2cfa58bb3a7b2de06919c018b68643d (do not edit this line) */
+/* JavaCC - OriginalChecksum=aca06f41afc9b1811a89e3889c0e2d38 (do not edit this line) */

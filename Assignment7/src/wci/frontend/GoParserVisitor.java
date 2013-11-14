@@ -4,6 +4,6 @@ package wci.frontend;
 public interface GoParserVisitor
 {
   public Object visit(SimpleNode node, Object data);
-  public Object visit(ASTblock node, Object data);
+  public Object visit(ASTassignmentStatement node, Object data);
 }
-/* JavaCC - OriginalChecksum=7a8e9d1f8b1842d88417e89254dbd1fa (do not edit this line) */
+/* JavaCC - OriginalChecksum=fc22a20b3d5d996be1203812993b27c3 (do not edit this line) */

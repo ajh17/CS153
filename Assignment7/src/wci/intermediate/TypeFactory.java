@@ -1,6 +1,6 @@
 package wci.intermediate;
 
-import wci.intermediate.typeimpl.*;
+import wci.intermediate.typeimpl.TypeSpecImpl;
 
 /**
  * <h1>TypeFactory</h1>

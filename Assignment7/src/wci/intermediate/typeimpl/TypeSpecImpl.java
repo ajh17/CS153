@@ -1,9 +1,12 @@
 package wci.intermediate.typeimpl;
 
-import java.util.HashMap;
-
-import wci.intermediate.*;
+import wci.intermediate.SymTabEntry;
+import wci.intermediate.TypeForm;
+import wci.intermediate.TypeKey;
+import wci.intermediate.TypeSpec;
 import wci.intermediate.symtabimpl.Predefined;
+
+import java.util.HashMap;
 
 import static wci.intermediate.typeimpl.TypeFormImpl.ARRAY;
 import static wci.intermediate.typeimpl.TypeFormImpl.SUBRANGE;

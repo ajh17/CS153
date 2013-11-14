@@ -1,14 +1,12 @@
 package wci.util;
 
-import java.util.ArrayList;
-
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.DefinitionImpl;
 import wci.intermediate.typeimpl.TypeFormImpl;
 
+import java.util.ArrayList;
+
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
-import static wci.intermediate.symtabimpl.DefinitionImpl.*;
-import static wci.intermediate.typeimpl.TypeFormImpl.*;
 import static wci.intermediate.typeimpl.TypeKeyImpl.*;
 
 /**

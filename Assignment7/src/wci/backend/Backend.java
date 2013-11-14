@@ -1,7 +1,5 @@
 package wci.backend;
 
-import java.io.*;
-
 import wci.intermediate.ICode;
 import wci.intermediate.SymTabStack;
 

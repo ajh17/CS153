@@ -1,7 +1,7 @@
 package wci.intermediate.icodeimpl;
 
 import wci.frontend.Node;
-import wci.intermediate.*;
+import wci.intermediate.ICode;
 
 /**
  * <h1>ICodeImpl</h1>

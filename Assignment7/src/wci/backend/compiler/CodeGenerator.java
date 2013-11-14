@@ -1,15 +1,10 @@
 package wci.backend.compiler;
 
-import java.util.ArrayList;
-import java.io.*;
+import wci.backend.Backend;
+import wci.intermediate.ICode;
+import wci.intermediate.SymTabStack;
 
-import wci.frontend.*;
-import wci.intermediate.*;
-import wci.intermediate.symtabimpl.Predefined;
-import wci.backend.*;
-
-import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
-import static wci.intermediate.symtabimpl.DefinitionImpl.*;
+import java.io.PrintWriter;
 
 /**
  * <p>The code generator for a compiler back end.</p>

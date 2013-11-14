@@ -1,15 +1,17 @@
 package wci.intermediate.symtabimpl;
 
+import wci.intermediate.*;
+
 import java.util.ArrayList;
 
-import wci.intermediate.*;
-import wci.intermediate.symtabimpl.*;
-
-import static wci.intermediate.symtabimpl.DefinitionImpl.*;
-import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
+import static wci.intermediate.symtabimpl.DefinitionImpl.FUNCTION;
+import static wci.intermediate.symtabimpl.DefinitionImpl.PROCEDURE;
 import static wci.intermediate.symtabimpl.RoutineCodeImpl.*;
-import static wci.intermediate.typeimpl.TypeFormImpl.*;
-import static wci.intermediate.typeimpl.TypeKeyImpl.*;
+import static wci.intermediate.symtabimpl.SymTabKeyImpl.CONSTANT_VALUE;
+import static wci.intermediate.symtabimpl.SymTabKeyImpl.ROUTINE_CODE;
+import static wci.intermediate.typeimpl.TypeFormImpl.ENUMERATION;
+import static wci.intermediate.typeimpl.TypeFormImpl.SCALAR;
+import static wci.intermediate.typeimpl.TypeKeyImpl.ENUMERATION_CONSTANTS;
 
 /**
  * <h1>Predefined</h1>
