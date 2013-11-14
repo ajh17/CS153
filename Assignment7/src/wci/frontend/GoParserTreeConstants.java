@@ -3,41 +3,13 @@ package wci.frontend;
 
 public interface GoParserTreeConstants
 {
-  public int JJTSTART = 0;
-  public int JJTSTATEMENT = 1;
-  public int JJTSTATEMENTLIST = 2;
-  public int JJTBLOCK = 3;
-  public int JJTSWITCHSTATEMENT = 4;
-  public int JJTSWITCHBLOCK = 5;
-  public int JJTCASEGROUP = 6;
-  public int JJTASSIGNMENTSTATEMENT = 7;
-  public int JJTINCORDEC = 8;
-  public int JJTFORSTATEMENT = 9;
-  public int JJTFORCLAUSE = 10;
-  public int JJTRANGECLAUSE = 11;
-  public int JJTOPERAND = 12;
-  public int JJTEXPRESSION = 13;
-  public int JJTEXPRESSIONLIST = 14;
-  public int JJTVOID = 15;
+  public int JJTVOID = 0;
+  public int JJTBLOCK = 1;
 
 
   public String[] jjtNodeName = {
-    "start",
-    "statement",
-    "statementList",
-    "block",
-    "switchStatement",
-    "switchBlock",
-    "caseGroup",
-    "assignmentStatement",
-    "incOrDec",
-    "forStatement",
-    "forClause",
-    "rangeClause",
-    "operand",
-    "expression",
-    "expressionList",
     "void",
+    "block",
   };
 }
-/* JavaCC - OriginalChecksum=6abb43e46e9b80660688968847aa8aa7 (do not edit this line) */
+/* JavaCC - OriginalChecksum=e2cfa58bb3a7b2de06919c018b68643d (do not edit this line) */

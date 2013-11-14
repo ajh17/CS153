@@ -4,20 +4,6 @@ package wci.frontend;
 public interface GoParserVisitor
 {
   public Object visit(SimpleNode node, Object data);
-  public Object visit(ASTstart node, Object data);
-  public Object visit(ASTstatement node, Object data);
-  public Object visit(ASTstatementList node, Object data);
   public Object visit(ASTblock node, Object data);
-  public Object visit(ASTswitchStatement node, Object data);
-  public Object visit(ASTswitchBlock node, Object data);
-  public Object visit(ASTcaseGroup node, Object data);
-  public Object visit(ASTassignmentStatement node, Object data);
-  public Object visit(ASTincOrDec node, Object data);
-  public Object visit(ASTforStatement node, Object data);
-  public Object visit(ASTforClause node, Object data);
-  public Object visit(ASTrangeClause node, Object data);
-  public Object visit(ASToperand node, Object data);
-  public Object visit(ASTexpression node, Object data);
-  public Object visit(ASTexpressionList node, Object data);
 }
-/* JavaCC - OriginalChecksum=97555443bde7eef8b71047ad3b04046c (do not edit this line) */
+/* JavaCC - OriginalChecksum=7a8e9d1f8b1842d88417e89254dbd1fa (do not edit this line) */
