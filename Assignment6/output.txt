@@ -1,0 +1,148 @@
+STARTING TO PARSE!!!!!
+
+==========IF STATEMENT=========
+if i== 0 {
+	
+==========ASSIGNMENT=========
+c++;
+==========ASSIGNMENT=========
+--d
+==========ASSIGNMENT=========
+a=4
+==========ASSIGNMENT=========
+b:=5
+}
+
+==========IF STATEMENT=========
+if i!= 0 {
+	
+==========ASSIGNMENT=========
+answer:=42
+}
+else if j== 0 {
+	
+==========ASSIGNMENT=========
+answer:=0
+}
+
+==========IF STATEMENT=========
+if i== 0 {
+	
+}
+else if j== 0 {
+	
+}
+else if k< 6 {
+	
+}
+else  {
+	
+}
+
+==========FOR STATEMENT=========
+for i:=0;i< 10;i++ {
+	
+==========ASSIGNMENT=========
+array_index:=i
+}
+
+==========FOR STATEMENT=========
+for i:=0;;i++ {
+	
+==========ASSIGNMENT=========
+middle:=4
+}
+
+==========FOR STATEMENT=========
+for i:=0;i< 10; {
+	
+}
+
+==========ASSIGNMENT=========
+s:=""
+==========FOR STATEMENT=========
+for  {
+	
+==========ASSIGNMENT=========
+s=s+ "a"
+}
+
+==========ASSIGNMENT=========
+s:=""
+==========FOR STATEMENT=========
+for s!= "aaaaa"; {
+	
+==========ASSIGNMENT=========
+s=s+ "a"
+}
+
+==========ASSIGNMENT=========
+s:=""
+==========FOR STATEMENT=========
+for s!= "aaaaa" {
+	
+==========ASSIGNMENT=========
+s=s+ "a"
+}
+
+==========IF STATEMENT=========
+if true {
+	
+}
+
+==========IF STATEMENT=========
+if a< b {
+	
+}
+else if a> b {
+	
+}
+else  {
+	
+}
+
+==========IF STATEMENT=========
+if ( a== b&& b== c)  {
+	
+}
+else if ( b<= a|| b<= c)  {
+	
+}
+
+==========SWITCH STATEMENT=========
+switch  {
+	
+case true:
+case false:
+default: 
+}
+
+==========ASSIGNMENT=========
+i:=5
+==========SWITCH STATEMENT=========
+switch i {
+	
+case 4:
+case 5:
+case 6:
+}
+
+==========ASSIGNMENT=========
+j:=4
+==========SWITCH STATEMENT=========
+switch j {
+	
+case 1, 3, 5, 7, 9:;
+default: 
+}
+
+==========VARIABLE DECLARATION=========
+x int 
+==========VARIABLE DECLARATION=========
+y int ; 
+==========FUNCTION DECLARATION=========
+func foo ( a int , b int )  {
+	
+}
+
+FINISHED PARSING!!!!!
