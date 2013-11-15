@@ -105,3 +105,10 @@ switch j {
     case 1,3,5,7,9: ; // TODO: No support for fallthrough yet
     default:
 }
+
+x int
+y int;
+
+func foo(a int, b int) {
+
+}

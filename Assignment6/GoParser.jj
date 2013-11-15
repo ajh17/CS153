@@ -65,11 +65,47 @@ void start() : {}
 
 void statement() : {}
 {
-    ({ System.out.println("\n==========ASSIGNMENT========="); } assignmentStatement())
-    | ({ System.out.println("\n==========SWITCH STATEMENT========="); } switchStatement())
-    | ({ System.out.println("\n==========IF STATEMENT========="); } ifStatement())
-    | ({ System.out.println("\n==========FOR STATEMENT========="); } forStatement())
-    | (";" { System.out.print(token.image); })
+      LOOKAHEAD(2) declarationStatement()
+    | LOOKAHEAD(2) { System.out.println("\n==========ASSIGNMENT========="); } assignmentStatement()
+    | { System.out.println("\n==========SWITCH STATEMENT========="); } switchStatement()
+    | { System.out.println("\n==========IF STATEMENT========="); } ifStatement()
+    | { System.out.println("\n==========FOR STATEMENT========="); } forStatement()
+    | <SEMICOLON> { System.out.print(token.image); }
+}
+
+void declarationStatement() : {}
+{
+    { System.out.println("\n==========VARIABLE DECLARATION========="); } variableDeclaration()
+    | { System.out.println("\n==========FUNCTION DECLARATION========="); } functionDeclaration()
+}
+
+void variableDeclaration() : {}
+{
+    <IDENTIFIER> { System.out.print(token.image + " "); }
+    <TYPE> { System.out.print(token.image + " "); }
+    (LOOKAHEAD(2) <SEMICOLON> { System.out.print(token.image + " "); })?
+}
+
+void functionDeclaration() : {}
+{
+    "func" { System.out.print(token.image + " "); }
+    <IDENTIFIER> { System.out.print(token.image + " "); }
+    "(" { System.out.print(token.image + " "); }
+    parameterList()
+    ")" { System.out.print(token.image + " "); }
+    (<IDENTIFIER> | <TYPE>)?
+    block()
+}
+
+void parameter() : {}
+{
+    (<IDENTIFIER> { System.out.print(token.image + " "); })?
+    <TYPE> { System.out.print(token.image + " "); }
+}
+
+void parameterList() : {}
+{
+    (parameter() ("," { System.out.print(token.image + " "); } parameter())*)?
 }
 
 void statementList() : {}
@@ -136,7 +172,7 @@ void assignmentStatement() : {}
                     incOrDec()
             )
 
-            (LOOKAHEAD(2) ";" { System.out.print(token.image); })?
+            (LOOKAHEAD(2) <SEMICOLON> { System.out.print(token.image); })?
         )
     )
     |
@@ -161,7 +197,7 @@ void forStatement() : {}
 void forClause() : {}
 {
     (LOOKAHEAD(2) assignmentStatement())?
-    (LOOKAHEAD(2) expression())? (";" { System.out.print(token.image); })?
+    (LOOKAHEAD(2) expression())? (<SEMICOLON> { System.out.print(token.image); })?
     (assignmentStatement())?
 }
 
@@ -207,6 +243,11 @@ void expressionList() : {}
     expression() ("," { System.out.print(token.image + " "); } expression())*
 }
 
+void Error() : {}
+{
+    <ERROR>
+}
+
 /********************s
     -- Tokens --
 ********************/
@@ -216,40 +257,28 @@ TOKEN : {
         | "go" | "map" | "struct" | "chan" | "else" | "goto" | "package" | "switch"
         | "const" | "fallthrough" | "if" | "range" | "type" | "continue"
         | "for" | "import" | "return" | "var">
-        //{ debugStream.println("\nRESERVED_WORD token: " + matchedToken.image); }
+    |
+    <TYPE: "int">
     |
     <INTEGER_NUMBER: <DIGIT> (<DIGIT>)*>
-        //{ debugStream.println("\nINTEGER_NUMBER token: " + matchedToken.image); }
     |
     <REAL_NUMBER: <INTEGER_NUMBER> "." (<INTEGER_NUMBER>)?>
-        //{ debugStream.println("\nREAL_NUMBER token: " + matchedToken.image); }
     |
     <RAW_STRING: "`" (<ALPHANUMERIC> | <RAW_LITERAL_SYMBOL> | <NEWLINE>)* "`">
-        //{ debugStream.println("\nRAW_STRING token: " + matchedToken.image); }
     |
     <INTERPRETED_STRING: "\"" (<ALPHANUMERIC> | <ESCAPED_CHAR>
             | <INTERPRETED_LITERAL_SYMBOL> | <WHITE_SPACE>)* "\"">
-        //{ debugStream.println("\nINTERPRETED_STRING token: " + matchedToken.image); }
 
         | <#NEWLINE: ["\r", "\n"]>
         | <#ESCAPED_CHAR: "\\" ("a" | "b" | "f" | "n" | "r" | "t" | "v" | "\\" | "'" | "\"")>
         | <#WHITE_SPACE: <NEWLINE> | "\t" | " ">
     |
-    <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT> | "_")*>
-         //{ debugStream.println("\nIDENTIFIER token: " + matchedToken.image); }
-        |
-        <IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
-    /*
+    <SEMICOLON: ";">
     |
-    <SPECIAL_SYMBOL:
-        "+" | "&" | "+=" | "&=" | "&&" | "==" | "!=" | "(" | ")"
-        | "-" | "|" | "-=" | "|=" | "||" | "<" | "<=" | "[" | "]"
-        | "*" | "^" | "*=" | "^=" | "<-" | ">" | ">=" | "{"  | "}"
-        | "/" | "<<" | "/=" | "<<=" | "++" | "=" | ":=" | "," | ";"
-        | "%" | ">>" | "%=" | ">>=" | "--" | "!" | "..." |  "." | ":"
-        | "&^" | "&^=">
-        { debugStream.println("\nSPECIAL_SYMBOL token: " + matchedToken.image); }
-    */
+    <DOT: ".">
+    |
+    <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT> | "_")*>
+        | <IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
         | <#LETTER: ["a"-"z", "A"-"Z"]>
         | <#DIGIT: ["0"-"9"]>
         | <#ALPHANUMERIC: (<LETTER> | <DIGIT>)+>
@@ -257,12 +286,22 @@ TOKEN : {
         | <MUL_OP: ("*" | "/" | "%")>
         | <#REL_OP: "==" | "!=" | "<" | "<=" | ">" | ">=">
         | <UNARY_OP: "+" | "-" | "!" | "^" | "*" | "&">
-        | <ASSIGN_OP: (<ADD_OP> | <MUL_OP>)? "=">
+        | <ASSIGN_OP: (":" | <ADD_OP> | <MUL_OP>)? "=">
         | <BINARY_OP: "||" | "&&" | <REL_OP> | <ADD_OP>| <MUL_OP>>
         | <#COMMON_LITERAL_SYMBOL: "~" | "!" | "@" | "#" | "$" | "%" | "^"
             | "&" | "*"| "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">"
             | "," | "." | "/"| "?" | ":" | ";" | "[" | "]" | "{" | "}" | "|">
         | <#RAW_LITERAL_SYMBOL: <COMMON_LITERAL_SYMBOL> | "\"" | "\\">
         | <#INTERPRETED_LITERAL_SYMBOL: <COMMON_LITERAL_SYMBOL> | "'">
+    |
+    <SPECIAL_SYMBOL:
+            "+" | "&" | "+=" | "&=" | "&&" | "==" | "!=" | "(" | ")"
+            | "-" | "|" | "-=" | "|=" | "||" | "<" | "<=" | "[" | "]"
+            | "*" | "^" | "*=" | "^=" | "<-" | ">" | ">=" | "{"  | "}"
+            | "/" | "<<" | "/=" | "<<=" | "++" | "=" | ":=" | "," | ";"
+            | "%" | ">>" | "%=" | ">>=" | "--" | "!" | "..." |  "." | ":"
+            | "&^" | "&^=">
+    |
+    <ERROR: ~["\r", "\n"]>
 }
 
