@@ -91,11 +91,13 @@ SKIP : {
 
 SimpleNode start() #void : { SimpleNode rootNode = null; }
 {
+    { System.out.println("\n-----BEGIN PARSING-----\n"); }
     try {
         (
             statement()
         )*
         <EOF> {
+            { System.out.println("\n-----FINISHED PARSING-----"); }
             return rootNode;
         }
     }
@@ -107,7 +109,8 @@ SimpleNode start() #void : { SimpleNode rootNode = null; }
 
 void statement() #void : {}
 {
-    assignmentStatement()
+      LOOKAHEAD(2) declarationStatement()
+    | LOOKAHEAD(2) assignmentStatement()
     | switchStatement()
     | ifStatement()
     | forStatement()
@@ -117,6 +120,41 @@ void statement() #void : {}
 void statementList() #void : {}
 {
     (statement())*
+}
+
+void declarationStatement() #void : {}
+{
+    variableDeclaration()
+    | functionDeclaration()
+}
+
+void variableDeclaration() #void : {}
+{
+    <IDENTIFIER>
+    <TYPE>
+    (LOOKAHEAD(2) <SEMICOLON>)?
+}
+
+void functionDeclaration() #void : {}
+{
+    "func"
+    <IDENTIFIER>
+    "("
+    parameterList()
+    ")"
+    (<IDENTIFIER> | <TYPE>)?
+    block()
+}
+
+void parameter() #void : {}
+{
+    (<IDENTIFIER>)?
+    <TYPE>
+}
+
+void parameterList() #void : {}
+{
+    (parameter() ("," parameter())*)?
 }
 
 void block() #void : {}
@@ -186,6 +224,7 @@ void assignmentStatement() : {}
     (
         incOrDec()
         <IDENTIFIER>
+        (LOOKAHEAD(2) <SEMICOLON>)?
     )
 }
 
@@ -250,6 +289,8 @@ TOKEN : {
         | "const" | "fallthrough" | "if" | "range" | "type" | "continue"
         | "for" | "import" | "return" | "var">
     |
+    <TYPE: "int">
+    |
     <INTEGER_NUMBER: <DIGIT> (<DIGIT>)*>
     |
     <REAL_NUMBER: <INTEGER_NUMBER> "." (<INTEGER_NUMBER>)?>
@@ -264,6 +305,8 @@ TOKEN : {
         | <#WHITE_SPACE: <NEWLINE> | "\t" | " ">
     |
     <SEMICOLON: ";">
+    |
+    <DOT: ".">
     |
     <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT> | "_")*>
         | <IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>

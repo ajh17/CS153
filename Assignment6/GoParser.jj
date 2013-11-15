@@ -179,6 +179,7 @@ void assignmentStatement() : {}
     (
         incOrDec()
         <IDENTIFIER> { System.out.print(token.image); }
+        (LOOKAHEAD(2) <SEMICOLON> { System.out.print(token.image); })?
     )
 }
 
