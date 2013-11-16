@@ -58,8 +58,9 @@ public class GoParser
         crossReferencer.print(symTabStack);
 
         // Visit the parse tree nodes to decorate them with type information.
-        TypeSetterVisitor typeVisitor = new TypeSetterVisitor();
-        rootNode.jjtAccept(typeVisitor, null);
+        // Haven't done Go Types yet.
+        // TypeSetterVisitor typeVisitor = new TypeSetterVisitor();
+        //rootNode.jjtAccept(typeVisitor, null);
 
         // Create and initialize the ICode wrapper for the parse tree.
         ICode iCode = ICodeFactory.createICode();
