@@ -1,8 +1,10 @@
 options {
+    BUILD_PARSER=true;
     JJTREE_OUTPUT_DIRECTORY="src/wci/frontend";
     NODE_EXTENDS="wci.intermediate.icodeimpl.ICodeNodeImpl";
     MULTI=true;
     VISITOR=true;
+    // DEBUG_PARSER=true;
 }
 
 PARSER_BEGIN(GoParser)
