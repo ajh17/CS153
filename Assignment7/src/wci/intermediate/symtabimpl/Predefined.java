@@ -31,7 +31,7 @@ public class Predefined
     public static TypeSpec charType;
     public static TypeSpec undefinedType;
 
-    // Predefined identifiers.
+    // TODO: Predefined identifiers.
     public static SymTabEntry integerId;
     public static SymTabEntry realId;
     public static SymTabEntry booleanId;
@@ -135,6 +135,7 @@ public class Predefined
     }
 
     /**
+    TODO: Put the GO standard routines here
      * Initialize the standard procedures and functions.
      * @param symTabStack the symbol table stack to initialize.
      */

@@ -1,8 +1,7 @@
 package wci.intermediate;
 
-import wci.frontend.ASTassignmentStatement;
-import wci.frontend.SimpleNode;
-import wci.intermediate.symtabimpl.Predefined;
+import wci.frontend.*;
+import wci.intermediate.symtabimpl.*;
 
 public class TypeSetterVisitor extends GoParserVisitorAdapter
 {
@@ -23,10 +22,82 @@ public class TypeSetterVisitor extends GoParserVisitorAdapter
         node.setTypeSpec(type);
     }
     
-    public Object visit(ASTassignmentStatement node, Object data)
+
+    public Object visit(ASTblock node, Object data)
     {
         Object obj = super.visit(node, data);
         setType(node);
         return obj;
     }
+
+    public Object visit(ASTcaseGroup node, Object data)
+    {
+        Object obj = super.visit(node, data);
+        setType(node);
+        return obj;
+    }
+
+
+    public Object visit(ASTfunctionDeclaration node, Object data)
+    {
+        Object obj = super.visit(node, data);
+        setType(node);
+        return obj;
+    }
+    
+    
+    
+    public Object visit(ASTifStatement node, Object data)
+    {
+        Object obj = super.visit(node, data);
+        setType(node);
+        return obj;
+    }
+    
+    public Object visit(ASTparameter node, Object data)
+    {
+        return data;
+    }
+    
+    public Object visit(ASTparameterList node, Object data)
+    {
+        return data;
+    }
+    
+    public Object visit(ASTstart node, Object data)
+    {
+        Object obj = super.visit(node, data);
+        setType(node);
+        return obj;
+    }
+    
+    public Object visit(ASTstatement node, Object data)
+    {
+        Object obj = super.visit(node, data);
+        setType(node);
+        return obj;
+            }
+    
+    
+    
+    public Object visit(ASTswitchBlock node, Object data)
+    {
+        Object obj = super.visit(node, data);
+        setType(node);
+        return obj;
+            }
+    
+    
+    
+   public Object visit(ASTswitchStatement node, Object data)
+    {
+
+        Object obj = super.visit(node, data);
+        setType(node);
+        return obj;
+            }
+    
+   
+
+    
 }

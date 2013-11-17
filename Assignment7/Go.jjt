@@ -59,8 +59,8 @@ public class GoParser
 
         // Visit the parse tree nodes to decorate them with type information.
         // Haven't done Go Types yet.
-        // TypeSetterVisitor typeVisitor = new TypeSetterVisitor();
-        //rootNode.jjtAccept(typeVisitor, null);
+         TypeSetterVisitor typeVisitor = new TypeSetterVisitor();
+        rootNode.jjtAccept(typeVisitor, null);
 
         // Create and initialize the ICode wrapper for the parse tree.
         ICode iCode = ICodeFactory.createICode();
@@ -92,13 +92,13 @@ SKIP : {
   -- Production Rules --
 *************************/
 
-SimpleNode start() #void : { SimpleNode rootNode = null; }
+SimpleNode start(): { SimpleNode rootNode = null; }
 {
     { System.out.println("\n-----BEGIN PARSING-----\n"); }
     try {
-        (
-            statement()
-        )*
+        (statement())*
+            {              return jjtThis;            }            
+        
         <EOF> {
             { System.out.println("\n-----FINISHED PARSING-----"); }
             return rootNode;
@@ -110,14 +110,14 @@ SimpleNode start() #void : { SimpleNode rootNode = null; }
     }
 }
 
-void statement() #void : {}
+void statement() : {}
 {
       LOOKAHEAD(2) declarationStatement()
-    | LOOKAHEAD(2) assignmentStatement()
-    | switchStatement()
-    | ifStatement()
+    | LOOKAHEAD(2) assignmentStatement() 
+    | switchStatement() 
+    | ifStatement() 
     | forStatement()
-    | <SEMICOLON>
+    | <SEMICOLON>    
 }
 
 void statementList() #void : {}
@@ -125,20 +125,41 @@ void statementList() #void : {}
     (statement())*
 }
 
-void declarationStatement() #void : {}
+void declarationStatement() #void: { }
 {
-    variableDeclaration()
-    | functionDeclaration()
+   variableDeclaration()
+   | functionDeclaration()
 }
 
-void variableDeclaration() #void : {}
+void variableDeclaration() #void : {ArrayList<SymTabEntry> variableList; int index = 0;}
 {
-    <IDENTIFIER>
-    <TYPE>
-    (LOOKAHEAD(2) <SEMICOLON>)?
+(
+        <IDENTIFIER> {
+            variableList = new ArrayList<SymTabEntry>();
+            processVariableDecl(token, index++, variableList);
+        }
+        (
+            <COMMA>
+            <IDENTIFIER> {
+                processVariableDecl(token, index++, variableList);
+            }
+        )*
+        < ASSIGN_OP >
+        <IDENTIFIER> {
+            SymTabEntry typeId = symTabStack.lookup(token.image);
+            typeId.appendLineNumber(token.beginLine);
+            TypeSpec type = typeId.getTypeSpec();
+
+            for (SymTabEntry variableId : variableList) {
+                variableId.setTypeSpec(type);
+            }
+        }
+        <SEMICOLON>
+    )+
+   
 }
 
-void functionDeclaration() #void : {}
+SimpleNode functionDeclaration(): {SimpleNode rootNode;}
 {
     "func"
     <IDENTIFIER>
@@ -146,51 +167,57 @@ void functionDeclaration() #void : {}
     parameterList()
     ")"
     (<IDENTIFIER> | <TYPE>)?
-    block()
+    rootNode = block() {return rootNode;}
 }
 
-void parameter() #void : {}
+void parameter(): {}
 {
     (<IDENTIFIER>)?
     <TYPE>
 }
 
-void parameterList() #void : {}
+void parameterList()  : {}
 {
-    (parameter() ("," parameter())*)?
+    (parameter() (<COMMA> parameter())*)?
 }
 
-void block() #void : {}
+SimpleNode block() : {SimpleNode rootNode;}
 {
     "{"
-    statementList()
+   statementList()   {
+   return jjtThis;
+ }
     "}"
 }
 
-void ifStatement() #void : {}
+SimpleNode ifStatement()  : {SimpleNode rootNode;}
 {
     "if"
-    expression()
-    block()
+   expression()
+    rootNode = block() {
+       return rootNode;
+     }
+     
     (LOOKAHEAD(2) "else" "if" expression() block())*
     ("else" block())?
+    
 }
 
-void switchStatement() #void : {}
+SimpleNode switchStatement()  : {SimpleNode rootNode;}
 {
     "switch"
-    (expression())?
-    switchBlock()
+    (expression() )?
+    rootNode = switchBlock() {return rootNode;}
 }
 
-void switchBlock() #void : {}
+SimpleNode switchBlock()  : {SimpleNode rootNode;}
 {
     "{"
-    caseGroup()
+    rootNode = caseGroup(){return rootNode;}
     "}"
 }
 
-void caseGroup() #void : {}
+SimpleNode caseGroup() : {SimpleNode rootNode;}
 {
     (
         "case"
@@ -206,9 +233,9 @@ void caseGroup() #void : {}
     )?
 }
 
-void assignmentStatement() : {}
+void assignmentStatement() #void : {}
 {
-    (
+  (
         <IDENTIFIER>
         (
             (
@@ -231,53 +258,62 @@ void assignmentStatement() : {}
     )
 }
 
-void incOrDec() #void : {}
+void incOrDec() : {}
 {
     ("++" | "--")
 }
 
-void forStatement() #void : {}
+SimpleNode forStatement()  : {SimpleNode rootNode;}
 {
     "for"
-    forClause()
-    block()
+  forClause()
+  rootNode = block() {return rootNode;}
 }
 
-void forClause() #void : {}
+void forClause() : { }
 {
-    (LOOKAHEAD(2) assignmentStatement())?
-    (LOOKAHEAD(2) expression())?
+    (LOOKAHEAD(2)  assignmentStatement()  )?
+    (LOOKAHEAD(2) expression() )?
     (<SEMICOLON>)?
     (assignmentStatement())?
 }
 
-void operand() #void : {}
+void operand(): { }
 {
     (
         (
-            (<INTEGER_NUMBER> | <REAL_NUMBER> | <RAW_STRING> | <INTERPRETED_STRING> | <IDENTIFIER>)
+            (integerConstant() | <REAL_NUMBER> | <RAW_STRING> |<INTERPRETED_STRING> | <IDENTIFIER>)
         )
         |
         (
             "("
-            expression()
+            expression() 
             ")"
         )
     )
 }
 
-void expression() #void : {}
+
+void integerConstant() : {}
 {
-    operand() (<BINARY_OP> operand())*
+    <INTEGER_NUMBER> {
+        jjtThis.setTypeSpec(Predefined.integerType);
+        jjtThis.setAttribute(VALUE, Integer.parseInt(token.image));
+    }
 }
 
-void expressionList() #void : {}
+void expression():  { }
+{
+   operand() (<BINARY_OP> operand())*
+}
+
+void expressionList()  : {}
 {
     expression()
-    ("," expression())*
+    (<COMMA>  expression())*
 }
 
-void Error() #void : {}
+void Error()  : {}
 {
     <ERROR>
 }
@@ -311,8 +347,10 @@ TOKEN : {
     |
     <DOT: ".">
     |
+    <COMMA : ",">
+    |
     <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT> | "_")*>
-        | <IDENTIFIER_LIST: <IDENTIFIER> ("," <IDENTIFIER>)*>
+        | <IDENTIFIER_LIST: <IDENTIFIER> (<COMMA> <IDENTIFIER>)*>
         | <#LETTER: ["a"-"z", "A"-"Z"]>
         | <#DIGIT: ["0"-"9"]>
         | <#ALPHANUMERIC: (<LETTER> | <DIGIT>)+>
@@ -324,7 +362,7 @@ TOKEN : {
         | <BINARY_OP: "||" | "&&" | <REL_OP> | <ADD_OP>| <MUL_OP>>
         | <#COMMON_LITERAL_SYMBOL: "~" | "!" | "@" | "#" | "$" | "%" | "^"
             | "&" | "*"| "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">"
-            | "," | "." | "/"| "?" | ":" | ";" | "[" | "]" | "{" | "}" | "|">
+            | "." | "/"| "?" | ";" | "[" | "]" | "{" | "}" | "|">
         | <#RAW_LITERAL_SYMBOL: <COMMON_LITERAL_SYMBOL> | "\"" | "\\">
         | <#INTERPRETED_LITERAL_SYMBOL: <COMMON_LITERAL_SYMBOL> | "'">
     |
@@ -332,7 +370,7 @@ TOKEN : {
             "+" | "&" | "+=" | "&=" | "&&" | "==" | "!=" | "(" | ")"
             | "-" | "|" | "-=" | "|=" | "||" | "<" | "<=" | "[" | "]"
             | "*" | "^" | "*=" | "^=" | "<-" | ">" | ">=" | "{"  | "}"
-            | "/" | "<<" | "/=" | "<<=" | "++" | "=" | ":=" | "," | ";"
+            | "/" | "<<" | "/=" | "<<=" | "++" | "=" | ";"
             | "%" | ">>" | "%=" | ">>=" | "--" | "!" | "..." |  "." | ":"
             | "&^" | "&^=">
     |
