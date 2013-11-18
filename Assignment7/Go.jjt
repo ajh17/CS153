@@ -195,21 +195,21 @@ void ifStatement() : {}
     ("else" block())?
 }
 
-SimpleNode switchStatement()  : {SimpleNode rootNode;}
+void switchStatement()  : {}
 {
     "switch"
     (expression())?
-    rootNode = switchBlock() {return rootNode;}
+    switchBlock() {}
 }
 
-SimpleNode switchBlock()  : {SimpleNode rootNode;}
+void switchBlock()  : {}
 {
     "{"
-    rootNode = caseGroup() {return rootNode;}
+    caseGroup()
     "}"
 }
 
-SimpleNode caseGroup() : {SimpleNode rootNode;}
+void caseGroup() : {}
 {
     (
         "case"
@@ -266,8 +266,8 @@ void forStatement() : {}
 
 void forClause() : {}
 {
-    (LOOKAHEAD(2)  assignmentStatement()  )?
-    (LOOKAHEAD(2) expression() )?
+    (LOOKAHEAD(2) assignmentStatement())?
+    (LOOKAHEAD(2) expression())?
     (<SEMICOLON>)?
     (assignmentStatement())?
 }
@@ -298,9 +298,14 @@ void expression() #void : {}
     (
         operand()
         (
-            //TODO: Change to do other operations other than just add
-            <ADD_OP> operand() #add(2)
-        )*
+            //TODO: This implementation is very limited. Need to change eventually.
+
+            <REL_OP> operand() #relationalOperator(2)
+            |
+            (
+                <ADD_OP> operand() #add(2)
+            )*
+        )
     )
 }
 
@@ -345,13 +350,6 @@ void interpretedString() : {}
 {
     <INTERPRETED_STRING> {
         //TODO: Do something similar to real and integer constants
-    }
-}
-
-SimpleNode add() : {}
-{
-    <ADD_OP> {
-        return jjtThis;
     }
 }
 
@@ -403,7 +401,7 @@ TOKEN : {
         | <#ALPHANUMERIC: (<LETTER> | <DIGIT>)+>
         | <ADD_OP: ["+", "-"]>
         | <MUL_OP: ("*" | "/" | "%")>
-        | <#REL_OP: "==" | "!=" | "<" | "<=" | ">" | ">=">
+        | <REL_OP: "==" | "!=" | "<" | "<=" | ">" | ">=">
         | <UNARY_OP: "+" | "-" | "!" | "^" | "*" | "&">
         | <ASSIGN_OP: (":")? "=">
         | <ARITHMETIC_ASSIGN_OP: (<ADD_OP> | <MUL_OP>) "=">
