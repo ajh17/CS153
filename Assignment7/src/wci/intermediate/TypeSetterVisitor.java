@@ -71,12 +71,7 @@ public class TypeSetterVisitor extends GoParserVisitorAdapter
         return obj;
     }
     
-    public Object visit(ASTstatement node, Object data)
-    {
-        Object obj = super.visit(node, data);
-        setType(node);
-        return obj;
-            }
+    
     
     
     
