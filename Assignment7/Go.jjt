@@ -155,23 +155,23 @@ void variableDeclaration() : { SymTabEntry typeId; }
     (LOOKAHEAD(2) <SEMICOLON>)?
 }
 
-SimpleNode functionDeclaration() : { SimpleNode rootNode; }
+void functionDeclaration() : { SimpleNode id; }
 {
     "func"
-    <IDENTIFIER> {
+    id = identifier() {
         // Enter into symbol table
     }
     "("
     parameterList()
     ")"
-    (<IDENTIFIER> | <TYPE>)?
-    rootNode = block() { return rootNode; }
+    (identifier() | type())?
+    block()
 }
 
 void parameter(): {}
 {
-    (<IDENTIFIER>)?
-    <TYPE>
+    (identifier())?
+    type()
 }
 
 void parameterList() : {}
@@ -277,16 +277,16 @@ void forClause() : {}
     (assignmentStatement())?
 }
 
-SimpleNode operand() #void : { SimpleNode rootNode = null; }
+void operand() #void : {}
 {
     (
         (
             (
-                  rootNode = identifier()
-                | rootNode = integerConstant()
-                | rootNode = realConstant()
-                | rootNode = interpretedString()
-                | rootNode = rawString()
+                  identifier()
+                | integerConstant()
+                | realConstant()
+                | interpretedString()
+                | rawString()
             )
         )
         |
@@ -295,9 +295,7 @@ SimpleNode operand() #void : { SimpleNode rootNode = null; }
             expression() 
             ")"
         )
-    ) {
-        return rootNode;
-    }
+    )
 }
 
 void expression() #void : {}
@@ -305,6 +303,7 @@ void expression() #void : {}
     (
         operand()
         (
+            //TODO: Change to do other operations other than just add
             <ADD_OP> operand() #add(2)
         )*
     )
@@ -319,39 +318,38 @@ void expressionList() : {}
 SimpleNode identifier() : {}
 {
     <IDENTIFIER> {
+        //TODO: Do something similar to real and integer constants
         return jjtThis;
     }
 }
 
-SimpleNode integerConstant() : {}
+void integerConstant() : {}
 {
     <INTEGER_NUMBER> {
         jjtThis.setTypeSpec(Predefined.integerType);
         jjtThis.setAttribute(VALUE, Integer.parseInt(token.image));
-        return jjtThis;
     }
 }
 
-SimpleNode realConstant() : {}
+void realConstant() : {}
 {
     <REAL_NUMBER> {
         jjtThis.setTypeSpec(Predefined.realType);
         jjtThis.setAttribute(VALUE, Float.parseFloat(token.image));
-        return jjtThis;
     }
 }
 
-SimpleNode rawString() : {}
+void rawString() : {}
 {
     <RAW_STRING> {
-        return jjtThis;
+        //TODO: Do something similar to real and integer constants
     }
 }
 
-SimpleNode interpretedString() : {}
+void interpretedString() : {}
 {
     <INTERPRETED_STRING> {
-        return jjtThis;
+        //TODO: Do something similar to real and integer constants
     }
 }
 
