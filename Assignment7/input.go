@@ -1,5 +1,7 @@
 x int
 y x; // The type of x will be the type of y
+q float;
+r string;
 x++
 --x;
 a = 5 + 5 + 5 + 5;
