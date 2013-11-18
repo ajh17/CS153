@@ -109,18 +109,16 @@ SimpleNode start() #void : { SimpleNode rootNode = null; }
     }
 }
 
-SimpleNode statement() #void : { SimpleNode rootNode = null; }
+void statement() #void : {}
 {
     (
           LOOKAHEAD(2) declarationStatement()
-        | LOOKAHEAD(2) rootNode = assignmentStatement()
-        | rootNode = switchStatement()
-        | rootNode = ifStatement()
-        | rootNode = forStatement()
+        | LOOKAHEAD(2) assignmentStatement()
+        | switchStatement()
+        | ifStatement()
+        | forStatement()
         | <SEMICOLON>
-    ) {
-        return rootNode;
-    }
+    )
 }
 
 SimpleNode statementList() : {}
@@ -132,7 +130,7 @@ SimpleNode statementList() : {}
 
 void declarationStatement() #void : {}
 {
-   variableDeclaration()
+     variableDeclaration()
    | functionDeclaration()
 }
 
