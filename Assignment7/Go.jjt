@@ -4,7 +4,7 @@ options {
     NODE_EXTENDS="wci.intermediate.icodeimpl.ICodeNodeImpl";
     MULTI=true;
     VISITOR=true;
-    // DEBUG_PARSER=true;
+    //DEBUG_PARSER=true;
 }
 
 PARSER_BEGIN(GoParser)
@@ -236,7 +236,7 @@ SimpleNode assignmentStatement() : { SimpleNode node = null; }
             (
                 (
                     (
-                        ("=" | ":=")
+                        <ASSIGN_OP>
                         node = operand() {
                             jjtThis.jjtAddChild(node, 1);
                         }
@@ -398,7 +398,8 @@ TOKEN : {
         | <MUL_OP: ("*" | "/" | "%")>
         | <#REL_OP: "==" | "!=" | "<" | "<=" | ">" | ">=">
         | <UNARY_OP: "+" | "-" | "!" | "^" | "*" | "&">
-        | <ASSIGN_OP: (":" | <ADD_OP> | <MUL_OP>)? "=">
+        | <ASSIGN_OP: (":")? "=">
+        | <ARITHMETIC_ASSIGN_OP: (<ADD_OP> | <MUL_OP>) "=">
         | <BINARY_OP: "||" | "&&" | <REL_OP> | <ADD_OP>| <MUL_OP>>
         | <#COMMON_LITERAL_SYMBOL: "'" | "~" | "!" | "@" | "#" | "$" | "%"
             | "^" | "&" | "*"| "(" | ")" | "_" | "-" | "+" | "=" | "<"
