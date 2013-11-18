@@ -25,6 +25,10 @@ public class GoParserVisitorAdapter implements GoParserVisitor {
         return node.childrenAccept(this, data);
     }
 
+    public Object visit(ASTidentifier node, Object data) {
+        return node.childrenAccept(this, data);
+    }
+
     public Object visit(ASTintegerConstant node, Object data) {
         return node.childrenAccept(this, data);
     }
@@ -66,10 +70,6 @@ public class GoParserVisitorAdapter implements GoParserVisitor {
     }
 
     public Object visit(ASTforClause node, Object data) {
-        return node.childrenAccept(this, data);
-    }
-
-    public Object visit(ASTError node, Object data) {
         return node.childrenAccept(this, data);
     }
 

@@ -97,11 +97,10 @@ SimpleNode start(): { SimpleNode rootNode; }
     { System.out.println("\n-----BEGIN PARSING-----\n"); }
     try {
         rootNode = statementList()
-        //rootNode = integerConstant()
 
         <EOF> {
             System.out.println("\n-----FINISHED PARSING-----");
-            rootNode.dump(">");
+            rootNode.dump("");
             return rootNode;
         }
     }
@@ -229,16 +228,21 @@ SimpleNode caseGroup() : {SimpleNode rootNode;}
     )?
 }
 
-SimpleNode assignmentStatement() : {}
+SimpleNode assignmentStatement() : { SimpleNode node = null; }
 {
     (
         (
-            <IDENTIFIER>
+            node = identifier() {
+                jjtThis.jjtAddChild(node, 0);
+            }
             (
                 (
                     (
                         ("=" | ":=")
-                        operand() ((<ADD_OP> | <MUL_OP>) operand())*
+                        node = operand() {
+                            jjtThis.jjtAddChild(node, 1);
+                        }
+                        ((<ADD_OP> | <MUL_OP>) operand())*
                     )
                     |
                         incOrDec()
@@ -258,6 +262,13 @@ SimpleNode assignmentStatement() : {}
     }
 }
 
+SimpleNode identifier() : {}
+{
+    <IDENTIFIER> {
+        return jjtThis;
+    }
+}
+
 void incOrDec() : {}
 {
     ("++" | "--")
@@ -270,7 +281,7 @@ SimpleNode forStatement()  : { SimpleNode rootNode; }
     rootNode = block() { return rootNode; }
 }
 
-void forClause() : { }
+void forClause() : {}
 {
     (LOOKAHEAD(2)  assignmentStatement()  )?
     (LOOKAHEAD(2) expression() )?
@@ -278,11 +289,11 @@ void forClause() : { }
     (assignmentStatement())?
 }
 
-void operand(): { }
+SimpleNode operand(): { SimpleNode rootNode = null; }
 {
     (
         (
-            (integerConstant() | realConstant() | <RAW_STRING> |<INTERPRETED_STRING> | <IDENTIFIER>)
+            (rootNode = identifier() | rootNode = integerConstant() | rootNode = realConstant())
         )
         |
         (
@@ -290,15 +301,17 @@ void operand(): { }
             expression() 
             ")"
         )
-    )
+    ) {
+        return rootNode;
+    }
 }
 
-void expression():  { }
+void expression() : {}
 {
    operand() (<BINARY_OP> operand())*
 }
 
-void expressionList()  : {}
+void expressionList() : {}
 {
     expression()
     (<COMMA>  expression())*
@@ -323,7 +336,7 @@ SimpleNode realConstant() : {}
     }
 }
 
-void Error()  : {}
+void Error() #void : {}
 {
     <ERROR>
 }
