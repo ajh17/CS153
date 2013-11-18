@@ -92,21 +92,20 @@ SKIP : {
   -- Production Rules --
 *************************/
 
-SimpleNode start(): { SimpleNode rootNode; }
+SimpleNode start() #void : { SimpleNode rootNode = null; }
 {
-    { System.out.println("\n-----BEGIN PARSING-----\n"); }
     try {
         rootNode = statementList()
 
         <EOF> {
-            System.out.println("\n-----FINISHED PARSING-----");
+            System.out.println("\n-----Printing Tree-----");
             rootNode.dump("");
             return rootNode;
         }
     }
     catch (ParseException ex) {
         handleError(ex);
-        return null;
+        return rootNode;
     }
 }
 
@@ -124,11 +123,11 @@ SimpleNode statement() #void : { SimpleNode rootNode = null; }
     }
 }
 
-SimpleNode statementList() #void : { SimpleNode rootNode = null; }
+SimpleNode statementList() : {}
 {
     // This assignment is obviously incorrect. Just trying to get things to print.
-    ( rootNode = statement() )* {
-        return rootNode;
+    (statement())* {
+        return jjtThis;
     }
 }
 
@@ -262,13 +261,6 @@ SimpleNode assignmentStatement() : { SimpleNode node = null; }
     }
 }
 
-SimpleNode identifier() : {}
-{
-    <IDENTIFIER> {
-        return jjtThis;
-    }
-}
-
 void incOrDec() : {}
 {
     ("++" | "--")
@@ -289,7 +281,7 @@ void forClause() : {}
     (assignmentStatement())?
 }
 
-SimpleNode operand(): { SimpleNode rootNode = null; }
+SimpleNode operand() #void : { SimpleNode rootNode = null; }
 {
     (
         (
@@ -317,6 +309,12 @@ void expressionList() : {}
     (<COMMA>  expression())*
 }
 
+SimpleNode identifier() : {}
+{
+    <IDENTIFIER> {
+        return jjtThis;
+    }
+}
 
 SimpleNode integerConstant() : {}
 {
