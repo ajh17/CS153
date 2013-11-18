@@ -285,7 +285,13 @@ SimpleNode operand() #void : { SimpleNode rootNode = null; }
 {
     (
         (
-            (rootNode = identifier() | rootNode = integerConstant() | rootNode = realConstant())
+            (
+                  rootNode = identifier()
+                | rootNode = integerConstant()
+                | rootNode = realConstant()
+                | rootNode = interpretedString()
+                | rootNode = rawString()
+            )
         )
         |
         (
@@ -330,6 +336,20 @@ SimpleNode realConstant() : {}
     <REAL_NUMBER> {
         jjtThis.setTypeSpec(Predefined.realType);
         jjtThis.setAttribute(VALUE, Float.parseFloat(token.image));
+        return jjtThis;
+    }
+}
+
+SimpleNode rawString() : {}
+{
+    <RAW_STRING> {
+        return jjtThis;
+    }
+}
+
+SimpleNode interpretedString() : {}
+{
+    <INTERPRETED_STRING> {
         return jjtThis;
     }
 }
@@ -381,11 +401,11 @@ TOKEN : {
         | <UNARY_OP: "+" | "-" | "!" | "^" | "*" | "&">
         | <ASSIGN_OP: (":" | <ADD_OP> | <MUL_OP>)? "=">
         | <BINARY_OP: "||" | "&&" | <REL_OP> | <ADD_OP>| <MUL_OP>>
-        | <#COMMON_LITERAL_SYMBOL: "~" | "!" | "@" | "#" | "$" | "%" | "^"
-            | "&" | "*"| "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">"
-            | "." | "/"| "?" | ";" | "[" | "]" | "{" | "}" | "|">
-        | <#RAW_LITERAL_SYMBOL: <COMMON_LITERAL_SYMBOL> | "\"" | "\\">
-        | <#INTERPRETED_LITERAL_SYMBOL: <COMMON_LITERAL_SYMBOL> | "'">
+        | <#COMMON_LITERAL_SYMBOL: "'" | "~" | "!" | "@" | "#" | "$" | "%"
+            | "^" | "&" | "*"| "(" | ")" | "_" | "-" | "+" | "=" | "<"
+            | ">" | "." | "/"| "?" | ";" | "[" | "]" | "{" | "}" | "|">
+        | <RAW_LITERAL_SYMBOL: <COMMON_LITERAL_SYMBOL> | "\"" | "\\">
+        | <INTERPRETED_LITERAL_SYMBOL: <COMMON_LITERAL_SYMBOL> | "`">
     |
     <SPECIAL_SYMBOL:
             "+" | "&" | "+=" | "&=" | "&&" | "==" | "!=" | "(" | ")"
