@@ -96,8 +96,8 @@ SimpleNode start(): { SimpleNode rootNode; }
 {
     { System.out.println("\n-----BEGIN PARSING-----\n"); }
     try {
-        //rootNode = statementList()
-        rootNode = integerConstant()
+        rootNode = statementList()
+        //rootNode = integerConstant()
 
         <EOF> {
             System.out.println("\n-----FINISHED PARSING-----");
@@ -115,7 +115,7 @@ SimpleNode statement() #void : { SimpleNode rootNode = null; }
 {
     (
           LOOKAHEAD(2) declarationStatement()
-        | LOOKAHEAD(2) assignmentStatement()
+        | LOOKAHEAD(2) rootNode = assignmentStatement()
         | switchStatement()
         | ifStatement()
         | forStatement()
@@ -229,29 +229,33 @@ SimpleNode caseGroup() : {SimpleNode rootNode;}
     )?
 }
 
-void assignmentStatement() #void : {}
+SimpleNode assignmentStatement() : {}
 {
     (
-        <IDENTIFIER>
         (
+            <IDENTIFIER>
             (
                 (
-                    ("=" | ":=")
-                    operand() ((<ADD_OP> | <MUL_OP>) operand())*
+                    (
+                        ("=" | ":=")
+                        operand() ((<ADD_OP> | <MUL_OP>) operand())*
+                    )
+                    |
+                        incOrDec()
                 )
-                |
-                    incOrDec()
-            )
 
+                (LOOKAHEAD(2) <SEMICOLON>)?
+            )
+        )
+        |
+        (
+            incOrDec()
+            <IDENTIFIER>
             (LOOKAHEAD(2) <SEMICOLON>)?
         )
-    )
-    |
-    (
-        incOrDec()
-        <IDENTIFIER>
-        (LOOKAHEAD(2) <SEMICOLON>)?
-    )
+    ) {
+        return jjtThis;
+    }
 }
 
 void incOrDec() : {}
