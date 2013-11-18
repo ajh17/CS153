@@ -78,14 +78,14 @@ public class Predefined
     private static void initializeTypes(SymTabStack symTabStack)
     {
         // Type integer.
-        integerId = symTabStack.enterLocal("integer");
+        integerId = symTabStack.enterLocal("int");
         integerType = TypeFactory.createType(SCALAR);
         integerType.setIdentifier(integerId);
         integerId.setDefinition(DefinitionImpl.TYPE);
         integerId.setTypeSpec(integerType);
 
         // Type real.
-        realId = symTabStack.enterLocal("real");
+        realId = symTabStack.enterLocal("float");
         realType = TypeFactory.createType(SCALAR);
         realType.setIdentifier(realId);
         realId.setDefinition(DefinitionImpl.TYPE);
@@ -99,7 +99,7 @@ public class Predefined
         booleanId.setTypeSpec(booleanType);
 
         // Type char.
-        charId = symTabStack.enterLocal("char");
+        charId = symTabStack.enterLocal("string");
         charType = TypeFactory.createType(SCALAR);
         charType.setIdentifier(charId);
         charId.setDefinition(DefinitionImpl.TYPE);

@@ -134,18 +134,24 @@ void declarationStatement() #void : {}
    | functionDeclaration()
 }
 
-void variableDeclaration() #void : {}
+void variableDeclaration() : { SymTabEntry typeId; }
 {
-    <IDENTIFIER> {
+    identifier() {
         SymTabEntry variableId = symTabStack.enterLocal(token.image);
-    }
-    (<TYPE> | <IDENTIFIER>) {
-        SymTabEntry typeId = symTabStack.lookup(token.image);
-        typeId.appendLineNumber(token.beginLine);
-        TypeSpec type = typeId.getTypeSpec();
-        variableId.setTypeSpec(type);
         variableId.setDefinition(DefinitionImpl.VARIABLE);
     }
+    (
+        type() {
+            typeId = symTabStack.lookup(token.image);
+            variableId.setTypeSpec(typeId.getTypeSpec());
+        }
+        |
+        identifier() {
+            typeId = symTabStack.lookup(token.image);
+            typeId.appendLineNumber(token.beginLine);
+            variableId.setTypeSpec(typeId.getTypeSpec());
+        }
+    )
     (LOOKAHEAD(2) <SEMICOLON>)?
 }
 
@@ -224,13 +230,11 @@ SimpleNode caseGroup() : {SimpleNode rootNode;}
     )?
 }
 
-SimpleNode assignmentStatement() : { SimpleNode node = null; }
+void assignmentStatement() : {}
 {
     (
         (
-            node = identifier() {
-                jjtThis.jjtAddChild(node, 0);
-            }
+            identifier()
             (
                 (
                     (
@@ -247,12 +251,10 @@ SimpleNode assignmentStatement() : { SimpleNode node = null; }
         |
         (
             incOrDec()
-            <IDENTIFIER>
+            identifier()
             (LOOKAHEAD(2) <SEMICOLON>)?
         )
-    ) {
-        return jjtThis;
-    }
+    )
 }
 
 void incOrDec() : {}
@@ -358,6 +360,11 @@ SimpleNode add() : {}
     <ADD_OP> {
         return jjtThis;
     }
+}
+
+void type() : {}
+{
+    <TYPE>
 }
 
 void Error() #void : {}

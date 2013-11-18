@@ -1,3 +1,7 @@
+x int
+y x; // The type of x will be the type of y
+x++
+--x;
 a = 5 + 5 + 5 + 5;
 b := 6
 c = 7.8
