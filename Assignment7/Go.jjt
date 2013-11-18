@@ -179,18 +179,23 @@ void parameterList() : {}
     (parameter() (<COMMA> parameter())*)?
 }
 
-void block() : {}
+SimpleNode block() : { SimpleNode rootNode; }
 {
     "{"
-    statementList()
+    statementList() {
+        return jjtThis;
+    }
     "}"
 }
 
-void ifStatement() : {}
+SimpleNode ifStatement() : {SimpleNode rootNode;}
 {
     "if"
     expression()
-    block()
+    rootNode = block() {
+       return rootNode;
+    }
+     
     (LOOKAHEAD(2) "else" "if" expression() block())*
     ("else" block())?
 }
@@ -257,11 +262,11 @@ void incOrDec() : {}
     ("++" | "--")
 }
 
-void forStatement() : {}
+SimpleNode forStatement()  : { SimpleNode rootNode; }
 {
     "for"
     forClause()
-    block()
+    rootNode = block() { return rootNode; }
 }
 
 void forClause() : {}
@@ -337,14 +342,16 @@ void realConstant() : {}
 void rawString() : {}
 {
     <RAW_STRING> {
-        //TODO: Do something similar to real and integer constants
+        jjtThis.setTypeSpec(Predefined.charType);
+        jjtThis.setAttribute(VALUE, token.image.toString());
     }
 }
 
 void interpretedString() : {}
 {
     <INTERPRETED_STRING> {
-        //TODO: Do something similar to real and integer constants
+       jjtThis.setTypeSpec(Predefined.charType);
+    jjtThis.setAttribute(VALUE, token.image.toString());
     }
 }
 
