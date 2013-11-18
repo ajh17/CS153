@@ -114,9 +114,9 @@ SimpleNode statement() #void : { SimpleNode rootNode = null; }
     (
           LOOKAHEAD(2) declarationStatement()
         | LOOKAHEAD(2) rootNode = assignmentStatement()
-        | switchStatement()
-        | ifStatement()
-        | forStatement()
+        | rootNode = switchStatement()
+        | rootNode = ifStatement()
+        | rootNode = forStatement()
         | <SEMICOLON>
     ) {
         return rootNode;
@@ -125,7 +125,6 @@ SimpleNode statement() #void : { SimpleNode rootNode = null; }
 
 SimpleNode statementList() : {}
 {
-    // This assignment is obviously incorrect. Just trying to get things to print.
     (statement())* {
         return jjtThis;
     }
