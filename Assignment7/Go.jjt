@@ -237,10 +237,7 @@ SimpleNode assignmentStatement() : { SimpleNode node = null; }
                 (
                     (
                         <ASSIGN_OP>
-                        node = operand() {
-                            jjtThis.jjtAddChild(node, 1);
-                        }
-                        ((<ADD_OP> | <MUL_OP>) operand())*
+                        expression()
                     )
                     |
                         incOrDec()
@@ -303,9 +300,14 @@ SimpleNode operand() #void : { SimpleNode rootNode = null; }
     }
 }
 
-void expression() : {}
+void expression() #void : {}
 {
-   operand() (<BINARY_OP> operand())*
+    (
+        operand()
+        (
+            <ADD_OP> operand() #add(2)
+        )*
+    )
 }
 
 void expressionList() : {}
@@ -349,6 +351,13 @@ SimpleNode rawString() : {}
 SimpleNode interpretedString() : {}
 {
     <INTERPRETED_STRING> {
+        return jjtThis;
+    }
+}
+
+SimpleNode add() : {}
+{
+    <ADD_OP> {
         return jjtThis;
     }
 }
