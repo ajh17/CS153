@@ -179,23 +179,18 @@ void parameterList() : {}
     (parameter() (<COMMA> parameter())*)?
 }
 
-SimpleNode block() : { SimpleNode rootNode; }
+void block() : {}
 {
     "{"
-    statementList() {
-        return jjtThis;
-    }
+    statementList()
     "}"
 }
 
-SimpleNode ifStatement() : {SimpleNode rootNode;}
+void ifStatement() : {}
 {
     "if"
     expression()
-    rootNode = block() {
-       return rootNode;
-    }
-     
+    block()
     (LOOKAHEAD(2) "else" "if" expression() block())*
     ("else" block())?
 }
@@ -262,11 +257,11 @@ void incOrDec() : {}
     ("++" | "--")
 }
 
-SimpleNode forStatement()  : { SimpleNode rootNode; }
+void forStatement() : {}
 {
     "for"
     forClause()
-    rootNode = block() { return rootNode; }
+    block()
 }
 
 void forClause() : {}

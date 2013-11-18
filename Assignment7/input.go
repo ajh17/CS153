@@ -12,3 +12,10 @@ e = "\tasdf\n"
 f = "\\ghjk\"";
 g = `\n\n\tabc\t\t`
 h := `\r\n"""""def"`;
+
+if true {
+    a = 5;
+    b := 6
+    c = 7.0
+    d := "hello\n";
+}
