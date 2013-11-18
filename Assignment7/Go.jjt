@@ -59,7 +59,7 @@ public class GoParser
 
         // Visit the parse tree nodes to decorate them with type information.
         // Haven't done Go Types yet.
-         TypeSetterVisitor typeVisitor = new TypeSetterVisitor();
+        TypeSetterVisitor typeVisitor = new TypeSetterVisitor();
         rootNode.jjtAccept(typeVisitor, null);
 
         // Create and initialize the ICode wrapper for the parse tree.
@@ -92,15 +92,16 @@ SKIP : {
   -- Production Rules --
 *************************/
 
-SimpleNode start(): { SimpleNode rootNode = null; }
+SimpleNode start(): { SimpleNode rootNode; }
 {
     { System.out.println("\n-----BEGIN PARSING-----\n"); }
     try {
-        (statement())*
-            {              return jjtThis;            }            
-        
+        //rootNode = statementList()
+        rootNode = integerConstant()
+
         <EOF> {
-            { System.out.println("\n-----FINISHED PARSING-----"); }
+            System.out.println("\n-----FINISHED PARSING-----");
+            rootNode.dump(">");
             return rootNode;
         }
     }
@@ -110,64 +111,60 @@ SimpleNode start(): { SimpleNode rootNode = null; }
     }
 }
 
-void statement() : {}
+SimpleNode statement() #void : { SimpleNode rootNode = null; }
 {
-      LOOKAHEAD(2) declarationStatement()
-    | LOOKAHEAD(2) assignmentStatement() 
-    | switchStatement() 
-    | ifStatement() 
-    | forStatement()
-    | <SEMICOLON>    
+    (
+          LOOKAHEAD(2) declarationStatement()
+        | LOOKAHEAD(2) assignmentStatement()
+        | switchStatement()
+        | ifStatement()
+        | forStatement()
+        | <SEMICOLON>
+    ) {
+        return rootNode;
+    }
 }
 
-void statementList() #void : {}
+SimpleNode statementList() #void : { SimpleNode rootNode = null; }
 {
-    (statement())*
+    // This assignment is obviously incorrect. Just trying to get things to print.
+    ( rootNode = statement() )* {
+        return rootNode;
+    }
 }
 
-void declarationStatement() #void: { }
+void declarationStatement() #void : {}
 {
    variableDeclaration()
    | functionDeclaration()
 }
 
-void variableDeclaration() #void : {ArrayList<SymTabEntry> variableList; int index = 0;}
+void variableDeclaration() #void : {}
 {
-(
-        <IDENTIFIER> {
-            variableList = new ArrayList<SymTabEntry>();
-            processVariableDecl(token, index++, variableList);
-        }
-        (
-            <COMMA>
-            <IDENTIFIER> {
-                processVariableDecl(token, index++, variableList);
-            }
-        )*
-        < ASSIGN_OP >
-        <IDENTIFIER> {
-            SymTabEntry typeId = symTabStack.lookup(token.image);
-            typeId.appendLineNumber(token.beginLine);
-            TypeSpec type = typeId.getTypeSpec();
-
-            for (SymTabEntry variableId : variableList) {
-                variableId.setTypeSpec(type);
-            }
-        }
-        <SEMICOLON>
-    )+
-   
+    <IDENTIFIER> {
+        SymTabEntry variableId = symTabStack.enterLocal(token.image);
+    }
+    (<TYPE> | <IDENTIFIER>) {
+        SymTabEntry typeId = symTabStack.lookup(token.image);
+        typeId.appendLineNumber(token.beginLine);
+        TypeSpec type = typeId.getTypeSpec();
+        variableId.setTypeSpec(type);
+        variableId.setDefinition(DefinitionImpl.VARIABLE);
+    }
+    (LOOKAHEAD(2) <SEMICOLON>)?
 }
 
-SimpleNode functionDeclaration(): {SimpleNode rootNode;}
+SimpleNode functionDeclaration() : { SimpleNode rootNode; }
 {
     "func"
-    <IDENTIFIER>
+    <IDENTIFIER> {
+        // Enter into symbol table
+    }
     "("
     parameterList()
     ")"
     (<IDENTIFIER> | <TYPE>)?
-    rootNode = block() {return rootNode;}
+    rootNode = block() { return rootNode; }
 }
 
 void parameter(): {}
@@ -176,44 +173,43 @@ void parameter(): {}
     <TYPE>
 }
 
-void parameterList()  : {}
+void parameterList() : {}
 {
     (parameter() (<COMMA> parameter())*)?
 }
 
-SimpleNode block() : {SimpleNode rootNode;}
+SimpleNode block() : { SimpleNode rootNode; }
 {
     "{"
-   statementList()   {
-   return jjtThis;
- }
+    statementList() {
+        return jjtThis;
+    }
     "}"
 }
 
-SimpleNode ifStatement()  : {SimpleNode rootNode;}
+SimpleNode ifStatement() : {SimpleNode rootNode;}
 {
     "if"
-   expression()
+    expression()
     rootNode = block() {
        return rootNode;
-     }
+    }
      
     (LOOKAHEAD(2) "else" "if" expression() block())*
     ("else" block())?
-    
 }
 
 SimpleNode switchStatement()  : {SimpleNode rootNode;}
 {
     "switch"
-    (expression() )?
+    (expression())?
     rootNode = switchBlock() {return rootNode;}
 }
 
 SimpleNode switchBlock()  : {SimpleNode rootNode;}
 {
     "{"
-    rootNode = caseGroup(){return rootNode;}
+    rootNode = caseGroup() {return rootNode;}
     "}"
 }
 
@@ -235,7 +231,7 @@ SimpleNode caseGroup() : {SimpleNode rootNode;}
 
 void assignmentStatement() #void : {}
 {
-  (
+    (
         <IDENTIFIER>
         (
             (
@@ -263,11 +259,11 @@ void incOrDec() : {}
     ("++" | "--")
 }
 
-SimpleNode forStatement()  : {SimpleNode rootNode;}
+SimpleNode forStatement()  : { SimpleNode rootNode; }
 {
     "for"
-  forClause()
-  rootNode = block() {return rootNode;}
+    forClause()
+    rootNode = block() { return rootNode; }
 }
 
 void forClause() : { }
@@ -282,7 +278,7 @@ void operand(): { }
 {
     (
         (
-            (integerConstant() | <REAL_NUMBER> | <RAW_STRING> |<INTERPRETED_STRING> | <IDENTIFIER>)
+            (integerConstant() | realConstant() | <RAW_STRING> |<INTERPRETED_STRING> | <IDENTIFIER>)
         )
         |
         (
@@ -291,15 +287,6 @@ void operand(): { }
             ")"
         )
     )
-}
-
-
-void integerConstant() : {}
-{
-    <INTEGER_NUMBER> {
-        jjtThis.setTypeSpec(Predefined.integerType);
-        jjtThis.setAttribute(VALUE, Integer.parseInt(token.image));
-    }
 }
 
 void expression():  { }
@@ -311,6 +298,25 @@ void expressionList()  : {}
 {
     expression()
     (<COMMA>  expression())*
+}
+
+
+SimpleNode integerConstant() : {}
+{
+    <INTEGER_NUMBER> {
+        jjtThis.setTypeSpec(Predefined.integerType);
+        jjtThis.setAttribute(VALUE, Integer.parseInt(token.image));
+        return jjtThis;
+    }
+}
+
+SimpleNode realConstant() : {}
+{
+    <REAL_NUMBER> {
+        jjtThis.setTypeSpec(Predefined.realType);
+        jjtThis.setAttribute(VALUE, Float.parseFloat(token.image));
+        return jjtThis;
+    }
 }
 
 void Error()  : {}
@@ -328,7 +334,7 @@ TOKEN : {
         | "const" | "fallthrough" | "if" | "range" | "type" | "continue"
         | "for" | "import" | "return" | "var">
     |
-    <TYPE: "int">
+    <TYPE: "int" | "float" | "double" | "string">
     |
     <INTEGER_NUMBER: <DIGIT> (<DIGIT>)*>
     |
@@ -375,16 +381,6 @@ TOKEN : {
             | "&^" | "&^=">
     |
     <ERROR: ~["\r", "\n"]>
-}
-
-JAVACODE
-void processVariableDecl(Token token, int index, ArrayList<SymTabEntry> variableList) #void
-{
-    SymTabEntry variableId = symTabStack.enterLocal(token.image);
-    variableId.setIndex(index);
-    variableId.setDefinition(DefinitionImpl.VARIABLE);
-    variableId.appendLineNumber(token.beginLine);
-    variableList.add(variableId);
 }
 
 JAVACODE

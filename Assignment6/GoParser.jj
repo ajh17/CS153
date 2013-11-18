@@ -82,7 +82,7 @@ void declarationStatement() : {}
 void variableDeclaration() : {}
 {
     <IDENTIFIER> { System.out.print(token.image + " "); }
-    <TYPE> { System.out.print(token.image + " "); }
+    (<TYPE> | <IDENTIFIER>) { System.out.print(token.image + " "); }
     (LOOKAHEAD(2) <SEMICOLON> { System.out.print(token.image + " "); })?
 }
 
