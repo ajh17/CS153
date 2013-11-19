@@ -194,12 +194,11 @@ void variableDeclaration() : {}
 
 void functionDeclaration() : { SimpleNode id; }
 {
-{
-  
-    HashSet syncSet = new HashSet();
-	syncSet.add(EOF);
-	syncSet.add(SEMICOLON);
-}
+    {
+        HashSet syncSet = new HashSet();
+        syncSet.add(EOF);
+        syncSet.add(SEMICOLON);
+    }
   
     "func"
     id = identifier() {
