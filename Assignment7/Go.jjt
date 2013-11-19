@@ -165,7 +165,10 @@ void variableDeclaration() : {}
         syncSet.add(EOF);
         syncSet.add(SEMICOLON);
     }
-  
+
+    // Our implementation of Go's variable declaration will be either these forms:
+    // var x int; OR x = 5 (provided that they also used the first form to declare the variable)
+
     try {
         "var"
         identifier() {

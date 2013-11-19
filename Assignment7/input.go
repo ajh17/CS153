@@ -3,9 +3,9 @@ var x int
 var y x; // The type of x will be the type of y
 var q float;
 var r string
-y = 4
-bar = "hello"
-foo = "baz"
+//y = 4
+//bar = "hello"
+//foo = "baz"
 x++
 --x;
 a = 5 + 5 + 5 + 5;
