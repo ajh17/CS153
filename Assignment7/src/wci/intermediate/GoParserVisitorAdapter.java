@@ -77,9 +77,9 @@ public class GoParserVisitorAdapter implements GoParserVisitor {
         return node.childrenAccept(this, data);
     }
 
-    public Object visit(ASTexpression node, Object data) {
-        return node.childrenAccept(this, data);
-    }
+    //public Object visit(ASTexpression node, Object data) {
+    //    return node.childrenAccept(this, data);
+    //}
 
     public Object visit(ASTexpressionList node, Object data) {
         return node.childrenAccept(this, data);
@@ -89,9 +89,9 @@ public class GoParserVisitorAdapter implements GoParserVisitor {
         return node.childrenAccept(this, data);
     }
 
-    public Object visit(ASToperand node, Object data) {
-        return node.childrenAccept(this, data);
-    }
+    //public Object visit(ASToperand node, Object data) {
+    //    return node.childrenAccept(this, data);
+    //}
 
     public Object visit(ASTincOrDec node, Object data) {
         return node.childrenAccept(this, data);

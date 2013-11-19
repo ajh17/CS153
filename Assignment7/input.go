@@ -1,11 +1,8 @@
 package main
 var x int
-var y x; // The type of x will be the type of y
+var foo float;
 var q float;
 var r string
-//y = 4
-//bar = "hello"
-//foo = "baz"
 x++
 --x;
 a = 5 + 5 + 5 + 5;
@@ -38,7 +35,7 @@ switch {
     default: 
 }
 
-i := 5
+i = 5
 switch i {
     case 4: 
     case 5: 
