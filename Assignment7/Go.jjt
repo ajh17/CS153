@@ -107,7 +107,13 @@ SimpleNode start() #void : { SimpleNode rootNode = null; }
             symTabStack.setProgramId(programId);
         }
 
-        rootNode = statementList()
+        (
+            rootNode = statementList()
+        |
+            Error() {
+               throw new ParseException();
+            }
+        )
 
         <EOF> {
             return rootNode;
