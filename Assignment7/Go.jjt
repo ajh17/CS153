@@ -4,7 +4,7 @@ options {
     NODE_EXTENDS="wci.intermediate.icodeimpl.ICodeNodeImpl";
     MULTI=true;
     VISITOR=true;
-    DEBUG_PARSER=true;
+    //DEBUG_PARSER=true;
 }
 
 PARSER_BEGIN(GoParser)
@@ -52,6 +52,8 @@ public class GoParser
         Reader reader = new FileReader(sourceFilePath);
         GoParser parser = new GoParser(reader);
         SimpleNode rootNode = parser.start();
+        System.out.println("\n-----Printing Tree-----");
+        rootNode.dump("");
 
         // Print the cross-reference table.
         CrossReferencer crossReferencer = new CrossReferencer();
@@ -98,8 +100,6 @@ SimpleNode start() #void : { SimpleNode rootNode = null; }
         rootNode = statementList()
 
         <EOF> {
-            System.out.println("\n-----Printing Tree-----");
-            rootNode.dump("");
             return rootNode;
         }
     }
