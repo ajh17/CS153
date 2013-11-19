@@ -9,19 +9,19 @@ var r string
 x++
 --x;
 a = 5 + 5 + 5 + 5;
-b := 6
+b = 6
 c = 7.8
-d := 9.0
+d = 9.0
 e = "\tasdf\n"
 f = "\\ghjk\"";
 g = `\n\n\tabc\t\t`
-h := `\r\n"""""def"`;
+h = `\r\n"""""def"`;
 
 if true {
     a = 5;
-    b := 6
+    b = 6
     c = 7.0
-    d := "hello\n";
+    d = "hello\n";
 }
 
 if a > b {

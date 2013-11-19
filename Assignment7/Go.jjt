@@ -299,7 +299,6 @@ void assignmentStatement() : {}
             identifier()
         )
     )
-
     (LOOKAHEAD(2) <SEMICOLON>)?
 }
 
@@ -453,7 +452,7 @@ TOKEN : {
         | <MUL_OP: ("*" | "/" | "%")>
         | <REL_OP: "==" | "!=" | "<" | "<=" | ">" | ">=">
         | <UNARY_OP: "+" | "-" | "!" | "^" | "*" | "&">
-        | <ASSIGN_OP: (":")? "=">
+        | <ASSIGN_OP: "=">
         | <ARITHMETIC_ASSIGN_OP: (<ADD_OP> | <MUL_OP>) "=">
         | <BINARY_OP: "||" | "&&" | <REL_OP> | <ADD_OP>| <MUL_OP>>
         | <#COMMON_LITERAL_SYMBOL: "'" | "~" | "!" | "@" | "#" | "$" | "%"
