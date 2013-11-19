@@ -98,8 +98,8 @@ SKIP : {
 SimpleNode start() #void : { SimpleNode rootNode = null; }
 {
     try {
-        "package" <IDENTIFIER>
-        {
+        "package"
+        <IDENTIFIER> {
             programId = symTabStack.enterLocal(token.image);
             programId.setDefinition(DefinitionImpl.PROGRAM);
             programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
@@ -107,13 +107,7 @@ SimpleNode start() #void : { SimpleNode rootNode = null; }
             symTabStack.setProgramId(programId);
         }
 
-        (
-            rootNode = statementList()
-        |
-            Error() {
-               throw new ParseException();
-            }
-        )
+        rootNode = statementList()
 
         <EOF> {
             return rootNode;
@@ -130,29 +124,28 @@ SimpleNode start() #void : { SimpleNode rootNode = null; }
 
 void statement() #void : {}
 {
-  {
-    HashSet syncSet = new HashSet();
-	syncSet.add(EOF);
-	syncSet.add(SEMICOLON);
-  }
-  try
-  {
-    (
+    {
+        HashSet syncSet = new HashSet();
+        syncSet.add(EOF);
+        syncSet.add(SEMICOLON);
+    }
+    try {
           LOOKAHEAD(2) declarationStatement(syncSet)
         | LOOKAHEAD(2) assignmentStatement()
         | switchStatement(syncSet)
         | ifStatement(syncSet)
         | forStatement()
         | <SEMICOLON>
-    )
-  }catch (ParseException ex) {
+    } catch (ParseException ex) {
          handleError(ex, syncSet, true);
     }
 }
 
 SimpleNode statementList() : {}
 {  
-    (statement())* {
+    (
+        statement()
+    )* {
         return jjtThis;
     }
 }
@@ -432,11 +425,6 @@ void interpretedString() : {}
 void type() : {}
 {
     <TYPE>
-}
-
-void Error() #void : {}
-{
-    <ERROR>
 }
 
 /********************s
