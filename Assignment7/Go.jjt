@@ -167,27 +167,18 @@ void variableDeclaration() : {}
     }
   
     try {
+        "var"
         identifier() {
             SymTabEntry variableId = symTabStack.enterLocal(token.image);
             variableId.setDefinition(DefinitionImpl.VARIABLE);
         }
-
-        (
-            type() {
-                typeId = symTabStack.lookup(token.image);
-                variableId.setTypeSpec(typeId.getTypeSpec());
-            }
-            |
-            identifier() {
-                typeId = symTabStack.lookup(token.image);
-                typeId.appendLineNumber(token.beginLine);
-                variableId.setTypeSpec(typeId.getTypeSpec());
-            }
-        )
-
+        type() {
+            typeId = symTabStack.lookup(token.image);
+            variableId.setTypeSpec(typeId.getTypeSpec());
+        }
         (LOOKAHEAD(2) <SEMICOLON>)?
-
-    } catch (ParseException ex) {
+    }
+    catch (ParseException ex) {
         handleError(ex, syncSet, true);
     }
 }
