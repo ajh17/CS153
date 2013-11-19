@@ -11,6 +11,7 @@ PARSER_BEGIN(GoParser)
 package wci.frontend;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.io.*;
 
 import wci.intermediate.*;
@@ -113,8 +114,11 @@ SimpleNode start() #void : { SimpleNode rootNode = null; }
         }
     }
     catch (ParseException ex) {
-        handleError(ex);
-        return rootNode;
+        HashSet syncSet = new HashSet();
+        syncSet.add(EOF);
+        
+        handleError(ex, syncSet, true);
+        return null;
     }
 }
 
@@ -431,16 +435,18 @@ TOKEN : {
     <ERROR: ~["\r", "\n"]>
 }
 
+
 JAVACODE
-String handleError(ParseException ex) #void
+String handleError(ParseException ex, HashSet syncSet, boolean doPop) #void
 {
     Token token = ex.currentToken;
     System.out.println(ex.getMessage());
 
-    do {
-    	token = getNextToken();
-    } while (token.kind != SEMICOLON);
+    // Consume tokens up to but not including a token in the sync set.
+    while (!syncSet.contains(getToken(1).kind)) {
+        token = getNextToken();
+    } 	
 
-	jjtree.popNode();
+    if (doPop) jjtree.popNode();
     return token.image;
 }
