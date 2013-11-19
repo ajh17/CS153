@@ -97,6 +97,15 @@ SKIP : {
 SimpleNode start() #void : { SimpleNode rootNode = null; }
 {
     try {
+        "package" <IDENTIFIER>
+        {
+            programId = symTabStack.enterLocal(token.image);
+            programId.setDefinition(DefinitionImpl.PROGRAM);
+            programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
+            programId.setAttribute(ROUTINE_ROUTINES, new ArrayList<SymTabEntry>());
+            symTabStack.setProgramId(programId);
+        }
+
         rootNode = statementList()
 
         <EOF> {

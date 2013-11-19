@@ -1,3 +1,4 @@
+package main
 x int
 y x; // The type of x will be the type of y
 q float;
