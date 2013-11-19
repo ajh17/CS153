@@ -23,3 +23,16 @@ if true {
 for i = 0; i < 10; i++ {
     e = "hello\n";
 }
+
+switch {
+    case true: 
+	case false: 
+    default: 
+}
+
+i := 5
+switch i {
+    case 4: 
+    case 5: 
+    case 6:
+}
