@@ -341,27 +341,21 @@ void operand() #void : {}
 {
     (
         (
-            (
-                  identifier()
-                | integerConstant()
-                | realConstant()
-                | interpretedString()
-                | rawString()
-            )
+              identifier()
+            | integerConstant()
+            | realConstant()
+            | interpretedString()
+            | rawString()
         )
         |
-        (
-            "("
-            expression() 
-            ")"
-        )
+        "("
+        expression()
+        ")"
     )
 }
 
 void expression() #void : {}
 {
-
-    
     (
         operand()
         (
