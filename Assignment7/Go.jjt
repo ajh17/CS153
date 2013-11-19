@@ -293,12 +293,10 @@ void assignmentStatement() : {}
         (
             identifier()
             (
-                (
-                    <ASSIGN_OP>
-                    expression()
-                )
+                <ASSIGN_OP>
+                expression()
                 |
-                    incOrDec()
+                incOrDec()
             )
         )
         |
