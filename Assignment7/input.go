@@ -20,6 +20,10 @@ if true {
     d := "hello\n";
 }
 
+if a > b {
+    a = b;
+}
+
 for i = 0; i < 10; i++ {
     e = "hello\n";
 }

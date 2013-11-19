@@ -4,7 +4,7 @@ options {
     NODE_EXTENDS="wci.intermediate.icodeimpl.ICodeNodeImpl";
     MULTI=true;
     VISITOR=true;
-    //DEBUG_PARSER=true;
+    DEBUG_PARSER=true;
 }
 
 PARSER_BEGIN(GoParser)
@@ -186,14 +186,11 @@ void block() : {}
     "}"
 }
 
-SimpleNode ifStatement() : {SimpleNode rootNode;}
+void ifStatement() : {}
 {
     "if"
     expression()
-    rootNode = block() {
-       return rootNode;
-    }
-     
+    block()
     (LOOKAHEAD(2) "else" "if" expression() block())*
     ("else" block())?
 }
@@ -235,24 +232,21 @@ void assignmentStatement() : {}
             identifier()
             (
                 (
-                    (
-                        <ASSIGN_OP>
-                        expression()
-                    )
-                    |
-                        incOrDec()
+                    <ASSIGN_OP>
+                    expression()
                 )
-
-                (LOOKAHEAD(2) <SEMICOLON>)?
+                |
+                    incOrDec()
             )
         )
         |
         (
             incOrDec()
             identifier()
-            (LOOKAHEAD(2) <SEMICOLON>)?
         )
     )
+
+    (LOOKAHEAD(2) <SEMICOLON>)?
 }
 
 void incOrDec() : {}
@@ -260,11 +254,11 @@ void incOrDec() : {}
     ("++" | "--")
 }
 
-SimpleNode forStatement()  : { SimpleNode rootNode; }
+void forStatement()  : {}
 {
     "for"
     forClause()
-    rootNode = block() { return rootNode; }
+    block()
 }
 
 void forClause() : {}
