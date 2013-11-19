@@ -179,13 +179,11 @@ void parameterList() : {}
     (parameter() (<COMMA> parameter())*)?
 }
 
-SimpleNode block() : { SimpleNode rootNode; }
+void block() : {}
 {
     "{"
-    statementList() "}" {
-        return jjtThis;
-    }
-    
+    statementList()
+    "}"
 }
 
 SimpleNode ifStatement() : {SimpleNode rootNode;}
@@ -355,8 +353,8 @@ void rawString() : {}
 void interpretedString() : {}
 {
     <INTERPRETED_STRING> {
-       jjtThis.setTypeSpec(Predefined.charType);
-    jjtThis.setAttribute(VALUE, token.image.toString());
+        jjtThis.setTypeSpec(Predefined.charType);
+        jjtThis.setAttribute(VALUE, token.image.toString());
     }
 }
 
