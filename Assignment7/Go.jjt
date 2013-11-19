@@ -173,6 +173,7 @@ void variableDeclaration() : {}
         "var"
         identifier() {
             SymTabEntry variableId = symTabStack.enterLocal(token.image);
+            variableId.appendLineNumber(token.beginLine);
             variableId.setDefinition(DefinitionImpl.VARIABLE);
         }
         type() {
