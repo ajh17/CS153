@@ -286,12 +286,26 @@ void assignmentStatement() : {}
 {
     (
         (
-            identifier()
+            identifier() {
+               SymTabEntry variableId = symTabStack.lookup(token.image);
+               TypeSpec typeId = variableId.getTypeSpec();
+            }
             (
                 <ASSIGN_OP>
                 expression()
                 |
-                incOrDec()
+                incOrDec() {
+                    if (typeId.getIdentifier() == Predefined.integerId) {
+                        if (token.image == "++") {
+                            //int number = variableId.getAttribute(VALUE) + 1;
+                            //variableId.setAttribute(number);
+                        }
+                        else if (token.image == "--") {
+                            //int number = variableId.getAttribute(VALUE) - 1;
+                            //variableId.setAttribute(number);
+                        }
+                    }
+                }
             )
         )
         |
