@@ -136,6 +136,7 @@ void statement() #void : {}
         | ifStatement(syncSet)
         | forStatement()
         | <SEMICOLON>
+
     } catch (ParseException ex) {
          handleError(ex, syncSet, true);
     }
@@ -156,36 +157,38 @@ void declarationStatement(HashSet syncSet) #void : {}
    | functionDeclaration()
 }
 
-void variableDeclaration() : { SymTabEntry typeId; }
+void variableDeclaration() : {}
 {
- {
-    HashSet syncSet = new HashSet();
-	syncSet.add(EOF);
-	syncSet.add(SEMICOLON);
-  }
-  
-  try
-  {
-    
-    identifier() {
-        SymTabEntry variableId = symTabStack.enterLocal(token.image);
-        variableId.setDefinition(DefinitionImpl.VARIABLE);
+    {
+        SymTabEntry typeId;
+        HashSet syncSet = new HashSet();
+        syncSet.add(EOF);
+        syncSet.add(SEMICOLON);
     }
-    (
-        type() {
-            typeId = symTabStack.lookup(token.image);
-            variableId.setTypeSpec(typeId.getTypeSpec());
-        }
-        |
+  
+    try {
         identifier() {
-            typeId = symTabStack.lookup(token.image);
-            typeId.appendLineNumber(token.beginLine);
-            variableId.setTypeSpec(typeId.getTypeSpec());
+            SymTabEntry variableId = symTabStack.enterLocal(token.image);
+            variableId.setDefinition(DefinitionImpl.VARIABLE);
         }
-    )
-    (LOOKAHEAD(2) <SEMICOLON>)?
-  }catch (ParseException ex) {
-         handleError(ex, syncSet, true);
+
+        (
+            type() {
+                typeId = symTabStack.lookup(token.image);
+                variableId.setTypeSpec(typeId.getTypeSpec());
+            }
+            |
+            identifier() {
+                typeId = symTabStack.lookup(token.image);
+                typeId.appendLineNumber(token.beginLine);
+                variableId.setTypeSpec(typeId.getTypeSpec());
+            }
+        )
+
+        (LOOKAHEAD(2) <SEMICOLON>)?
+
+    } catch (ParseException ex) {
+        handleError(ex, syncSet, true);
     }
 }
 
@@ -222,40 +225,37 @@ void parameterList() : {}
 
 void block(HashSet syncSet) : {}
 {
-  { 
-  syncSet.add("}");
-  syncSet.add("{");
-  
-  }
-   try
-   {
-      "{"
-    statementList()
-    "}"
-  }catch (ParseException ex) {
+    {
+        syncSet.add("}");
+        syncSet.add("{");
+    }
+
+    try {
+        "{"
+        statementList()
+        "}"
+
+    } catch (ParseException ex) {
          handleError(ex, syncSet, true);
     }
 }
 
 void ifStatement(HashSet syncSet) : {}
 {
-
 	{
-	syncSet.add("if");
-	syncSet.add("else");
-  }
-  
-    try
-    {
-    "if"
-    expression()
-    block(syncSet)
-    (LOOKAHEAD(2) "else" "if" expression() block(syncSet))* ("else" block(syncSet))?
-
-   }catch (ParseException ex) {
-         handleError(ex, syncSet, true);
+        syncSet.add("if");
+        syncSet.add("else");
     }
   
+    try {
+        "if"
+        expression()
+        block(syncSet)
+        (LOOKAHEAD(2) "else" "if" expression() block(syncSet))* ("else" block(syncSet))?
+
+    } catch (ParseException ex) {
+        handleError(ex, syncSet, true);
+    }
 }
 
 void switchStatement(HashSet syncSet)  : {}
@@ -319,11 +319,12 @@ void incOrDec() : {}
 
 void forStatement()  : {}
 {
-  {
-    HashSet syncSet = new HashSet();
-	syncSet.add(EOF);
-	syncSet.add(SEMICOLON);
+    {
+        HashSet syncSet = new HashSet();
+        syncSet.add(EOF);
+        syncSet.add(SEMICOLON);
     }
+
     "for"
     forClause()
     block(syncSet)
