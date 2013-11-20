@@ -101,7 +101,7 @@ SimpleNode start() #void : { SimpleNode rootNode = null; }
         "package"
         <IDENTIFIER> {
             programId = symTabStack.enterLocal(token.image);
-            programId.setDefinition(DefinitionImpl.PROGRAM);
+            programId.setDefinition(DefinitionImpl.PACKAGE);
             programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
             programId.setAttribute(ROUTINE_ROUTINES, new ArrayList<SymTabEntry>());
             symTabStack.setProgramId(programId);
