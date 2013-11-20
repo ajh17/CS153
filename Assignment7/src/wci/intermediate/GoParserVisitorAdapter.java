@@ -29,6 +29,10 @@ public class GoParserVisitorAdapter implements GoParserVisitor {
         return node.childrenAccept(this, data);
     }
 
+    public Object visit(ASTbooleanConstant node, Object data) {
+        return node.childrenAccept(this, data);
+    }
+
     public Object visit(ASTrealConstant node, Object data) {
         return node.childrenAccept(this, data);
     }

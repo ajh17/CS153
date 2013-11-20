@@ -2,7 +2,9 @@ package main
 var x int
 var foo float;
 var q float;
-var r string
+var r string;
+//var didFallDown bool;
+//didFallDown = true;
 
 if true {
     var a int;
