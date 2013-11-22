@@ -1,7 +1,12 @@
 package main
-i int;
+var x int
+var foo; // no type
+var float; // no variable name
+var didFallDown boolean; // no boolean type; called bool
 
-// missing opening brace in switch
-switch i 
-    case 4: 
+if true { // all this is valid and should be in cross ref table
+    var a int;
+    a = true; 
+    var d int;
+    d = 5;
 }
