@@ -1,726 +1,675 @@
 options
 {
-  BUILD_PARSER = true;
-  JJTREE_OUTPUT_DIRECTORY = "src/wci/frontend";
-  NODE_EXTENDS = "wci.intermediate.icodeimpl.ICodeNodeImpl";
-  MULTI = true;
-  VISITOR = true;
-  //DEBUG_PARSER=true;
+   BUILD_PARSER = true;
+   JJTREE_OUTPUT_DIRECTORY = "src/wci/frontend";
+   NODE_EXTENDS = "wci.intermediate.icodeimpl.ICodeNodeImpl";
+   MULTI = true;
+   VISITOR = true;
+   //DEBUG_PARSER=true;
 }
 
 PARSER_BEGIN(GoParser)
-package wci.frontend;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.io.*;
-import wci.intermediate.*;
-import wci.intermediate.symtabimpl.*;
-import wci.backend.*;
-import wci.util.*;
-import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
-import static wci.intermediate.symtabimpl.DefinitionImpl.*;
-import static wci.intermediate.symtabimpl.RoutineCodeImpl.*;
-import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
-import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
+   package wci.frontend;
+   import java.util.ArrayList;
+   import java.util.HashSet;
+   import java.io.*;
+   import wci.intermediate.*;
+   import wci.intermediate.symtabimpl.*;
+   import wci.backend.*;
+   import wci.util.*;
+   import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
+   import static wci.intermediate.symtabimpl.DefinitionImpl.*;
+   import static wci.intermediate.symtabimpl.RoutineCodeImpl.*;
+   import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
+   import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 
 public class GoParser
 {
-  private static final String SOURCE_SUFFIX = ".go";
-
-  private static final String OUTPUT_SUFFIX = ".j";
-
-  private static SymTabStack symTabStack;
-
-  private static SymTabEntry programId;
-
-  public static void main(String [] args) throws Exception
-  {
-    // Create and initialize the symbol table stack.
-    symTabStack = SymTabFactory.createSymTabStack();
-    Predefined.initialize(symTabStack);
-    // Process the source file path which ends in .go
-    // and create the output file path which ends in .j
-    String sourceFilePath = args [0];
-    int truncatedLength = sourceFilePath.length() - SOURCE_SUFFIX.length();
-    int suffixIndex = sourceFilePath.lastIndexOf(SOURCE_SUFFIX);
-    String objectFilePath = (suffixIndex == truncatedLength) ? sourceFilePath.substring(0, truncatedLength) + OUTPUT_SUFFIX : sourceFilePath + OUTPUT_SUFFIX;
-    // Parse a Go program.
-    Reader reader = new FileReader(sourceFilePath);
-    GoParser parser = new GoParser(reader);
-    SimpleNode rootNode = parser.start();
-    // Print the cross-reference table.
-    CrossReferencer crossReferencer = new CrossReferencer();
-    crossReferencer.print(symTabStack);
-    // Visit the parse tree nodes to decorate them with type information.
-    // Haven't done Go Types yet.
-    TypeSetterVisitor typeVisitor = new TypeSetterVisitor();
-    rootNode.jjtAccept(typeVisitor, null);
-    // Create and initialize the ICode wrapper for the parse tree.
-    ICode iCode = ICodeFactory.createICode();
-    iCode.setRoot(rootNode);
-    programId.setAttribute(ROUTINE_ICODE, iCode);
-    // Print the parse tree.
-    ParseTreePrinter treePrinter = new ParseTreePrinter(System.out);
-    treePrinter.print(symTabStack);
-  }
+   private static final String SOURCE_SUFFIX = ".go";
+   private static final String OUTPUT_SUFFIX = ".j";
+   private static SymTabStack symTabStack;
+   private static SymTabEntry programId;
+   public static void main(String [] args) throws Exception
+   {
+      // Create and initialize the symbol table stack.
+      symTabStack = SymTabFactory.createSymTabStack();
+      Predefined.initialize(symTabStack);
+      // Process the source file path which ends in .go
+      // and create the output file path which ends in .j
+      String sourceFilePath = args [0];
+      int truncatedLength = sourceFilePath.length() - SOURCE_SUFFIX.length();
+      int suffixIndex = sourceFilePath.lastIndexOf(SOURCE_SUFFIX);
+      String objectFilePath = (suffixIndex == truncatedLength) ? sourceFilePath.substring(0, truncatedLength) + OUTPUT_SUFFIX : sourceFilePath + OUTPUT_SUFFIX;
+      // Parse a Go program.
+      Reader reader = new FileReader(sourceFilePath);
+      GoParser parser = new GoParser(reader);
+      SimpleNode rootNode = parser.start();
+      // Print the cross-reference table.
+      CrossReferencer crossReferencer = new CrossReferencer();
+      crossReferencer.print(symTabStack);
+      // Visit the parse tree nodes to decorate them with type information.
+      // Haven't done Go Types yet.
+      TypeSetterVisitor typeVisitor = new TypeSetterVisitor();
+      rootNode.jjtAccept(typeVisitor, null);
+      // Create and initialize the ICode wrapper for the parse tree.
+      ICode iCode = ICodeFactory.createICode();
+      iCode.setRoot(rootNode);
+      programId.setAttribute(ROUTINE_ICODE, iCode);
+      // Print the parse tree.
+      ParseTreePrinter treePrinter = new ParseTreePrinter(System.out);
+      treePrinter.print(symTabStack);
+   }
 }
-
 PARSER_END(GoParser)
 
-SKIP :
+SKIP:
 {
-  < IGNORE : [ " ", "\r", "\n", "\t" ] >
-| < "//" (~[ "\n", "\r" ])* >
-| < "/*" > : MULTI_LINE_COMMENT
+   < IGNORE : [ " ", "\r", "\n", "\t" ] >
+      | < "//" (~[ "\n", "\r" ])* >
+      | < "/*" > : MULTI_LINE_COMMENT
 }
 
 < MULTI_LINE_COMMENT >
-SKIP :
+SKIP:
 {
-  "*/" : DEFAULT
+   "*/" : DEFAULT
 }
 
 < MULTI_LINE_COMMENT >
-MORE :
+MORE:
 {
-  < ~[ ] >
+   < ~[ ] >
 }
 
 /*************************
   -- Production Rules --
-*************************/
+ *************************/
 SimpleNode start() #void :
 {
-  SimpleNode rootNode = null;
-  HashSet syncSet = new HashSet();
-  syncSet.add(EOF);
+   SimpleNode rootNode = null;
+   HashSet syncSet = new HashSet();
+   syncSet.add(EOF);
 }
 {
-  try
-  {
-    "package" < IDENTIFIER >
-    {
-      programId = symTabStack.enterLocal(token.image);
-      programId.setDefinition(DefinitionImpl.PACKAGE);
-      programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
-      symTabStack.setProgramId(programId);
-    }
-    rootNode = statementList() < EOF >
-    {
-      return rootNode;
-    }
-  }
-  catch (ParseException ex)
-  {
-    handleError(ex, syncSet, true);
-    return null;
-  }
+   try
+   {
+      "package" < IDENTIFIER >
+      {
+         programId = symTabStack.enterLocal(token.image);
+         programId.setDefinition(DefinitionImpl.PACKAGE);
+         programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
+         symTabStack.setProgramId(programId);
+      }
+      rootNode = statementList() < EOF >
+      {
+         return rootNode;
+      }
+   }
+   catch (ParseException ex)
+   {
+      handleError(ex, syncSet, true);
+      return null;
+   }
 }
 
 void statement() #void :
 {
-  HashSet syncSet = new HashSet();
-  syncSet.add(EOF);
-  syncSet.add(SEMICOLON);
+   HashSet syncSet = new HashSet();
+   syncSet.add(EOF);
+   syncSet.add(SEMICOLON);
 }
 {
-  try
-  {
-    LOOKAHEAD(2)
-    declarationStatement(syncSet)
-  | LOOKAHEAD(2)
-    assignmentStatement(syncSet)
-  | switchStatement(syncSet)
-  | ifStatement(syncSet)
-  | forStatement(syncSet)
-  | < SEMICOLON >
-  }
-  catch (ParseException ex)
-  {
-    handleError(ex, syncSet, true);
-  }
+   try
+   {
+      LOOKAHEAD(2)
+         declarationStatement(syncSet)
+         | LOOKAHEAD(2)
+         assignmentStatement(syncSet)
+         | switchStatement(syncSet)
+         | ifStatement(syncSet)
+         | forStatement(syncSet)
+         | < SEMICOLON >
+   }
+   catch (ParseException ex)
+   {
+      handleError(ex, syncSet, true);
+   }
 }
 
 SimpleNode statementList() :
 {}
 {
-  (
+   (
     statement()
-  )*
-  {
-    return jjtThis;
-  }
+   )*
+   {
+      return jjtThis;
+   }
 }
 
 void declarationStatement(HashSet syncSet) #void :
 {}
 {
-  try
-  {
-    variableDeclaration(syncSet)
-  | functionDeclaration(syncSet)
-  }
-  catch (ParseException ex)
-  {
-    handleError(ex, syncSet, true);
-  }
+   try
+   {
+      variableDeclaration(syncSet)
+         | functionDeclaration(syncSet)
+   }
+   catch (ParseException ex)
+   {
+      handleError(ex, syncSet, true);
+   }
 }
 
 void variableDeclaration(HashSet syncSet) :
 {}
 {
-  {
-    syncSet.add(VAR); // skip to the next variable declaration
-  }
-  // Our implementation of Go's variable declaration will be either these forms:
-  // var x int; OR x = 5 (provided that they also used the first form to declare the variable)
-  try
-  {
-    < VAR > identifier()
-    {
-      SymTabEntry variableId = symTabStack.enterLocal(token.image);
-      variableId.appendLineNumber(token.beginLine);
-      variableId.setDefinition(DefinitionImpl.VARIABLE);
-    }
-    type()
-    {
-      SymTabEntry typeId = symTabStack.lookup(token.image);
-      TypeSpec type = typeId.getTypeSpec();
-      variableId.setTypeSpec(type);
-    }
-    (LOOKAHEAD(2)
-    < SEMICOLON >) ?
-  }
-  catch (ParseException ex)
-  {
-    handleError(ex, syncSet, true);
-  }
+   {
+      syncSet.add(VAR); // skip to the next variable declaration
+   }
+   // Our implementation of Go's variable declaration will be either these forms:
+   // var x int; OR x = 5 (provided that they also used the first form to declare the variable)
+   try
+   {
+      < VAR > identifier()
+      {
+         SymTabEntry variableId = symTabStack.enterLocal(token.image);
+         variableId.appendLineNumber(token.beginLine);
+         variableId.setDefinition(DefinitionImpl.VARIABLE);
+      }
+      type()
+      {
+         SymTabEntry typeId = symTabStack.lookup(token.image);
+         TypeSpec type = typeId.getTypeSpec();
+         variableId.setTypeSpec(type);
+      }
+      (LOOKAHEAD(2)
+       < SEMICOLON >) ?
+   }
+   catch (ParseException ex)
+   {
+      handleError(ex, syncSet, true);
+   }
 }
 
 void functionDeclaration(HashSet syncSet) :
 {
-  SimpleNode id;
+   SimpleNode id;
 }
 {
-  {
-    syncSet.add("func"); // skip to next function delaration
-    syncSet.add("var"); // skip to a variable declaration
-  }
-  "func" id = identifier()
-  { // Enter into symbol table
-  }
-  "(" parameterList() ")"
-  (
-    identifier()
-  | type()
-  )?
-  block(syncSet)
-}
-
-void parameter() :
-{}
-{
-  (
-    identifier()
-  )?
-  type()
+   {
+      syncSet.add("func"); // skip to next function delaration
+      syncSet.add("var"); // skip to a variable declaration
+   }
+   "func" id = identifier()
+   { // Enter into symbol table
+   }
+   "(" parameterList() ")"
+      (
+       identifier()
+       | type()
+      )?
+      block(syncSet)
 }
 
-void parameterList() :
-{}
+void parameter() : {}
 {
-  (
-    parameter()
-    (
-      < COMMA > parameter()
-    )*
-  )?
+   ( identifier())?  type()
 }
 
-void block(HashSet syncSet) :
-{}
+void parameterList() : {}
 {
-  {
-    syncSet.add("}"); // skip to the next closing brace 
-  }
-  try
-  {
-    "{" statementList() "}"
-  }
-  catch (ParseException ex)
-  {
-    handleError(ex, syncSet, true);
-  }
+   ( parameter() ( < COMMA > parameter())*)?
 }
 
-void ifStatement(HashSet syncSet) :
-{}
+void block(HashSet syncSet) : {}
 {
-  {
-    syncSet.add("if"); // skip to next if, else, or else if 
-    syncSet.add("else");
-  }
-  try
-  {
-    "if" expression() block(syncSet) (LOOKAHEAD(2)
-    "else" "if" expression() block(syncSet)) * ("else" block(syncSet)) ?
-  }
-  catch (ParseException ex)
-  {
-    handleError(ex, syncSet, true);
-  }
+   {
+      syncSet.add("}"); // skip to the next closing brace 
+   }
+   try
+   {
+      "{" statementList() "}"
+   }
+   catch (ParseException ex)
+   {
+      handleError(ex, syncSet, true);
+   }
 }
 
-void switchStatement(HashSet syncSet) :
-{}
+void ifStatement(HashSet syncSet) : {}
 {
-  "switch"
-  (
-    expression()
-  )?
-  switchBlock()
-  {}
+   {
+      syncSet.add("if"); // skip to next if, else, or else if 
+      syncSet.add("else");
+   }
+   try
+   {
+      "if" expression() block(syncSet) (LOOKAHEAD(2)
+            "else" "if" expression() block(syncSet)) * ("else" block(syncSet)) ?
+   }
+   catch (ParseException ex)
+   {
+      handleError(ex, syncSet, true);
+   }
 }
 
-void switchBlock() :
-{}
+void switchStatement(HashSet syncSet) : {}
 {
-  "{" caseGroup() "}"
+   "switch"
+    ( expression())?  switchBlock() {}
+}
+
+void switchBlock() : {}
+{
+   "{" caseGroup() "}"
 }
 
 void caseGroup() :
 {
-  HashSet syncSet = new HashSet();
-  syncSet.add(EOF);
-  syncSet.add(SEMICOLON);
-  syncSet.add("case");
-  syncSet.add("default"); // skip to next case
+   HashSet syncSet = new HashSet();
+   syncSet.add(EOF);
+   syncSet.add(SEMICOLON);
+   syncSet.add("case");
+   syncSet.add("default"); // skip to next case
 }
 {
-  (
-    "case" expressionList() ":" statementList()
-  )*
-  (
-    "default" ":" statementList()
-  )?
+    (
+        "case" expressionList() ":" statementList()
+    )*
+    ( "default" ":" statementList())?
 }
 
-void assignmentStatement(HashSet syncSet) :
-{}
+void assignmentStatement(HashSet syncSet) : {}
 {
-  (
+   (
     (
-      identifier()
-      {
+     identifier()
+     {
         SymTabEntry variableId = symTabStack.lookup(token.image);
         TypeSpec typeId = variableId.getTypeSpec();
-      }
-      (
-        < ASSIGN_OP > expression()
+     }
+     (
+      < ASSIGN_OP > expression()
       | incOrDec()
-        {
-          if (typeId.getIdentifier() == Predefined.integerId)
-          {
-            if (token.image == "++")
-            { //int number = variableId.getAttribute(VALUE) + 1;
-            //variableId.setAttribute(number);
-            }
-            else if (token.image == "--")
-            { //int number = variableId.getAttribute(VALUE) - 1;
-            //variableId.setAttribute(number);
-            }
-          }
-        }
-      )
-    )
-  |
-    (
-      incOrDec() identifier()
-    )
-  )
-  (
-    LOOKAHEAD(2)
-    < SEMICOLON >
-  )?
+      {
+         if (typeId.getIdentifier() == Predefined.integerId)
+     {
+        if (token.image == "++")
+     { //int number = variableId.getAttribute(VALUE) + 1;
+        //variableId.setAttribute(number);
+     }
+     else if (token.image == "--")
+     { //int number = variableId.getAttribute(VALUE) - 1;
+        //variableId.setAttribute(number);
+     }
+     }
+      }
+     )
+        )
+        |
+        (
+         incOrDec() identifier()
+        )
+        )
+        (
+         LOOKAHEAD(2)
+         < SEMICOLON >
+        )?
 }
 
-void incOrDec() :
-{}
+void incOrDec() : {}
 {
-  (
+   (
     "++"
-  | "--"
-  )
+    | "--"
+   )
 }
 
-void forStatement(HashSet syncSet) :
-{}
+void forStatement(HashSet syncSet) : {}
 {
-  "for" forClause() block(syncSet)
+   "for" forClause() block(syncSet)
 }
 
-void forClause() :
-{
-  HashSet syncSet = new HashSet();
-  syncSet.add(EOF);
-  syncSet.add(SEMICOLON);
-  syncSet.add("for");
+void forClause() : {
+   HashSet syncSet = new HashSet();
+   syncSet.add(EOF);
+   syncSet.add(SEMICOLON);
+   syncSet.add("for");
 }
 {
-  (
+   (
     LOOKAHEAD(2)
     assignmentStatement(syncSet)
-  )?
-  (
-    LOOKAHEAD(2)
-    expression()
-  )?
-  (< SEMICOLON >)?
-  (
-    assignmentStatement(syncSet)
-  )?
+   )?
+      (
+       LOOKAHEAD(2)
+       expression()
+      )?
+      (< SEMICOLON >)?
+      (
+       assignmentStatement(syncSet)
+      )?
 }
 
-void operand() #void :
-{}
+void operand() #void : {}
 {
-  (
     (
+     (
       identifier()
-    | integerConstant()
-    | realConstant()
-    | booleanConstant()
-    | interpretedString()
-    | rawString()
+      | integerConstant()
+      | realConstant()
+      | booleanConstant()
+      | interpretedString()
+      | rawString()
+     )
+     | "(" expression() ")"
     )
-  | "(" expression() ")"
-  )
 }
 
-void expression() #void :
-{}
+void expression() #void : {}
 {
-  (
-    operand()
-    (
+    (operand() (
       //TODO: This implementation is very limited. Need to change eventually.
       < REL_OP > operand() #relationalOperator(2)
-  |
-    (
-      < ADD_OP > operand() #add(2)
-  )*
-)
-)
+      |
+      ( < ADD_OP > operand() #add(2))*)
+    )
 }
 
-void expressionList() :
-{}
+void expressionList() : {}
 {
-  expression()
-  (
-    < COMMA > expression()
-  )*
+    expression()
+        (
+         < COMMA > expression()
+        )*
 }
 
-SimpleNode identifier() :
-{}
+SimpleNode identifier() : {}
 {
-  < IDENTIFIER >
-  {
-    //TODO: Do something similar to real and integer constants
-    return jjtThis;
-  }
+    < IDENTIFIER >
+    {
+        //TODO: Do something similar to real and integer constants
+        return jjtThis;
+    }
 }
 
-void integerConstant() :
-{}
+void integerConstant() : {}
 {
-  < INTEGER_NUMBER >
-  {
-    jjtThis.setTypeSpec(Predefined.integerType);
-    jjtThis.setAttribute(VALUE, Integer.parseInt(token.image));
-  }
+    < INTEGER_NUMBER >
+    {
+        jjtThis.setTypeSpec(Predefined.integerType);
+        jjtThis.setAttribute(VALUE, Integer.parseInt(token.image));
+    }
 }
 
-void booleanConstant() :
-{}
+void booleanConstant() : {}
 {
-  < BOOL_CONSTANT >
-  {
-    jjtThis.setTypeSpec(Predefined.booleanType);
-    jjtThis.setAttribute(VALUE, Boolean.parseBoolean(token.image));
-  }
+    < BOOL_CONSTANT >
+    {
+        jjtThis.setTypeSpec(Predefined.booleanType);
+        jjtThis.setAttribute(VALUE, Boolean.parseBoolean(token.image));
+    }
 }
 
-void realConstant() :
-{}
+void realConstant() : {}
 {
-  < REAL_NUMBER >
-  {
-    jjtThis.setTypeSpec(Predefined.realType);
-    jjtThis.setAttribute(VALUE, Float.parseFloat(token.image));
-  }
+    < REAL_NUMBER >
+    {
+        jjtThis.setTypeSpec(Predefined.realType);
+        jjtThis.setAttribute(VALUE, Float.parseFloat(token.image));
+    }
 }
 
-void rawString() :
-{}
+void rawString() : {}
 {
-  < RAW_STRING >
-  {
-    jjtThis.setTypeSpec(Predefined.charType);
-    jjtThis.setAttribute(VALUE, token.image.toString());
-  }
+    < RAW_STRING >
+    {
+        jjtThis.setTypeSpec(Predefined.charType);
+        jjtThis.setAttribute(VALUE, token.image.toString());
+    }
 }
 
-void interpretedString() :
-{}
+void interpretedString() : {}
 {
-  < INTERPRETED_STRING >
-  {
-    jjtThis.setTypeSpec(Predefined.charType);
-    jjtThis.setAttribute(VALUE, token.image.toString());
-  }
+    < INTERPRETED_STRING >
+    {
+        jjtThis.setTypeSpec(Predefined.charType);
+        jjtThis.setAttribute(VALUE, token.image.toString());
+    }
 }
 
-void type() :
-{}
+void type() : {}
 {
-  < TYPE >
+    < TYPE >
 }
 
 /********************s
-    -- Tokens --
-********************/
+  -- Tokens --
+ ********************/
 TOKEN :
 {
-  < RESERVED_WORD :
-    "break"
-  | "default"
-  | "func"
-  | "interface"
-  | "select"
-  | "case"
-  | "defer"
-  | "go"
-  | "map"
-  | "struct"
-  | "chan"
-  | "else"
-  | "goto"
-  | "package"
-  | "switch"
-  | "const"
-  | "fallthrough"
-  | "if"
-  | "range"
-  | "type"
-  | "continue"
-  | "for"
-  | "import"
-  | "return" >
-| < VAR : "var" >
-| < TYPE :
-    "int"
-  | "float"
-  | "double"
-  | "string"
-  | "bool" >
-| < INTEGER_NUMBER : < DIGIT > (< DIGIT >)* >
-| < REAL_NUMBER : < INTEGER_NUMBER > "." (< INTEGER_NUMBER >)? >
-| < BOOL_CONSTANT :
-    (
-      "true"
-    | "false"
-    ) >
-| < RAW_STRING :
-    "`"
-    (
-      < ALPHANUMERIC >
-    | < RAW_LITERAL_SYMBOL >
-    | < NEWLINE >
-    )*
-    "`" >
-| < INTERPRETED_STRING :
-    "\""
-    (
-      < ALPHANUMERIC >
-    | < ESCAPED_CHAR >
-    | < INTERPRETED_LITERAL_SYMBOL >
-    | < WHITE_SPACE >
-    )*
-    "\"" >
-| < #NEWLINE : [ "\r", "\n" ] >
-| < #ESCAPED_CHAR :
-    "\\"
-    (
-      "a"
-    | "b"
-    | "f"
-    | "n"
-    | "r"
-    | "t"
-    | "v"
-    | "\\"
-    | "'"
-    | "\""
-    ) >
-| < #WHITE_SPACE :
-    < NEWLINE >
-  | "\t"
-  | " " >
-| < SEMICOLON : ";" >
-| < DOT : "." >
-| < COMMA : "," >
-| < IDENTIFIER :
-    < LETTER >
-    (
+   < RESERVED_WORD :
+      "break"
+      | "default"
+      | "func"
+      | "interface"
+      | "select"
+      | "case"
+      | "defer"
+      | "go"
+      | "map"
+      | "struct"
+      | "chan"
+      | "else"
+      | "goto"
+      | "package"
+      | "switch"
+      | "const"
+      | "fallthrough"
+      | "if"
+      | "range"
+      | "type"
+      | "continue"
+      | "for"
+      | "import"
+      | "return" >
+      | < VAR : "var" >
+      | < TYPE :
+      "int"
+      | "float"
+      | "double"
+      | "string"
+      | "bool" >
+      | < INTEGER_NUMBER : < DIGIT > (< DIGIT >)* >
+      | < REAL_NUMBER : < INTEGER_NUMBER > "." (< INTEGER_NUMBER >)? >
+      | < BOOL_CONSTANT :
+      (
+       "true"
+       | "false"
+      ) >
+      | < RAW_STRING :
+      "`"
+      (
+       < ALPHANUMERIC >
+       | < RAW_LITERAL_SYMBOL >
+       | < NEWLINE >
+      )*
+      "`" >
+      | < INTERPRETED_STRING :
+      "\""
+      (
+       < ALPHANUMERIC >
+       | < ESCAPED_CHAR >
+       | < INTERPRETED_LITERAL_SYMBOL >
+       | < WHITE_SPACE >
+      )*
+      "\"" >
+      | < #NEWLINE : [ "\r", "\n" ] >
+      | < #ESCAPED_CHAR :
+      "\\"
+      (
+       "a"
+       | "b"
+       | "f"
+       | "n"
+       | "r"
+       | "t"
+       | "v"
+       | "\\"
+       | "'"
+       | "\""
+      ) >
+      | < #WHITE_SPACE :
+      < NEWLINE >
+      | "\t"
+      | " " >
+      | < SEMICOLON : ";" >
+      | < DOT : "." >
+      | < COMMA : "," >
+      | < IDENTIFIER :
       < LETTER >
-    | < DIGIT >
-    | "_"
-    )* >
-| < IDENTIFIER_LIST : < IDENTIFIER > (< COMMA > < IDENTIFIER >)* >
-| < #LETTER : [ "a"-"z", "A"-"Z" ] >
-| < #DIGIT : [ "0"-"9" ] >
-| < #ALPHANUMERIC :
-    (
-      < LETTER >
-    | < DIGIT >
-    )+ >
-| < ADD_OP : [ "+", "-" ] >
-| < MUL_OP :
-    (
-      "*"
-    | "/"
-    | "%"
-    ) >
-| < REL_OP :
-    "=="
-  | "!="
-  | "<"
-  | "<="
-  | ">"
-  | ">=" >
-| < UNARY_OP :
-    "+"
-  | "-"
-  | "!"
-  | "^"
-  | "*"
-  | "&" >
-| < ASSIGN_OP : "=" >
-| < ARITHMETIC_ASSIGN_OP :
-    (
-      < ADD_OP >
-    | < MUL_OP >
-    )
-    "=" >
-| < BINARY_OP :
-    "||"
-  | "&&"
-  | < REL_OP >
-  | < ADD_OP >
-  | < MUL_OP >>
-| < #COMMON_LITERAL_SYMBOL :
-    "'"
-  | "~"
-  | "!"
-  | "@"
-  | "#"
-  | "$"
-  | "%"
-  | "^"
-  | "&"
-  | "*"
-  | "("
-  | ")"
-  | "_"
-  | "-"
-  | "+"
-  | "="
-  | "<"
-  | ">"
-  | "."
-  | "/"
-  | "?"
-  | ";"
-  | "["
-  | "]"
-  | "{"
-  | "}"
-  | "|" >
-| < RAW_LITERAL_SYMBOL :
-    < COMMON_LITERAL_SYMBOL >
-  | "\""
-  | "\\" >
-| < INTERPRETED_LITERAL_SYMBOL :
-    < COMMON_LITERAL_SYMBOL >
-  | "`" >
-| < SPECIAL_SYMBOL :
-    "+"
-  | "&"
-  | "+="
-  | "&="
-  | "&&"
-  | "=="
-  | "!="
-  | "("
-  | ")"
-  | "-"
-  | "|"
-  | "-="
-  | "|="
-  | "||"
-  | "<"
-  | "<="
-  | "["
-  | "]"
-  | "*"
-  | "^"
-  | "*="
-  | "^="
-  | "<-"
-  | ">"
-  | ">="
-  | "{"
-  | "}"
-  | "/"
-  | "<<"
-  | "/="
-  | "<<="
-  | "++"
-  | "="
-  | ";"
-  | "%"
-  | ">>"
-  | "%="
-  | ">>="
-  | "--"
-  | "!"
-  | "..."
-  | "."
-  | ":"
-  | "&^"
-  | "&^=" >
-| < ERROR : ~[ "\r", "\n" ] >
+      (
+       < LETTER >
+       | < DIGIT >
+       | "_"
+      )* >
+      | < IDENTIFIER_LIST : < IDENTIFIER > (< COMMA > < IDENTIFIER >)* >
+      | < #LETTER : [ "a"-"z", "A"-"Z" ] >
+      | < #DIGIT : [ "0"-"9" ] >
+      | < #ALPHANUMERIC :
+      (
+       < LETTER >
+       | < DIGIT >
+      )+ >
+      | < ADD_OP : [ "+", "-" ] >
+      | < MUL_OP :
+      (
+       "*"
+       | "/"
+       | "%"
+      ) >
+      | < REL_OP :
+      "=="
+      | "!="
+      | "<"
+      | "<="
+      | ">"
+      | ">=" >
+      | < UNARY_OP :
+      "+"
+      | "-"
+      | "!"
+      | "^"
+      | "*"
+      | "&" >
+      | < ASSIGN_OP : "=" >
+      | < ARITHMETIC_ASSIGN_OP :
+      (
+       < ADD_OP >
+       | < MUL_OP >
+      )
+      "=" >
+      | < BINARY_OP :
+      "||"
+      | "&&"
+      | < REL_OP >
+      | < ADD_OP >
+      | < MUL_OP >>
+      | < #COMMON_LITERAL_SYMBOL :
+      "'"
+      | "~"
+      | "!"
+      | "@"
+      | "#"
+      | "$"
+      | "%"
+      | "^"
+      | "&"
+      | "*"
+      | "("
+      | ")"
+      | "_"
+      | "-"
+      | "+"
+      | "="
+      | "<"
+      | ">"
+      | "."
+      | "/"
+      | "?"
+      | ";"
+      | "["
+      | "]"
+      | "{"
+      | "}"
+      | "|" >
+      | < RAW_LITERAL_SYMBOL :
+      < COMMON_LITERAL_SYMBOL >
+      | "\""
+      | "\\" >
+      | < INTERPRETED_LITERAL_SYMBOL :
+      < COMMON_LITERAL_SYMBOL >
+      | "`" >
+      | < SPECIAL_SYMBOL :
+      "+"
+      | "&"
+      | "+="
+      | "&="
+      | "&&"
+      | "=="
+      | "!="
+      | "("
+      | ")"
+      | "-"
+      | "|"
+      | "-="
+      | "|="
+      | "||"
+      | "<"
+      | "<="
+      | "["
+      | "]"
+      | "*"
+      | "^"
+      | "*="
+      | "^="
+      | "<-"
+      | ">"
+      | ">="
+      | "{"
+      | "}"
+      | "/"
+      | "<<"
+      | "/="
+      | "<<="
+      | "++"
+      | "="
+      | ";"
+      | "%"
+      | ">>"
+      | "%="
+      | ">>="
+      | "--"
+      | "!"
+      | "..."
+      | "."
+      | ":"
+      | "&^"
+      | "&^=" >
+      | < ERROR : ~[ "\r", "\n" ] >
 }
 
 JAVACODE String handleError(ParseException ex, HashSet syncSet, boolean doPop) #void
 {
-  Token token = ex.currentToken;
-  System.out.println(ex.getMessage())
-;
-// Consume tokens up to but not including a token in the sync set.
-while
-(
-  !syncSet.contains
-  (
-    getToken(1).kind
-  )
-)
-{
-  token = getNextToken();
-}
+    Token token = ex.currentToken;
+    System.out.println(ex.getMessage());
 
-if (doPop) jjtree.popNode();
-return token.image;
+    // Consume tokens up to but not including a token in the sync set.
+    while ( !syncSet.contains ( getToken(1).kind)) {
+        token = getNextToken();
+    }
+
+    if (doPop) jjtree.popNode();
+    return token.image;
 }
