@@ -270,8 +270,8 @@ void caseGroup() :
    HashSet syncSet = new HashSet();
    syncSet.add(EOF);
    syncSet.add(SEMICOLON);
-   syncSet.add("case");
-   syncSet.add("default"); // skip to next case
+   syncSet.add(CASE);
+   syncSet.add(DEFAULT); // skip to next case
 }
 {
     (
@@ -335,7 +335,7 @@ void forClause() : {
    HashSet syncSet = new HashSet();
    syncSet.add(EOF);
    syncSet.add(SEMICOLON);
-   syncSet.add("for");
+   syncSet.add(FOR);
 }
 {
    (
@@ -447,123 +447,88 @@ void type() : {}
 /********************s
   -- Tokens --
  ********************/
+
+// Reserved words token
+TOKEN: {
+      <BREAK: "break">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <DEFAULT: "default">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <FUNC: "func">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <INTERFACE: "interface">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <CASE: "case">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <STRUCT: "struct">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <ELSE: "else">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <PACKAGE: "package">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <SWITCH: "switch">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <CONST: "const">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <FALLTHROUGH: "fallthrough">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <IF: "if">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <RANGE: "range">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <TYPE: "type">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <CONTINUE: "continue">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <FOR: "for">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <RETURN: "return">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <VAR : "var" >
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <INT: "int">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <FLOAT: "float">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <DOUBLE: "double">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <STRING: "string">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <BOOL: "bool">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+}
+
+// Types
 TOKEN :
 {
-   < RESERVED_WORD :
-      "break"
-      | "default"
-      | "func"
-      | "interface"
-      | "select"
-      | "case"
-      | "defer"
-      | "go"
-      | "map"
-      | "struct"
-      | "chan"
-      | "else"
-      | "goto"
-      | "package"
-      | "switch"
-      | "const"
-      | "fallthrough"
-      | "if"
-      | "range"
-      | "type"
-      | "continue"
-      | "for"
-      | "import"
-      | "return" >
-      | < VAR : "var" >
-      | < TYPE :
-      "int"
-      | "float"
-      | "double"
-      | "string"
-      | "bool" >
-      | < INTEGER_NUMBER : < DIGIT > (< DIGIT >)* >
+      <INTEGER_NUMBER : < DIGIT > (< DIGIT >)* >
+        { debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
       | < REAL_NUMBER : < INTEGER_NUMBER > "." (< INTEGER_NUMBER >)? >
-      | < BOOL_CONSTANT :
-      (
-       "true"
-       | "false"
-      ) >
-      | < RAW_STRING :
-      "`"
-      (
-       < ALPHANUMERIC >
-       | < RAW_LITERAL_SYMBOL >
-       | < NEWLINE >
-      )*
-      "`" >
-      | < INTERPRETED_STRING :
-      "\""
-      (
-       < ALPHANUMERIC >
-       | < ESCAPED_CHAR >
-       | < INTERPRETED_LITERAL_SYMBOL >
-       | < WHITE_SPACE >
-      )*
-      "\"" >
-      | < #NEWLINE : [ "\r", "\n" ] >
-      | < #ESCAPED_CHAR :
-      "\\"
-      (
-       "a"
-       | "b"
-       | "f"
-       | "n"
-       | "r"
-       | "t"
-       | "v"
-       | "\\"
-       | "'"
-       | "\""
-      ) >
-      | < #WHITE_SPACE :
-      < NEWLINE >
-      | "\t"
-      | " " >
+        { debugStream.println("REAL_NUMBER token: " + matchedToken.image); }
+      | < BOOL_CONSTANT : ( "true" | "false")>
+        { debugStream.println("BOOL_CONSTANT token: " + matchedToken.image); }
+      | < RAW_STRING : "`" ( < ALPHANUMERIC > | < RAW_LITERAL_SYMBOL > | < NEWLINE >)* "`" >
+        { debugStream.println("RAW_STRING token: " + matchedToken.image); }
+      | < INTERPRETED_STRING : "\"" ( < ALPHANUMERIC > | < ESCAPED_CHAR > | < INTERPRETED_LITERAL_SYMBOL > | < WHITE_SPACE >)* "\"" >
+        { debugStream.println("INTERPRETED_STRING token: " + matchedToken.image); }
+      | < IDENTIFIER : < LETTER > ( < LETTER > | < DIGIT > | "_")* >
+        { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
+      | < #ALPHANUMERIC : ( < LETTER > | < DIGIT >)+ > | < ADD_OP : [ "+", "-" ] >
+      | < #ESCAPED_CHAR : "\\" ( "a" | "b" | "f" | "n" | "r" | "t" | "v" | "\\" | "'" | "\"") >
+      | < #LETTER : [ "a"-"z", "A"-"Z" ] >
+      | < #DIGIT : [ "0"-"9" ] >
+}
+
+// Misc tokens
+TOKEN: {
+      < #NEWLINE : [ "\r", "\n" ] >
+      | < #WHITE_SPACE : < NEWLINE > | "\t" | " " >
       | < SEMICOLON : ";" >
       | < DOT : "." >
       | < COMMA : "," >
-      | < IDENTIFIER :
-      < LETTER >
-      (
-       < LETTER >
-       | < DIGIT >
-       | "_"
-      )* >
-      | < IDENTIFIER_LIST : < IDENTIFIER > (< COMMA > < IDENTIFIER >)* >
-      | < #LETTER : [ "a"-"z", "A"-"Z" ] >
-      | < #DIGIT : [ "0"-"9" ] >
-      | < #ALPHANUMERIC :
-      (
-       < LETTER >
-       | < DIGIT >
-      )+ >
-      | < ADD_OP : [ "+", "-" ] >
-      | < MUL_OP :
-      (
-       "*"
-       | "/"
-       | "%"
-      ) >
-      | < REL_OP :
-      "=="
-      | "!="
-      | "<"
-      | "<="
-      | ">"
-      | ">=" >
-      | < UNARY_OP :
-      "+"
-      | "-"
-      | "!"
-      | "^"
-      | "*"
-      | "&" >
-      | < ASSIGN_OP : "=" >
+      | < MUL_OP : ( "*" | "/" | "%") > 
+      | < REL_OP : "==" | "!=" | "<" | "<=" | ">" | ">=" > 
+      | < UNARY_OP : "+" | "-" | "!" | "^" | "*" | "&" > | < ASSIGN_OP : "=" >
       | < ARITHMETIC_ASSIGN_OP :
       (
        < ADD_OP >
