@@ -93,7 +93,7 @@ SimpleNode start() #void :
 {
    try
    {
-      "package" < IDENTIFIER >
+      <PACKAGE> < IDENTIFIER >
       {
          programId = symTabStack.enterLocal(token.image);
          programId.setDefinition(DefinitionImpl.PACKAGE);
@@ -198,18 +198,14 @@ void functionDeclaration(HashSet syncSet) :
 }
 {
    {
-      syncSet.add("func"); // skip to next function delaration
-      syncSet.add("var"); // skip to a variable declaration
+      syncSet.add(FUNC); // skip to next function delaration
+      syncSet.add(VAR); // skip to a variable declaration
    }
-   "func" id = identifier()
+   <FUNC> id = identifier()
    { // Enter into symbol table
    }
    "(" parameterList() ")"
-      (
-       identifier()
-       | type()
-      )?
-      block(syncSet)
+    ( identifier() | type() )? block(syncSet)
 }
 
 void parameter() : {}
@@ -240,13 +236,13 @@ void block(HashSet syncSet) : {}
 void ifStatement(HashSet syncSet) : {}
 {
    {
-      syncSet.add("if"); // skip to next if, else, or else if 
-      syncSet.add("else");
+      syncSet.add(IF); // skip to next if, else, or else if
+      syncSet.add(ELSE);
    }
    try
    {
-      "if" expression() block(syncSet) (LOOKAHEAD(2)
-            "else" "if" expression() block(syncSet)) * ("else" block(syncSet)) ?
+      <IF> expression() block(syncSet) (LOOKAHEAD(2)
+            <ELSE> <IF> expression() block(syncSet)) * (<ELSE> block(syncSet)) ?
    }
    catch (ParseException ex)
    {
@@ -256,7 +252,7 @@ void ifStatement(HashSet syncSet) : {}
 
 void switchStatement(HashSet syncSet) : {}
 {
-   "switch"
+    <SWITCH>
     ( expression())?  switchBlock() {}
 }
 
@@ -271,13 +267,11 @@ void caseGroup() :
    syncSet.add(EOF);
    syncSet.add(SEMICOLON);
    syncSet.add(CASE);
-   syncSet.add(DEFAULT); // skip to next case
+   syncSet.add(DEFAULT_TOKEN); // skip to next case
 }
 {
-    (
-        "case" expressionList() ":" statementList()
-    )*
-    ( "default" ":" statementList())?
+    ( <CASE> expressionList() ":" statementList() )*
+    ( <DEFAULT_TOKEN> ":" statementList())?
 }
 
 void assignmentStatement(HashSet syncSet) : {}
@@ -328,7 +322,7 @@ void incOrDec() : {}
 
 void forStatement(HashSet syncSet) : {}
 {
-   "for" forClause() block(syncSet)
+   <FOR> forClause() block(syncSet)
 }
 
 void forClause() : {
@@ -452,7 +446,7 @@ void type() : {}
 TOKEN: {
       <BREAK: "break">
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-      | <DEFAULT: "default">
+      | <DEFAULT_TOKEN: "default">
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
       | <FUNC: "func">
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
