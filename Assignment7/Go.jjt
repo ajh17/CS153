@@ -533,21 +533,14 @@ TOKEN: {
       | < ERROR : ~[ "\r", "\n" ] >
 }
 
+// Math tokens
 TOKEN: {
       < MUL_OP : ( "*" | "/" | "%") > 
       | < REL_OP : "==" | "!=" | "<" | "<=" | ">" | ">=" > 
       | < UNARY_OP : "+" | "-" | "!" | "^" | "*" | "&" >
       | < ASSIGN_OP : "=" >
-      | < ARITHMETIC_ASSIGN_OP :
-      (
-       < ADD_OP >
-       | < MUL_OP >
-      )
-      "=" >
-      | < BINARY_OP :
-      "||"
-      | "&&"
-      | < REL_OP >
+      | < ARITHMETIC_ASSIGN_OP : ( < ADD_OP > | < MUL_OP >) "=" >
+      | < BINARY_OP : "||" | "&&" | < REL_OP >
       | < ADD_OP >
       | < MUL_OP >>
 }
