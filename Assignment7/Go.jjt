@@ -286,40 +286,27 @@ void assignmentStatement(HashSet syncSet) : {}
         TypeSpec typeId = variableId.getTypeSpec();
      }
      (
-      <EQUALS> expression()
-      | incOrDec()
-      {
-         if (typeId.getIdentifier() == Predefined.integerId)
-     {
-        if (token.image == "++")
-     { //int number = variableId.getAttribute(VALUE) + 1;
-        //variableId.setAttribute(number);
+      <EQUALS> expression() | incOrDec() {
+         if (typeId.getIdentifier() == Predefined.integerId) {
+            if (token.image == "++") { 
+                //int number = variableId.getAttribute(VALUE) + 1;
+                //variableId.setAttribute(number);
+            }
+        }
+        else if (token.image == "--") { 
+            //int number = variableId.getAttribute(VALUE) - 1;
+            //variableId.setAttribute(number);
+        }
      }
-     else if (token.image == "--")
-     { //int number = variableId.getAttribute(VALUE) - 1;
-        //variableId.setAttribute(number);
-     }
-     }
-      }
      )
-        )
-        |
-        (
-         incOrDec() identifier()
-        )
-        )
-        (
-         LOOKAHEAD(2)
-         < SEMICOLON >
-        )?
+    )
+    | 
+    ( incOrDec() identifier())) ( LOOKAHEAD(2) < SEMICOLON >)?
 }
 
 void incOrDec() : {}
 {
-   (
-    "++"
-    | "--"
-   )
+   ( "++" | "--")
 }
 
 void forStatement(HashSet syncSet) : {}
@@ -334,33 +321,18 @@ void forClause() : {
    syncSet.add(FOR);
 }
 {
-   (
-    LOOKAHEAD(2)
-    assignmentStatement(syncSet)
-   )?
-      (
-       LOOKAHEAD(2)
-       expression()
-      )?
+   ( LOOKAHEAD(2) assignmentStatement(syncSet))?
+      ( LOOKAHEAD(2) expression())?
       (< SEMICOLON >)?
-      (
-       assignmentStatement(syncSet)
-      )?
+      ( assignmentStatement(syncSet))?
 }
 
 void operand() #void : {}
 {
-    (
-     (
-      identifier()
-      | integerConstant()
-      | realConstant()
-      | booleanConstant()
-      | interpretedString()
-      | rawString()
+    ( 
+     (identifier() | integerConstant() | realConstant() | booleanConstant() 
+      | interpretedString() | rawString()) | "(" expression() ")"
      )
-     | "(" expression() ")"
-    )
 }
 
 void relationalOperators() #void : {}
@@ -381,10 +353,7 @@ void expression() #void : {}
 
 void expressionList() : {}
 {
-    expression()
-        (
-         < COMMA > expression()
-        )*
+    expression() ( < COMMA > expression())*
 }
 
 SimpleNode identifier() : {}
@@ -538,10 +507,16 @@ TOKEN: {
         {debugStream.println("GREATER_EQUALS token: " + matchedToken.image); }
     | <OR_OR: "||">
         {debugStream.println("OR_ORD token: " + matchedToken.image); }
+    | <AND: "&">
+        {debugStream.println("AND token: " + matchedToken.image); }
     | <AND_AND: "&&">
         {debugStream.println("AND_AND token: " + matchedToken.image); }
     | <NOT_EQUALS: "!=">
         {debugStream.println("NOT_EQUALS token: " + matchedToken.image); }
+    | <NOT: "!">
+        {debugStream.println("NOT token: " + matchedToken.image); }
+    | <CARET: "^">
+        {debugStream.println("CARET token: " + matchedToken.image); }
 }
 
 // Types
