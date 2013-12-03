@@ -5,7 +5,7 @@ options
    NODE_EXTENDS = "wci.intermediate.icodeimpl.ICodeNodeImpl";
    MULTI = true;
    VISITOR = true;
-   DEBUG_PARSER=true;
+   //DEBUG_PARSER=true;
 }
 
 PARSER_BEGIN(GoParser)
@@ -286,7 +286,7 @@ void assignmentStatement(HashSet syncSet) : {}
         TypeSpec typeId = variableId.getTypeSpec();
      }
      (
-      < ASSIGN_OP > expression()
+      <EQUALS> expression()
       | incOrDec()
       {
          if (typeId.getIdentifier() == Predefined.integerId)
@@ -363,14 +363,19 @@ void operand() #void : {}
     )
 }
 
+void relationalOperators() #void : {}
+{
+    <EQUAL_EQUAL> | <NOT_EQUALS> | <LESS_THAN> | <LESS_EQUALS> | <GREATER_THAN> | <GREATER_EQUALS>
+}
+
 void expression() #void : {}
 {
     operand()
     (
         //TODO: This implementation is very limited. Need to change eventually.
-        < REL_OP > operand() #relationalOperator(2)
+        relationalOperators() operand() #relationalOperators(2)
         |
-        (< ADD_OP > operand() #add(2))*
+        ((<PLUS>|<MINUS>) operand() #add(2))*
     )
 }
 
@@ -505,14 +510,38 @@ TOKEN: {
 
 // Math tokens
 TOKEN: {
-      < MUL_OP : ( "*" | "/" | "%") >
-      | < REL_OP : "==" | "!=" | "<" | "<=" | ">" | ">=" >
-      | < UNARY_OP : "+" | "-" | "!" | "^" | "*" | "&" >
-      | < ASSIGN_OP : "=" >
-      | < ARITHMETIC_ASSIGN_OP : ( < ADD_OP > | < MUL_OP >) "=" >
-      | < BINARY_OP : "||" | "&&" | < REL_OP >
-      | < ADD_OP >
-      | < MUL_OP >>
+    <PLUS: "+">
+        {debugStream.println("PLUS token: " + matchedToken.image); }
+    | <MINUS: "-">
+        {debugStream.println("MINUS token: " + matchedToken.image); }
+    | <MULTIPLY: "*">
+        {debugStream.println("MULTIPLY token: " + matchedToken.image); }
+    | <DIVIDE: "/">
+        {debugStream.println("DIVIDE token: " + matchedToken.image); }
+    | <MODULO: "%">
+        {debugStream.println("MODULO token: " + matchedToken.image); }
+    | <EQUALS: "=">
+        {debugStream.println("EQUALS token: " + matchedToken.image); }
+    | <EQUAL_EQUAL: "==">
+        {debugStream.println("EQUAL_EQUAL token: " + matchedToken.image); }
+    | <PLUS_EQUAL: "+=">
+        {debugStream.println("PLUS_EQUAL token: " + matchedToken.image); }
+    | <MINUS_EQUAL: "-=">
+        {debugStream.println("MINUS_EQUAL token: " + matchedToken.image); }
+    | <LESS_THAN: "<">
+        {debugStream.println("LESS_THAN token: " + matchedToken.image); }
+    | <GREATER_THAN: ">">
+        {debugStream.println("GREATER_THAN token: " + matchedToken.image); }
+    | <LESS_EQUALS: "<=">
+        {debugStream.println("LESS_EQUALS token: " + matchedToken.image); }
+    | <GREATER_EQUALS: ">=">
+        {debugStream.println("GREATER_EQUALS token: " + matchedToken.image); }
+    | <OR_OR: "||">
+        {debugStream.println("OR_ORD token: " + matchedToken.image); }
+    | <AND_AND: "&&">
+        {debugStream.println("AND_AND token: " + matchedToken.image); }
+    | <NOT_EQUALS: "!=">
+        {debugStream.println("NOT_EQUALS token: " + matchedToken.image); }
 }
 
 // Types
@@ -530,7 +559,7 @@ TOKEN :
         { debugStream.println("INTERPRETED_STRING token: " + matchedToken.image); }
       | < IDENTIFIER : < LETTER > ( < LETTER > | < DIGIT > | "_")* >
         { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
-      | < #ALPHANUMERIC : ( < LETTER > | < DIGIT >)+ > | < ADD_OP : [ "+", "-" ] >
+      | < #ALPHANUMERIC : ( < LETTER > | < DIGIT >)+ > 
       | < #ESCAPED_CHAR : "\\" ( "a" | "b" | "f" | "n" | "r" | "t" | "v" | "\\" | "'" | "\"") >
       | < #LETTER : [ "a"-"z", "A"-"Z" ] >
       | < #DIGIT : [ "0"-"9" ] >
@@ -547,7 +576,7 @@ TOKEN :
       | "&^" | "&^=" >
 }
 
-TOKEN: { /*	Error token */
+TOKEN: { /* Error token */
     <ERROR : ~["\r", "\n"]>
 }
 
