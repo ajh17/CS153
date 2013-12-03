@@ -183,8 +183,7 @@ void variableDeclaration(HashSet syncSet) :
          TypeSpec type = typeId.getTypeSpec();
          variableId.setTypeSpec(type);
       }
-      (LOOKAHEAD(2)
-       < SEMICOLON >) ?
+      (LOOKAHEAD(2) < SEMICOLON >) ?
    }
    catch (ParseException ex)
    {
@@ -435,7 +434,7 @@ void interpretedString() : {}
 
 void type() : {}
 {
-    < TYPE >
+    < INT > | < FLOAT > | < STRING > | < BOOL >
 }
 
 /********************s
@@ -492,6 +491,26 @@ TOKEN: {
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
 }
 
+// Misc tokens
+TOKEN: {
+      < #NEWLINE : [ "\r", "\n" ] >
+      | < #WHITE_SPACE : < NEWLINE > | "\t" | " " >
+      | < SEMICOLON : ";" >
+      | < COMMA : "," >
+}
+
+// Math tokens
+TOKEN: {
+      < MUL_OP : ( "*" | "/" | "%") >
+      | < REL_OP : "==" | "!=" | "<" | "<=" | ">" | ">=" >
+      | < UNARY_OP : "+" | "-" | "!" | "^" | "*" | "&" >
+      | < ASSIGN_OP : "=" >
+      | < ARITHMETIC_ASSIGN_OP : ( < ADD_OP > | < MUL_OP >) "=" >
+      | < BINARY_OP : "||" | "&&" | < REL_OP >
+      | < ADD_OP >
+      | < MUL_OP >>
+}
+
 // Types
 TOKEN :
 {
@@ -524,25 +543,8 @@ TOKEN :
       | "&^" | "&^=" >
 }
 
-// Misc tokens
-TOKEN: {
-      < #NEWLINE : [ "\r", "\n" ] >
-      | < #WHITE_SPACE : < NEWLINE > | "\t" | " " >
-      | < SEMICOLON : ";" >
-      | < COMMA : "," >
-      | < ERROR : ~[ "\r", "\n" ] >
-}
-
-// Math tokens
-TOKEN: {
-      < MUL_OP : ( "*" | "/" | "%") > 
-      | < REL_OP : "==" | "!=" | "<" | "<=" | ">" | ">=" > 
-      | < UNARY_OP : "+" | "-" | "!" | "^" | "*" | "&" >
-      | < ASSIGN_OP : "=" >
-      | < ARITHMETIC_ASSIGN_OP : ( < ADD_OP > | < MUL_OP >) "=" >
-      | < BINARY_OP : "||" | "&&" | < REL_OP >
-      | < ADD_OP >
-      | < MUL_OP >>
+TOKEN: { /*	Error token */
+    <ERROR : ~["\r", "\n"]>
 }
 
 JAVACODE String handleError(ParseException ex, HashSet syncSet, boolean doPop) #void
