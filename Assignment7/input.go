@@ -11,8 +11,8 @@ if true {
     a = 5;
     var b int;
     b = 6
-    var c int;
+    var c float;
     c = 7.0;
-    var d int;
+    var d string;
     d = "hello\n";
 }
