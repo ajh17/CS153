@@ -1,0 +1,12 @@
+PROGRAM test;
+VAR
+	i, j, k : integer;
+	x, y, z : real;
+BEGIN
+    i := 1;
+    j := i + 3;
+    k := 2*j;
+    x := i + j;
+    y := 3.1415926 + i - j + k;
+    z := x + i*j/k - x/y
+END.

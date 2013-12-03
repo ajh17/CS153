@@ -5,7 +5,7 @@ options
    NODE_EXTENDS = "wci.intermediate.icodeimpl.ICodeNodeImpl";
    MULTI = true;
    VISITOR = true;
-   //DEBUG_PARSER=true;
+   DEBUG_PARSER=true;
 }
 
 PARSER_BEGIN(GoParser)
@@ -362,11 +362,12 @@ void operand() #void : {}
 
 void expression() #void : {}
 {
-    (operand() (
-      //TODO: This implementation is very limited. Need to change eventually.
-      < REL_OP > operand() #relationalOperator(2)
-      |
-      ( < ADD_OP > operand() #add(2))*)
+    operand()
+    (
+        //TODO: This implementation is very limited. Need to change eventually.
+        < REL_OP > operand() #relationalOperator(2)
+        |
+        (< ADD_OP > operand() #add(2))*
     )
 }
 
