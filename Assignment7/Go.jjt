@@ -295,7 +295,7 @@ void assignmentStatement(HashSet syncSet) : {}
      )
     )
     | 
-    ( incOrDec() identifier())) ( LOOKAHEAD(2) < SEMICOLON >)?
+    ( incOrDec() identifier())) ( LOOKAHEAD(2) < SEMICOLON >)
 }
 
 void incOrDec() : {}
@@ -317,7 +317,7 @@ void forClause() : {
 {
    ( LOOKAHEAD(2) assignmentStatement(syncSet))?
       ( LOOKAHEAD(2) expression())?
-      (< SEMICOLON >)?
+      (< SEMICOLON >)
       ( assignmentStatement(syncSet))?
 }
 
