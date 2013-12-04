@@ -471,8 +471,12 @@ TOKEN: {
 TOKEN: {
     <PLUS: "+">
         {debugStream.println("PLUS token: " + matchedToken.image); }
+    <PLUS_EQUALS: "+=">
+        {debugStream.println("PLUS_EQUALS token: " + matchedToken.image); }
     | <MINUS: "-">
         {debugStream.println("MINUS token: " + matchedToken.image); }
+    | <MINUS_EQUALS: "-=">
+        {debugStream.println("MINUS_EQUALS token: " + matchedToken.image); }
     | <MULTIPLY: "*">
         {debugStream.println("MULTIPLY token: " + matchedToken.image); }
     | <DIVIDE: "/">
@@ -495,10 +499,14 @@ TOKEN: {
         {debugStream.println("LESS_EQUALS token: " + matchedToken.image); }
     | <GREATER_EQUALS: ">=">
         {debugStream.println("GREATER_EQUALS token: " + matchedToken.image); }
+    | <OR: "|">
+        {debugStream.println("OR token: " + matchedToken.image); }
     | <OR_OR: "||">
-        {debugStream.println("OR_ORD token: " + matchedToken.image); }
+        {debugStream.println("OR_OR token: " + matchedToken.image); }
     | <AND: "&">
         {debugStream.println("AND token: " + matchedToken.image); }
+    | <AND_EQUALS: "&=">
+        {debugStream.println("AND_EQUALS token: " + matchedToken.image); }
     | <AND_AND: "&&">
         {debugStream.println("AND_AND token: " + matchedToken.image); }
     | <NOT_EQUALS: "!=">
@@ -534,11 +542,9 @@ TOKEN :
       | ";" | "[" | "]" | "{" | "}" | "|">
       | <RAW_LITERAL_SYMBOL : < COMMON_LITERAL_SYMBOL > | "\"" | "\\" >
       | <INTERPRETED_LITERAL_SYMBOL : < COMMON_LITERAL_SYMBOL > | "`" >
-      | <SPECIAL_SYMBOL : "+" | "&" | "+=" | "&=" | "&&" | "==" | "!=" | "(" | ")"
-      | "-" | "|" | "-=" | "|=" | "||" | "<" | "<=" | "[" | "]" | "*" | "^" | "*="
-      | "^=" | "<-" | ">" | ">=" | "{" | "}" | "/" | "<<" | "/=" | "<<=" | "++"
-      | "=" | ";" | "%" | ">>" | "%=" | ">>=" | "--" | "!" | "..." | "." | ":"
-      | "&^" | "&^=" >
+      | <SPECIAL_SYMBOL: "|=" | "[" | "]" | "*="
+      | "^=" | "<-" | "{" | "}" | "<<" | "/=" | "<<=" | "++"
+      | ">>" | "%=" | ">>=" | "--" | "." | ":" | "&^" | "&^=" >
 }
 
 TOKEN: { /* Error token */
