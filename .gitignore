@@ -1,9 +1,11 @@
 employeesort
 *.o
 .DS_Store
+tags
 out/
 workspace.xml
 misc.xml
 .idea/
 *.iml
 Assignment7/src/wci/frontend/
+Assignment7/*.j
