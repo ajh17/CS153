@@ -471,12 +471,8 @@ TOKEN: {
 TOKEN: {
     <PLUS: "+">
         {debugStream.println("PLUS token: " + matchedToken.image); }
-    <PLUS_EQUALS: "+=">
-        {debugStream.println("PLUS_EQUALS token: " + matchedToken.image); }
     | <MINUS: "-">
         {debugStream.println("MINUS token: " + matchedToken.image); }
-    | <MINUS_EQUALS: "-=">
-        {debugStream.println("MINUS_EQUALS token: " + matchedToken.image); }
     | <MULTIPLY: "*">
         {debugStream.println("MULTIPLY token: " + matchedToken.image); }
     | <DIVIDE: "/">
