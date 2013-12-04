@@ -421,8 +421,6 @@ TOKEN: {
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
       | <FUNC: "func">
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-      | <INTERFACE: "interface">
-        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
       | <CASE: "case">
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
       | <STRUCT: "struct">
@@ -454,8 +452,6 @@ TOKEN: {
       | <INT: "int">
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
       | <FLOAT: "float">
-        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-      | <DOUBLE: "double">
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
       | <STRING: "string">
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
