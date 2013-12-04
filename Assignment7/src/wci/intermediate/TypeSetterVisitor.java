@@ -64,17 +64,6 @@ public class TypeSetterVisitor extends GoParserVisitorAdapter
         return data;
     }
     
-    public Object visit(ASTstart node, Object data)
-    {
-        Object obj = super.visit(node, data);
-        setType(node);
-        return obj;
-    }
-    
-    
-    
-    
-    
     public Object visit(ASTswitchBlock node, Object data)
     {
         Object obj = super.visit(node, data);
