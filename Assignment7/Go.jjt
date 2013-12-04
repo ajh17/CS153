@@ -5,7 +5,7 @@ options
    NODE_EXTENDS = "wci.intermediate.icodeimpl.ICodeNodeImpl";
    MULTI = true;
    VISITOR = true;
-   //DEBUG_PARSER=true;
+   DEBUG_PARSER=true;
 }
 
 PARSER_BEGIN(GoParser)
@@ -135,7 +135,7 @@ void statement() #void :
    }
    catch (ParseException ex)
    {
-      handleError(ex, syncSet, true);
+      handleError(ex, syncSet, false);
    }
 }
 
@@ -160,38 +160,32 @@ void declarationStatement(HashSet syncSet) #void :
    }
    catch (ParseException ex)
    {
-      handleError(ex, syncSet, true);
+      handleError(ex, syncSet, false);
    }
 }
 
-void variableDeclaration(HashSet syncSet) :
+void variableDeclaration(HashSet syncSet) throws ParseException :
 {}
 {
    {
-      syncSet.add(VAR); // skip to the next variable declaration
+      //syncSet.add(VAR); // skip to the next variable declaration
    }
    // Our implementation of Go's variable declaration will be either these forms:
    // var x int; OR x = 5 (provided that they also used the first form to declare the variable)
-   try
+
+   < VAR > identifier()
    {
-      < VAR > identifier()
-      {
-         SymTabEntry variableId = symTabStack.enterLocal(token.image);
-         variableId.appendLineNumber(token.beginLine);
-         variableId.setDefinition(DefinitionImpl.VARIABLE);
-      }
-      type()
-      {
-         SymTabEntry typeId = symTabStack.lookup(token.image);
-         TypeSpec type = typeId.getTypeSpec();
-         variableId.setTypeSpec(type);
-      }
-      (LOOKAHEAD(2) < SEMICOLON >) ?
+      SymTabEntry variableId = symTabStack.enterLocal(token.image);
+      variableId.appendLineNumber(token.beginLine);
+      variableId.setDefinition(DefinitionImpl.VARIABLE);
    }
-   catch (ParseException ex)
+   type()
    {
-      handleError(ex, syncSet, true);
+      SymTabEntry typeId = symTabStack.lookup(token.image);
+      TypeSpec type = typeId.getTypeSpec();
+      variableId.setTypeSpec(type);
    }
+   < SEMICOLON >
 }
 
 void functionDeclaration(HashSet syncSet) :
