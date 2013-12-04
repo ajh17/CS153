@@ -1,5 +1,5 @@
 package main
-var x int
+var x int;
 var foo float;
 var q float;
 var r string;
@@ -10,7 +10,7 @@ if true {
     var a int;
     a = 5;
     var b int;
-    b = 6
+    b = 6;
     var c float;
     c = 7.0;
     var d string;

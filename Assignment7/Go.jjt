@@ -178,6 +178,11 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
       SymTabEntry variableId = symTabStack.enterLocal(token.image);
       variableId.appendLineNumber(token.beginLine);
       variableId.setDefinition(DefinitionImpl.VARIABLE);
+      
+      // TODO: This is stupid but this prevents the null pointer exception at the end.
+      // TODO: Verify if this is actually needed or if we need to take it out of CodeGenerator.java
+      int coolVariable = 0;
+      programID.setAttribute(ROUTINE_LOCALS_COUNT, coolVariable);
    }
    type()
    {
@@ -295,7 +300,7 @@ void assignmentStatement(HashSet syncSet) : {}
      )
     )
     | 
-    ( incOrDec() identifier())) ( LOOKAHEAD(2) < SEMICOLON >)?
+    ( incOrDec() identifier())) ( LOOKAHEAD(2) < SEMICOLON >)
 }
 
 void incOrDec() : {}
@@ -317,7 +322,7 @@ void forClause() : {
 {
    ( LOOKAHEAD(2) assignmentStatement(syncSet))?
       ( LOOKAHEAD(2) expression())?
-      (< SEMICOLON >)?
+      (< SEMICOLON >)
       ( assignmentStatement(syncSet))?
 }
 
@@ -471,12 +476,8 @@ TOKEN: {
 TOKEN: {
     <PLUS: "+">
         {debugStream.println("PLUS token: " + matchedToken.image); }
-    <PLUS_EQUALS: "+=">
-        {debugStream.println("PLUS_EQUALS token: " + matchedToken.image); }
     | <MINUS: "-">
         {debugStream.println("MINUS token: " + matchedToken.image); }
-    | <MINUS_EQUALS: "-=">
-        {debugStream.println("MINUS_EQUALS token: " + matchedToken.image); }
     | <MULTIPLY: "*">
         {debugStream.println("MULTIPLY token: " + matchedToken.image); }
     | <DIVIDE: "/">
