@@ -183,9 +183,6 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
       variableId.appendLineNumber(token.beginLine);
       variableId.setDefinition(DefinitionImpl.VARIABLE);
       variableNode.setAttribute(ID, variableId);
-      
-      // TODO: This is stupid but this prevents the null pointer exception at the end.
-      // TODO: Verify if this is actually needed or if we need to take it out of CodeGenerator.java
    }
    type()
    {
