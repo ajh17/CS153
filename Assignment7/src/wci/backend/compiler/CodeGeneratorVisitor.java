@@ -92,7 +92,14 @@ public class CodeGeneratorVisitor
         TypeSpec type1 = addend1Node.getTypeSpec();
 
         // Get the addition type.
-        TypeSpec type = node.getTypeSpec();
+        TypeSpec type;
+        if (addend0Node.getTypeSpec() == Predefined.realType || addend1Node.getTypeSpec() == Predefined.realType) {
+            type = Predefined.realType;
+        }
+        else {
+            type = Predefined.integerType;
+        }
+
         String typePrefix = (type == Predefined.integerType) ? "i" : "f";
 
         // Emit code for the first expression

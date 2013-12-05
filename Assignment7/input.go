@@ -1,3 +1,3 @@
 package main
-var x int;
-x = 1+1;
+var x float;
+x = 1.2 + 1.5;
