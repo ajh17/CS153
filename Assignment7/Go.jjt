@@ -41,7 +41,10 @@ public class GoParser
       String sourceFilePath = args [0];
       int truncatedLength = sourceFilePath.length() - SOURCE_SUFFIX.length();
       int suffixIndex = sourceFilePath.lastIndexOf(SOURCE_SUFFIX);
-      String objectFilePath = (suffixIndex == truncatedLength) ? sourceFilePath.substring(0, truncatedLength) + OUTPUT_SUFFIX : sourceFilePath + OUTPUT_SUFFIX;
+      String objectFilePath =
+        (suffixIndex == truncatedLength) ?
+            sourceFilePath.substring(0, truncatedLength) + OUTPUT_SUFFIX :
+            sourceFilePath + OUTPUT_SUFFIX;
       // Parse a Go program.
       Reader reader = new FileReader(sourceFilePath);
       GoParser parser = new GoParser(reader);
@@ -535,7 +538,8 @@ TOKEN :
         { debugStream.println("REAL_NUMBER token: " + matchedToken.image); }
       | < BOOL_CONSTANT : ( "true" | "false")>
         { debugStream.println("BOOL_CONSTANT token: " + matchedToken.image); }
-      | < INTERPRETED_STRING : "\"" ( < ALPHANUMERIC > | < ESCAPED_CHAR > | < INTERPRETED_LITERAL_SYMBOL > | < WHITE_SPACE >)* "\"" >
+      | < INTERPRETED_STRING : "\"" ( < ALPHANUMERIC > | < ESCAPED_CHAR >
+             | < INTERPRETED_LITERAL_SYMBOL > | < WHITE_SPACE >)* "\"" >
         { debugStream.println("INTERPRETED_STRING token: " + matchedToken.image); }
       | < IDENTIFIER : < LETTER > ( < LETTER > | < DIGIT > | "_")* >
         { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
