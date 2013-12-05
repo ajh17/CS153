@@ -104,8 +104,7 @@ public class CodeGenerator extends Backend
         objectFile.println("    new	 RunTimer");
         objectFile.println("    dup");
         objectFile.println("    invokenonvirtual	RunTimer/<init>()V");
-        objectFile.println("    putstatic	" + programName +
-                "/_runTimer LRunTimer;");
+        objectFile.println("    putstatic	" + programName + "/_runTimer LRunTimer;");
         objectFile.println("    new	 PascalTextIn");
         objectFile.println("    dup");
         objectFile.println("    invokenonvirtual	PascalTextIn/<init>()V");
@@ -114,16 +113,37 @@ public class CodeGenerator extends Backend
         objectFile.println();
         objectFile.flush();
 
+
         // Visit the parse tree nodes to generate code 
         // for the main method's compound statement.
         CodeGeneratorVisitor codeVisitor = new CodeGeneratorVisitor();
         Node rootNode = iCode.getRoot();
         rootNode.jjtAccept(codeVisitor, programName);
         objectFile.println();
+        
+        
+        // try and print out all variables
+        for (SymTabEntry id : locals) {
+            Definition defn = id.getDefinition();
+
+            if (defn == VARIABLE) {
+                String fieldName = id.getName();
+            
+                TypeSpec type = id.getTypeSpec();
+                String typeCode = type == Predefined.integerType ? "I" : "F";
+                objectFile.println("getstatic java/lang/System/out Ljava/io/PrintStream;");
+               objectFile.println("getstatic Input/"+ fieldName  + " " + typeCode);
+                objectFile.println("invokevirtual java/io/PrintStream/println(" + typeCode + ")V");
+                        
+            }
+        }
+        objectFile.println();
+        
+       
+        
 
         // Generate the main method epilogue.
-        objectFile.println("    getstatic	" + programName +
-                "/_runTimer LRunTimer;");
+        objectFile.println("    getstatic	" + programName + "/_runTimer LRunTimer;");
         objectFile.println("    invokevirtual	RunTimer.printElapsedTime()V");
         objectFile.println();
         objectFile.println("    return");
