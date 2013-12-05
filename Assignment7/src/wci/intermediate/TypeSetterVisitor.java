@@ -9,31 +9,28 @@ public class TypeSetterVisitor extends GoParserVisitorAdapter
     {
         int count = node.jjtGetNumChildren();
         TypeSpec type = Predefined.integerType;
-        
+
         for (int i = 0; (i < count) && (type == Predefined.integerType); ++i) {
             SimpleNode child = (SimpleNode) node.jjtGetChild(i);
             TypeSpec childType = child.getTypeSpec();
-            
+
             if (childType == Predefined.realType) {
                 type = Predefined.realType;
             }
         }
-        
+
         node.setTypeSpec(type);
     }
-    
 
     public Object visit(ASTblock node, Object data)
     {
         Object obj = super.visit(node, data);
-        setType(node);
         return obj;
     }
 
     public Object visit(ASTcaseGroup node, Object data)
     {
         Object obj = super.visit(node, data);
-        setType(node);
         return obj;
     }
 
@@ -41,16 +38,12 @@ public class TypeSetterVisitor extends GoParserVisitorAdapter
     public Object visit(ASTfunctionDeclaration node, Object data)
     {
         Object obj = super.visit(node, data);
-        setType(node);
         return obj;
     }
-    
-    
-    
+
     public Object visit(ASTifStatement node, Object data)
     {
         Object obj = super.visit(node, data);
-        setType(node);
         return obj;
     }
     
@@ -67,21 +60,14 @@ public class TypeSetterVisitor extends GoParserVisitorAdapter
     public Object visit(ASTswitchBlock node, Object data)
     {
         Object obj = super.visit(node, data);
-        setType(node);
         return obj;
-            }
+    }
     
     
     
-   public Object visit(ASTswitchStatement node, Object data)
+    public Object visit(ASTswitchStatement node, Object data)
     {
-
         Object obj = super.visit(node, data);
-        setType(node);
         return obj;
-            }
-    
-   
-
-    
+    }
 }
