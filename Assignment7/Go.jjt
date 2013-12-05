@@ -189,6 +189,7 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
       SymTabEntry typeId = symTabStack.lookup(token.image);
       TypeSpec type = typeId.getTypeSpec();
       variableNode.setTypeSpec(type);
+      variableId.setTypeSpec(type);
    }
    < SEMICOLON >
 }
