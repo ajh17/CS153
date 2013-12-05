@@ -168,9 +168,6 @@ void declarationStatement(HashSet syncSet) #void :
 void variableDeclaration(HashSet syncSet) throws ParseException :
 {}
 {
-   {
-      //syncSet.add(VAR); // skip to the next variable declaration
-   }
    // Our implementation of Go's variable declaration will be either these forms:
    // var x int; OR x = 5 (provided that they also used the first form to declare the variable)
 
@@ -414,7 +411,15 @@ void interpretedString() : {}
 
 void type() : {}
 {
-    < INT > | < FLOAT > | < STRING > | < BOOL >
+    (< INT > | < FLOAT > | < STRING > | < BOOL >)
+    {
+        switch (token.image) {
+            case "int": jjtThis.setTypeSpec(Predefined.integerType); break;
+            case "float": jjtThis.setTypeSpec(Predefined.realType); break;
+            case "string": jjtThis.setTypeSpec(Predefined.charType); break;
+            case "bool": jjtThis.setTypeSpec(Predefined.booleanType); break;
+        }
+    }
 }
 
 /********************s
