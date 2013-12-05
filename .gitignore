@@ -9,4 +9,3 @@ misc.xml
 *.iml
 Assignment7/src/wci/frontend/
 Assignment7/*.j
-**/*.class
