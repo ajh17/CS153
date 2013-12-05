@@ -7,12 +7,13 @@ import wci.intermediate.symtabimpl.Predefined;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 
 public class CodeGeneratorVisitor
-    extends PclParserVisitorAdapter
-    implements PclParserTreeConstants
+        extends GoParserVisitorAdapter
+        implements GoParserTreeConstants
 {
+    
     public Object visit(ASTassignmentStatement node, Object data)
     {
-    	String programName        = (String) data;
+        String programName        = (String) data;
         SimpleNode variableNode   = (SimpleNode) node.jjtGetChild(0);
         SimpleNode expressionNode = (SimpleNode) node.jjtGetChild(1);
 
@@ -25,7 +26,7 @@ public class CodeGeneratorVisitor
 
         // Convert an integer value to float if necessary.
         if ((targetType == Predefined.realType) &&
-            (expressionType == Predefined.integerType))
+                (expressionType == Predefined.integerType))
         {
             CodeGenerator.objectFile.println("    i2f");
             CodeGenerator.objectFile.flush();
@@ -38,15 +39,15 @@ public class CodeGeneratorVisitor
 
         // Emit the appropriate store instruction.
         CodeGenerator.objectFile.println("    putstatic " + programName +
-        		                         "/" + fieldName + " " + typeCode);
+                "/" + fieldName + " " + typeCode);
         CodeGenerator.objectFile.flush();
 
         return data;
     }
-    
-    public Object visit(ASTvariable node, Object data)
+
+    public Object visit(ASTidentifier node, Object data)
     {
-    	String programName = (String) data;
+        String programName = (String) data;
         SymTabEntry id = (SymTabEntry) node.getAttribute(ID);
         String fieldName = id.getName();
         TypeSpec type = id.getTypeSpec();
@@ -98,7 +99,7 @@ public class CodeGeneratorVisitor
         // with type conversion if necessary.
         addend0Node.jjtAccept(this, data);
         if ((type == Predefined.realType) &&
-            (type0 == Predefined.integerType))
+                (type0 == Predefined.integerType))
         {
             CodeGenerator.objectFile.println("    i2f");
             CodeGenerator.objectFile.flush();
@@ -108,7 +109,7 @@ public class CodeGeneratorVisitor
         // with type conversion if necessary.
         addend1Node.jjtAccept(this, data);
         if ((type == Predefined.realType) &&
-            (type1 == Predefined.integerType))
+                (type1 == Predefined.integerType))
         {
             CodeGenerator.objectFile.println("    i2f");
             CodeGenerator.objectFile.flush();
@@ -121,7 +122,7 @@ public class CodeGeneratorVisitor
         return data;
     }
 
-    public Object visit(ASTsubtract node, Object data)
+/*    public Object visit(ASTsubtract node, Object data)
     {
         SimpleNode addend0Node = (SimpleNode) node.jjtGetChild(0);
         SimpleNode addend1Node = (SimpleNode) node.jjtGetChild(1);
@@ -137,7 +138,7 @@ public class CodeGeneratorVisitor
         // with type conversion if necessary.
         addend0Node.jjtAccept(this, data);
         if ((type == Predefined.realType) &&
-            (type0 == Predefined.integerType))
+                (type0 == Predefined.integerType))
         {
             CodeGenerator.objectFile.println("    i2f");
             CodeGenerator.objectFile.flush();
@@ -147,7 +148,7 @@ public class CodeGeneratorVisitor
         // with type conversion if necessary.
         addend1Node.jjtAccept(this, data);
         if ((type == Predefined.realType) &&
-            (type1 == Predefined.integerType))
+                (type1 == Predefined.integerType))
         {
             CodeGenerator.objectFile.println("    i2f");
             CodeGenerator.objectFile.flush();
@@ -158,9 +159,9 @@ public class CodeGeneratorVisitor
         CodeGenerator.objectFile.flush();
 
         return data;
-    }
+    }*/
 
-    public Object visit(ASTmultiply node, Object data)
+ /*   public Object visit(ASTmultiply node, Object data)
     {
         SimpleNode addend0Node = (SimpleNode) node.jjtGetChild(0);
         SimpleNode addend1Node = (SimpleNode) node.jjtGetChild(1);
@@ -176,7 +177,7 @@ public class CodeGeneratorVisitor
         // with type conversion if necessary.
         addend0Node.jjtAccept(this, data);
         if ((type == Predefined.realType) &&
-            (type0 == Predefined.integerType))
+                (type0 == Predefined.integerType))
         {
             CodeGenerator.objectFile.println("    i2f");
             CodeGenerator.objectFile.flush();
@@ -186,7 +187,7 @@ public class CodeGeneratorVisitor
         // with type conversion if necessary.
         addend1Node.jjtAccept(this, data);
         if ((type == Predefined.realType) &&
-            (type1 == Predefined.integerType))
+                (type1 == Predefined.integerType))
         {
             CodeGenerator.objectFile.println("    i2f");
             CodeGenerator.objectFile.flush();
@@ -197,8 +198,8 @@ public class CodeGeneratorVisitor
         CodeGenerator.objectFile.flush();
 
         return data;
-    }
-
+    }*/
+/*
     public Object visit(ASTdivide node, Object data)
     {
         SimpleNode addend0Node = (SimpleNode) node.jjtGetChild(0);
@@ -215,7 +216,7 @@ public class CodeGeneratorVisitor
         // with type conversion if necessary.
         addend0Node.jjtAccept(this, data);
         if ((type == Predefined.realType) &&
-            (type0 == Predefined.integerType))
+                (type0 == Predefined.integerType))
         {
             CodeGenerator.objectFile.println("    i2f");
             CodeGenerator.objectFile.flush();
@@ -225,7 +226,7 @@ public class CodeGeneratorVisitor
         // with type conversion if necessary.
         addend1Node.jjtAccept(this, data);
         if ((type == Predefined.realType) &&
-            (type1 == Predefined.integerType))
+                (type1 == Predefined.integerType))
         {
             CodeGenerator.objectFile.println("    i2f");
             CodeGenerator.objectFile.flush();
@@ -237,4 +238,5 @@ public class CodeGeneratorVisitor
 
         return data;
     }
+    */
 }

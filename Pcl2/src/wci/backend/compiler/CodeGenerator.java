@@ -20,7 +20,7 @@ import static wci.intermediate.symtabimpl.DefinitionImpl.*;
 public class CodeGenerator extends Backend
 {
     private static final int STACK_LIMIT = 16;
-        
+
     static ICode iCode;
     static SymTabStack symTabStack;
     static PrintWriter objectFile;
@@ -35,7 +35,7 @@ public class CodeGenerator extends Backend
      */
     public void process(ICode iCode, SymTabStack symTabStack,
                         String objectFilePath)
-        throws Exception
+            throws Exception
     {
         CodeGenerator.iCode       = iCode;
         CodeGenerator.symTabStack = symTabStack;
@@ -49,14 +49,14 @@ public class CodeGenerator extends Backend
             programName = programName.substring(0, end);
         }
         programName = programName.substring(0, 1).toUpperCase() +
-                      programName.substring(1);
+                programName.substring(1);
         String methodName = programName.substring(0, 1).toLowerCase() +
-                            programName.substring(1);
-        
+                programName.substring(1);
+
         SymTabEntry programId = symTabStack.getProgramId();
-        int localsCount = 
+        int localsCount =
                 (Integer) programId.getAttribute(ROUTINE_LOCALS_COUNT);
-        SymTab routineSymTab = 
+        SymTab routineSymTab =
                 (SymTab) programId.getAttribute(ROUTINE_SYMTAB);
         ArrayList<SymTabEntry> locals = routineSymTab.sortedEntries();
 
@@ -64,26 +64,26 @@ public class CodeGenerator extends Backend
         objectFile.println(".class public " + programName);
         objectFile.println(".super java/lang/Object");
         objectFile.println();
-        
+
         // Generate code for the timer and standard input fields.
         objectFile.println(".field private static _runTimer LRunTimer;");
         objectFile.println(".field private static _standardIn LPascalTextIn;");
         objectFile.println();
-        
+
         // Generate code for fields.
         for (SymTabEntry id : locals) {
             Definition defn = id.getDefinition();
-            
+
             if (defn == VARIABLE) {
                 String fieldName = id.getName();
                 TypeSpec type = id.getTypeSpec();
                 String typeCode = type == Predefined.integerType ? "I" : "F";
-                objectFile.println(".field private static " + fieldName + 
-                		           " " + typeCode);
+                objectFile.println(".field private static " + fieldName +
+                        " " + typeCode);
             }
         }
         objectFile.println();
-        
+
         // Generate the class constructor.
         objectFile.println(".method public <init>()V");
         objectFile.println();
@@ -95,24 +95,24 @@ public class CodeGenerator extends Backend
         objectFile.println(".limit stack 1");
         objectFile.println(".end method");
         objectFile.println();
-        
+
         // Generate the main method header.
         objectFile.println(".method public static main([Ljava/lang/String;)V");
         objectFile.println();
-        
+
         // Generate the main method prologue.
         objectFile.println("    new	 RunTimer");
         objectFile.println("    dup");
         objectFile.println("    invokenonvirtual	RunTimer/<init>()V");
-        objectFile.println("    putstatic	" + programName +
-        		           "/_runTimer LRunTimer;");
+        objectFile.println("    putstatic	" + programName + "/_runTimer LRunTimer;");
         objectFile.println("    new	 PascalTextIn");
         objectFile.println("    dup");
         objectFile.println("    invokenonvirtual	PascalTextIn/<init>()V");
         objectFile.println("    putstatic	" + programName +
-        		           "/_standardIn LPascalTextIn;");
+                "/_standardIn LPascalTextIn;");
         objectFile.println();
         objectFile.flush();
+
 
         // Visit the parse tree nodes to generate code 
         // for the main method's compound statement.
@@ -120,10 +120,30 @@ public class CodeGenerator extends Backend
         Node rootNode = iCode.getRoot();
         rootNode.jjtAccept(codeVisitor, programName);
         objectFile.println();
+        
+        
+        // try and print out all variables
+        for (SymTabEntry id : locals) {
+            Definition defn = id.getDefinition();
+
+            if (defn == VARIABLE) {
+                String fieldName = id.getName();
+            
+                TypeSpec type = id.getTypeSpec();
+                String typeCode = type == Predefined.integerType ? "I" : "F";
+                objectFile.println("getstatic java/lang/System/out Ljava/io/PrintStream;");
+               objectFile.println("getstatic Input/"+ fieldName  + " " + typeCode);
+                objectFile.println("invokevirtual java/io/PrintStream/println(" + typeCode + ")V");
+                        
+            }
+        }
+        objectFile.println();
+        
+       
+        
 
         // Generate the main method epilogue.
-        objectFile.println("    getstatic	" + programName +
-        		           "/_runTimer LRunTimer;");
+        objectFile.println("    getstatic	" + programName + "/_runTimer LRunTimer;");
         objectFile.println("    invokevirtual	RunTimer.printElapsedTime()V");
         objectFile.println();
         objectFile.println("    return");
