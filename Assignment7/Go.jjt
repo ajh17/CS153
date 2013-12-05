@@ -281,14 +281,15 @@ void caseGroup() :
     ( <DEFAULT_TOKEN> ":" statementList())?
 }
 
-void assignmentStatement(HashSet syncSet) : {}
+void assignmentStatement(HashSet syncSet) : { SimpleNode variableNode; }
 {
    (
     (
-     identifier()
+     variableNode = identifier()
      {
         SymTabEntry variableId = symTabStack.lookup(token.image);
         TypeSpec typeId = variableId.getTypeSpec();
+        variableNode.setTypeSpec(typeId);
      }
      (
       <EQUALS> expression() | incOrDec() {
