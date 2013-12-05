@@ -330,7 +330,7 @@ void operand() #void : {}
 {
     ( 
      (identifier() | integerConstant() | realConstant() | booleanConstant() 
-      | interpretedString() | rawString()) | "(" expression() ")"
+      | interpretedString()) | "(" expression() ")"
      )
 }
 
@@ -388,15 +388,6 @@ void realConstant() : {}
     {
         jjtThis.setTypeSpec(Predefined.realType);
         jjtThis.setAttribute(VALUE, Float.parseFloat(token.image));
-    }
-}
-
-void rawString() : {}
-{
-    < RAW_STRING >
-    {
-        jjtThis.setTypeSpec(Predefined.charType);
-        jjtThis.setAttribute(VALUE, token.image.toString());
     }
 }
 
@@ -480,7 +471,7 @@ TOKEN: {
       | < COMMA : "," >
 }
 
-// Math tokens
+// Special character tokens
 TOKEN: {
     <PLUS: "+">
         {debugStream.println("PLUS token: " + matchedToken.image); }
@@ -535,8 +526,6 @@ TOKEN :
         { debugStream.println("REAL_NUMBER token: " + matchedToken.image); }
       | < BOOL_CONSTANT : ( "true" | "false")>
         { debugStream.println("BOOL_CONSTANT token: " + matchedToken.image); }
-      | < RAW_STRING : "`" ( < ALPHANUMERIC > | < RAW_LITERAL_SYMBOL > | < NEWLINE >)* "`" >
-        { debugStream.println("RAW_STRING token: " + matchedToken.image); }
       | < INTERPRETED_STRING : "\"" ( < ALPHANUMERIC > | < ESCAPED_CHAR > | < INTERPRETED_LITERAL_SYMBOL > | < WHITE_SPACE >)* "\"" >
         { debugStream.println("INTERPRETED_STRING token: " + matchedToken.image); }
       | < IDENTIFIER : < LETTER > ( < LETTER > | < DIGIT > | "_")* >
@@ -546,14 +535,15 @@ TOKEN :
       | < #LETTER : [ "a"-"z", "A"-"Z" ] >
       | < #DIGIT : [ "0"-"9" ] >
       |
-      <#COMMON_LITERAL_SYMBOL : "'" | "~" | "!" | "@" | "#" | "$" | "%" | "^" | "&"
+      <#INTERPRETED_LITERAL_SYMBOL : "'" | "~" | "!" | "@" | "#" | "$" | "%" | "^" | "&"
       | "*" | "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">" | "." | "/" | "?"
-      | ";" | "[" | "]" | "{" | "}" | "|">
-      | <RAW_LITERAL_SYMBOL : < COMMON_LITERAL_SYMBOL > | "\"" | "\\" >
-      | <INTERPRETED_LITERAL_SYMBOL : < COMMON_LITERAL_SYMBOL > | "`" >
+      | ";" | "[" | "]" | "{" | "}" | "|" | "`">
+
+      /* I have a feeling we don't need these TOKENS so I am commenting it for now.
       | <SPECIAL_SYMBOL: "|=" | "[" | "]" | "*="
       | "^=" | "<-" | "{" | "}" | "<<" | "/=" | "<<=" | "++"
       | ">>" | "%=" | ">>=" | "--" | "." | ":" | "&^" | "&^=" >
+      */
 }
 
 TOKEN: { /* Error token */
