@@ -10,7 +10,7 @@ public class CodeGeneratorVisitor
         extends GoParserVisitorAdapter
         implements GoParserTreeConstants
 {
-
+    
     public Object visit(ASTassignmentStatement node, Object data)
     {
         String programName        = (String) data;
@@ -122,8 +122,7 @@ public class CodeGeneratorVisitor
         return data;
     }
 
-    /*
-    public Object visit(ASTsubtract node, Object data)
+/*    public Object visit(ASTsubtract node, Object data)
     {
         SimpleNode addend0Node = (SimpleNode) node.jjtGetChild(0);
         SimpleNode addend1Node = (SimpleNode) node.jjtGetChild(1);
@@ -160,9 +159,9 @@ public class CodeGeneratorVisitor
         CodeGenerator.objectFile.flush();
 
         return data;
-    }
+    }*/
 
-    public Object visit(ASTmultiply node, Object data)
+ /*   public Object visit(ASTmultiply node, Object data)
     {
         SimpleNode addend0Node = (SimpleNode) node.jjtGetChild(0);
         SimpleNode addend1Node = (SimpleNode) node.jjtGetChild(1);
@@ -199,8 +198,8 @@ public class CodeGeneratorVisitor
         CodeGenerator.objectFile.flush();
 
         return data;
-    }
-
+    }*/
+/*
     public Object visit(ASTdivide node, Object data)
     {
         SimpleNode addend0Node = (SimpleNode) node.jjtGetChild(0);
