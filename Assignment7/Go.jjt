@@ -178,7 +178,7 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
       SymTabEntry variableId = symTabStack.enterLocal(token.image);
       variableId.appendLineNumber(token.beginLine);
       variableId.setDefinition(DefinitionImpl.VARIABLE);
-      variableNode.setAttribute(ID, token.image);
+      variableNode.setAttribute(ID, variableId);
       
       // TODO: This is stupid but this prevents the null pointer exception at the end.
       // TODO: Verify if this is actually needed or if we need to take it out of CodeGenerator.java
@@ -290,8 +290,7 @@ void assignmentStatement(HashSet syncSet) : { SimpleNode variableNode; }
      {
         SymTabEntry variableId = symTabStack.lookup(token.image);
         TypeSpec typeId = variableId.getTypeSpec();
-        variableNode.setTypeSpec(typeId);
-        variableNode.setAttribute(ID, token.image);
+        variableNode.setAttribute(ID, variableId);
      }
      (
       <EQUALS> expression() | incOrDec() {

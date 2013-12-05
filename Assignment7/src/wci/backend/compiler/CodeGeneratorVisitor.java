@@ -10,7 +10,7 @@ public class CodeGeneratorVisitor
         extends GoParserVisitorAdapter
         implements GoParserTreeConstants
 {
-    /*
+
     public Object visit(ASTassignmentStatement node, Object data)
     {
         String programName        = (String) data;
@@ -45,7 +45,7 @@ public class CodeGeneratorVisitor
         return data;
     }
 
-    public Object visit(ASTvariable node, Object data)
+    public Object visit(ASTidentifier node, Object data)
     {
         String programName = (String) data;
         SymTabEntry id = (SymTabEntry) node.getAttribute(ID);
@@ -122,6 +122,7 @@ public class CodeGeneratorVisitor
         return data;
     }
 
+    /*
     public Object visit(ASTsubtract node, Object data)
     {
         SimpleNode addend0Node = (SimpleNode) node.jjtGetChild(0);
