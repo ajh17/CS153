@@ -166,12 +166,14 @@ void declarationStatement(HashSet syncSet) #void :
 }
 
 void variableDeclaration(HashSet syncSet) throws ParseException :
-{}
+{
+    SimpleNode variableNode;
+}
 {
    // Our implementation of Go's variable declaration will be either these forms:
    // var x int; OR x = 5 (provided that they also used the first form to declare the variable)
 
-   < VAR > identifier()
+   < VAR > variableNode = identifier()
    {
       SymTabEntry variableId = symTabStack.enterLocal(token.image);
       variableId.appendLineNumber(token.beginLine);
@@ -186,7 +188,7 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
    {
       SymTabEntry typeId = symTabStack.lookup(token.image);
       TypeSpec type = typeId.getTypeSpec();
-      variableId.setTypeSpec(type);
+      variableNode.setTypeSpec(type);
    }
    < SEMICOLON >
 }
@@ -204,12 +206,12 @@ void functionDeclaration(HashSet syncSet) :
    { // Enter into symbol table
    }
    "(" parameterList() ")"
-    ( identifier() | type() )? block(syncSet)
+   (type())? block(syncSet)
 }
 
 void parameter() : {}
 {
-   ( identifier())?  type()
+   identifier() type()
 }
 
 void parameterList() : {}
@@ -246,6 +248,11 @@ void ifStatement(HashSet syncSet) : {}
    catch (ParseException ex)
    {
       handleError(ex, syncSet, true);
+   }
+   finally
+   {
+      syncSet.remove(IF);
+      syncSet.remove(ELSE);
    }
 }
 
@@ -400,17 +407,9 @@ void interpretedString() : {}
     }
 }
 
-void type() : {}
+void type() #void : {}
 {
-    (< INT > | < FLOAT > | < STRING > | < BOOL >)
-    {
-        switch (token.image) {
-            case "int": jjtThis.setTypeSpec(Predefined.integerType); break;
-            case "float": jjtThis.setTypeSpec(Predefined.realType); break;
-            case "string": jjtThis.setTypeSpec(Predefined.charType); break;
-            case "bool": jjtThis.setTypeSpec(Predefined.booleanType); break;
-        }
-    }
+    < INT > | < FLOAT > | < STRING > | < BOOL >
 }
 
 /********************s
