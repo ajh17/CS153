@@ -178,6 +178,7 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
       SymTabEntry variableId = symTabStack.enterLocal(token.image);
       variableId.appendLineNumber(token.beginLine);
       variableId.setDefinition(DefinitionImpl.VARIABLE);
+      variableNode.setAttribute(ID, token.image);
       
       // TODO: This is stupid but this prevents the null pointer exception at the end.
       // TODO: Verify if this is actually needed or if we need to take it out of CodeGenerator.java
@@ -188,8 +189,8 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
    {
       SymTabEntry typeId = symTabStack.lookup(token.image);
       TypeSpec type = typeId.getTypeSpec();
-      variableNode.setTypeSpec(type);
       variableId.setTypeSpec(type);
+      variableNode.setTypeSpec(type);
    }
    < SEMICOLON >
 }
@@ -290,6 +291,7 @@ void assignmentStatement(HashSet syncSet) : { SimpleNode variableNode; }
         SymTabEntry variableId = symTabStack.lookup(token.image);
         TypeSpec typeId = variableId.getTypeSpec();
         variableNode.setTypeSpec(typeId);
+        variableNode.setAttribute(ID, token.image);
      }
      (
       <EQUALS> expression() | incOrDec() {
@@ -368,7 +370,15 @@ SimpleNode identifier() : {}
 {
     < IDENTIFIER >
     {
-        //TODO: Do something similar to real and integer constants
+        SymTabEntry variableId = symTabStack.lookup(token.image);
+
+        if (variableId != null) {
+            variableId.appendLineNumber(token.beginLine);
+            TypeSpec type = variableId.getTypeSpec();
+            jjtThis.setTypeSpec(type);
+            jjtThis.setAttribute(ID, variableId);
+        }
+
         return jjtThis;
     }
 }
