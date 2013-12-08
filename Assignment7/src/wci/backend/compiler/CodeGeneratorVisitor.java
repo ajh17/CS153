@@ -94,6 +94,11 @@ public class CodeGeneratorVisitor
         return data;
     }
 
+    public Object visit(ASTprintStatement node, Object data)
+    {
+        return data;
+    }
+
     public Object visit(ASTadd node, Object data)
     {
         SimpleNode addend0Node = (SimpleNode) node.jjtGetChild(0);
