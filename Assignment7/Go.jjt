@@ -504,6 +504,12 @@ TOKEN: {
         {debugStream.println("DIVIDE token: " + matchedToken.image); }
     | <MODULO: "%">
         {debugStream.println("MODULO token: " + matchedToken.image); }
+    | <STAR_EQUALS: "*=">
+        {debugStream.println("STAR_EQUALS token: " + matchedToken.image); }
+    | <DIVIDE_EQUALS: "/=">
+        {debugStream.println("DIVIDE_EQUALS token: " + matchedToken.image); }
+    | <MODULO_EQUALS: "%=">
+        {debugStream.println("MODULO_EQUALS token: " + matchedToken.image); }
     | <EQUALS: "=">
         {debugStream.println("EQUALS token: " + matchedToken.image); }
     | <EQUAL_EQUAL: "==">
@@ -559,7 +565,7 @@ TOKEN :
       |
       <#INTERPRETED_LITERAL_SYMBOL : "'" | "~" | "!" | "@" | "#" | "$" | "%" | "^" | "&"
       | "*" | "_" | "-" | "+" | "=" | "<" | ">" | "." | "/" | "?"
-      | ";" | "[" | "]" | "{" | "}" | "|" | "`">
+      | ";" | "(" | ")" | "[" | "]" | "{" | "}" | "|" | "`">
 
       /* I have a feeling we don't need these TOKENS so I am commenting it for now.
       | <SPECIAL_SYMBOL: "|=" | "[" | "]" | "*="
