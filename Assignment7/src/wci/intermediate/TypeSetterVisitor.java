@@ -30,14 +30,6 @@ public class TypeSetterVisitor extends GoParserVisitorAdapter
         return obj;
     }
 
-    public Object visit(ASTprintStatement node, Object data)
-    {
-        Object obj = super.visit(node, data);
-        setType(node);
-
-        return obj;
-    }
-
     public Object visit(ASTadd node, Object data)
     {
         Object obj = super.visit(node, data);
@@ -51,11 +43,6 @@ public class TypeSetterVisitor extends GoParserVisitorAdapter
     }
     
     public Object visit(ASTintegerConstant node, Object data)
-    {
-        return data;
-    }
-
-    public Object visit(ASTinterpretedString node, Object data)
     {
         return data;
     }

@@ -1,92 +1,92 @@
 options
 {
-    BUILD_PARSER = true;
-    JJTREE_OUTPUT_DIRECTORY = "src/wci/frontend";
-    NODE_EXTENDS = "wci.intermediate.icodeimpl.ICodeNodeImpl";
-    MULTI = true;
-    VISITOR = true;
-    DEBUG_PARSER=true;
+   BUILD_PARSER = true;
+   JJTREE_OUTPUT_DIRECTORY = "src/wci/frontend";
+   NODE_EXTENDS = "wci.intermediate.icodeimpl.ICodeNodeImpl";
+   MULTI = true;
+   VISITOR = true;
+   DEBUG_PARSER=true;
 }
 
 PARSER_BEGIN(GoParser)
-    package wci.frontend;
-    import java.util.ArrayList;
-    import java.util.HashSet;
-    import java.io.*;
-    import wci.intermediate.*;
-    import wci.intermediate.symtabimpl.*;
-    import wci.backend.*;
-    import wci.util.*;
-    import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
-    import static wci.intermediate.symtabimpl.DefinitionImpl.*;
-    import static wci.intermediate.symtabimpl.RoutineCodeImpl.*;
-    import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
-    import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
+   package wci.frontend;
+   import java.util.ArrayList;
+   import java.util.HashSet;
+   import java.io.*;
+   import wci.intermediate.*;
+   import wci.intermediate.symtabimpl.*;
+   import wci.backend.*;
+   import wci.util.*;
+   import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
+   import static wci.intermediate.symtabimpl.DefinitionImpl.*;
+   import static wci.intermediate.symtabimpl.RoutineCodeImpl.*;
+   import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
+   import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 
 public class GoParser
 {
-    private static int counter = 0;
-    private static final String SOURCE_SUFFIX = ".go";
-    private static final String OUTPUT_SUFFIX = ".j";
-    private static SymTabStack symTabStack;
-    private static SymTabEntry programId;
+   private static int counter = 0;
+   private static final String SOURCE_SUFFIX = ".go";
+   private static final String OUTPUT_SUFFIX = ".j";
+   private static SymTabStack symTabStack;
+   private static SymTabEntry programId;
 
-    public static void main(String [] args) throws Exception
-    {
-        // Create and initialize the symbol table stack.
-        symTabStack = SymTabFactory.createSymTabStack();
-        Predefined.initialize(symTabStack);
-        // Process the source file path which ends in .go
-        // and create the output file path which ends in .j
-        String sourceFilePath = args [0];
-        int truncatedLength = sourceFilePath.length() - SOURCE_SUFFIX.length();
-        int suffixIndex = sourceFilePath.lastIndexOf(SOURCE_SUFFIX);
-        String objectFilePath =
-            (suffixIndex == truncatedLength) ?
+   public static void main(String [] args) throws Exception
+   {
+      // Create and initialize the symbol table stack.
+      symTabStack = SymTabFactory.createSymTabStack();
+      Predefined.initialize(symTabStack);
+      // Process the source file path which ends in .go
+      // and create the output file path which ends in .j
+      String sourceFilePath = args [0];
+      int truncatedLength = sourceFilePath.length() - SOURCE_SUFFIX.length();
+      int suffixIndex = sourceFilePath.lastIndexOf(SOURCE_SUFFIX);
+      String objectFilePath =
+        (suffixIndex == truncatedLength) ?
             sourceFilePath.substring(0, truncatedLength) + OUTPUT_SUFFIX :
             sourceFilePath + OUTPUT_SUFFIX;
-        // Parse a Go program.
-        Reader reader = new FileReader(sourceFilePath);
-        GoParser parser = new GoParser(reader);
-        SimpleNode rootNode = parser.start();
-        // Print the cross-reference table.
-        CrossReferencer crossReferencer = new CrossReferencer();
-        crossReferencer.print(symTabStack);
-        // Visit the parse tree nodes to decorate them with type information.
-        // Haven't done Go Types yet.
-        TypeSetterVisitor typeVisitor = new TypeSetterVisitor();
-        rootNode.jjtAccept(typeVisitor, null);
-        // Create and initialize the ICode wrapper for the parse tree.
-        ICode iCode = ICodeFactory.createICode();
-        iCode.setRoot(rootNode);
-        programId.setAttribute(ROUTINE_ICODE, iCode);
-        // Print the parse tree.
-        ParseTreePrinter treePrinter = new ParseTreePrinter(System.out);
-        treePrinter.print(symTabStack);
-        // Create the compiler backend and generate code.
-        Backend backend = BackendFactory.createBackend("compile");
-        backend.process(iCode, symTabStack, objectFilePath);
-    }
+      // Parse a Go program.
+      Reader reader = new FileReader(sourceFilePath);
+      GoParser parser = new GoParser(reader);
+      SimpleNode rootNode = parser.start();
+      // Print the cross-reference table.
+      CrossReferencer crossReferencer = new CrossReferencer();
+      crossReferencer.print(symTabStack);
+      // Visit the parse tree nodes to decorate them with type information.
+      // Haven't done Go Types yet.
+      TypeSetterVisitor typeVisitor = new TypeSetterVisitor();
+      rootNode.jjtAccept(typeVisitor, null);
+      // Create and initialize the ICode wrapper for the parse tree.
+      ICode iCode = ICodeFactory.createICode();
+      iCode.setRoot(rootNode);
+      programId.setAttribute(ROUTINE_ICODE, iCode);
+      // Print the parse tree.
+      ParseTreePrinter treePrinter = new ParseTreePrinter(System.out);
+      treePrinter.print(symTabStack);
+      // Create the compiler backend and generate code.
+      Backend backend = BackendFactory.createBackend("compile");
+      backend.process(iCode, symTabStack, objectFilePath);
+   }
 }
 PARSER_END(GoParser)
 
 SKIP:
 {
-    < IGNORE : [ " ", "\r", "\n", "\t" ] >
-        | < "//" (~[ "\n", "\r" ])* >
-        | < "/*" > : MULTI_LINE_COMMENT
+   < IGNORE : [ " ", "\r", "\n", "\t" ] >
+      | < "//" (~[ "\n", "\r" ])* >
+      | < "/*" > : MULTI_LINE_COMMENT
 }
 
 < MULTI_LINE_COMMENT >
 SKIP:
 {
-    "*/" : DEFAULT
+   "*/" : DEFAULT
 }
 
 < MULTI_LINE_COMMENT >
 MORE:
 {
-    < ~[ ] >
+   < ~[ ] >
 }
 
 /*************************
@@ -94,82 +94,82 @@ MORE:
  *************************/
 SimpleNode start() #void :
 {
-    SimpleNode rootNode = null;
-    HashSet syncSet = new HashSet();
-    syncSet.add(EOF);
+   SimpleNode rootNode = null;
+   HashSet syncSet = new HashSet();
+   syncSet.add(EOF);
 }
 {
-    try
-    {
-        <PACKAGE> < IDENTIFIER >
-        {
-            programId = symTabStack.enterLocal(token.image);
-            programId.setDefinition(DefinitionImpl.PACKAGE);
-            programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
-            symTabStack.setProgramId(programId);
-        }
-        rootNode = statementList() < EOF >
-
-        {
-            programId.setAttribute(ROUTINE_LOCALS_COUNT, counter);
-            return rootNode;
-        }
-    }
-    catch (ParseException ex)
-    {
-        handleError(ex, syncSet, true);
-        return null;
-    }
+   try
+   {
+      <PACKAGE> < IDENTIFIER >
+      {
+         programId = symTabStack.enterLocal(token.image);
+         programId.setDefinition(DefinitionImpl.PACKAGE);
+         programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
+         symTabStack.setProgramId(programId);
+      }
+      rootNode = statementList() < EOF >
+      
+      {
+         programId.setAttribute(ROUTINE_LOCALS_COUNT, counter);
+         return rootNode;
+      }
+   }
+   catch (ParseException ex)
+   {
+      handleError(ex, syncSet, true);
+      return null;
+   }
 }
 
 void statement() #void :
 {
-    HashSet syncSet = new HashSet();
-    syncSet.add(EOF);
-    syncSet.add(SEMICOLON);
+   HashSet syncSet = new HashSet();
+   syncSet.add(EOF);
+   syncSet.add(SEMICOLON);
 }
 {
-    try
-    {
-        LOOKAHEAD(2)
-            declarationStatement(syncSet)
-            | LOOKAHEAD(2)
-            assignmentStatement(syncSet)
-            | switchStatement(syncSet)
-            | ifStatement(syncSet)
-            | forStatement(syncSet)
-            | printStatement(syncSet)
-            | < SEMICOLON >
-    }
-    catch (ParseException ex)
-    {
-        handleError(ex, syncSet, false);
-    }
+   try
+   {
+      LOOKAHEAD(2)
+         declarationStatement(syncSet)
+         | LOOKAHEAD(2)
+         assignmentStatement(syncSet)
+         | switchStatement(syncSet)
+         | ifStatement(syncSet)
+         | forStatement(syncSet)
+         | printStatement(syncSet)
+         | < SEMICOLON >
+   }
+   catch (ParseException ex)
+   {
+      handleError(ex, syncSet, false);
+   }
 }
 
 SimpleNode statementList() :
 {}
 {
-    (
-     statement()
-    )*
-    {
-        return jjtThis;
-    }
+   (
+    statement()
+   )*
+   {
+      return jjtThis;
+   }
 }
 
 void declarationStatement(HashSet syncSet) #void :
 {}
 {
-    try
-    {
-        variableDeclaration(syncSet)
-            | functionDeclaration(syncSet)
-    }
-    catch (ParseException ex)
-    {
-        handleError(ex, syncSet, false);
-    }
+   try
+   {
+      variableDeclaration(syncSet)
+         | functionDeclaration(syncSet)
+   }
+   catch (ParseException ex)
+   {
+      handleError(ex, syncSet, false);
+   }
 }
 
 void variableDeclaration(HashSet syncSet) throws ParseException :
@@ -177,174 +177,174 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
     SimpleNode variableNode;
 }
 {
-    // Our implementation of Go's variable declaration will be either these forms:
-    // var x int; OR x = 5 (provided that they also used the first form to declare the variable)
+   // Our implementation of Go's variable declaration will be either these forms:
+   // var x int; OR x = 5 (provided that they also used the first form to declare the variable)
 
-    < VAR > variableNode = identifier()
-    {
-        counter++;
-        SymTabEntry variableId = symTabStack.enterLocal(token.image);
-        variableId.appendLineNumber(token.beginLine);
-        variableId.setDefinition(DefinitionImpl.VARIABLE);
-        variableNode.setAttribute(ID, variableId);
-    }
-    type()
-    {
-        SymTabEntry typeId = symTabStack.lookup(token.image);
-        TypeSpec type = typeId.getTypeSpec();
-        variableId.setTypeSpec(type);
-        variableNode.setTypeSpec(type);
-    }
-    < SEMICOLON >
+   < VAR > variableNode = identifier()
+   {
+      counter++;
+      SymTabEntry variableId = symTabStack.enterLocal(token.image);
+      variableId.appendLineNumber(token.beginLine);
+      variableId.setDefinition(DefinitionImpl.VARIABLE);
+      variableNode.setAttribute(ID, variableId);
+   }
+   type()
+   {
+      SymTabEntry typeId = symTabStack.lookup(token.image);
+      TypeSpec type = typeId.getTypeSpec();
+      variableId.setTypeSpec(type);
+      variableNode.setTypeSpec(type);
+   }
+   < SEMICOLON >
 }
 
 void functionDeclaration(HashSet syncSet) :
 {
-    SimpleNode id;
+   SimpleNode id;
 }
 {
-    {
-        syncSet.add(FUNC); // skip to next function delaration
-        syncSet.add(VAR); // skip to a variable declaration
-    }
-    <FUNC> id = identifier()
-    { // Enter into symbol table
-    }
-    <OPEN_PAREN> parameterList() <CLOSE_PAREN>
-        (type())? block(syncSet)
+   {
+      syncSet.add(FUNC); // skip to next function delaration
+      syncSet.add(VAR); // skip to a variable declaration
+   }
+   <FUNC> id = identifier()
+   { // Enter into symbol table
+   }
+   <OPEN_PAREN> parameterList() <CLOSE_PAREN>
+   (type())? block(syncSet)
 }
 
 void parameter() : {}
 {
-    identifier() type()
+   identifier() type()
 }
 
 void parameterList() : {}
 {
-    ( parameter() ( < COMMA > parameter())*)?
+   ( parameter() ( < COMMA > parameter())*)?
 }
 
 void block(HashSet syncSet) : {}
 {
-    {
-        syncSet.add("}"); // skip to the next closing brace
-    }
-    try
-    {
-        "{" statementList() "}"
-    }
-    catch (ParseException ex)
-    {
-        handleError(ex, syncSet, true);
-    }
+   {
+      syncSet.add("}"); // skip to the next closing brace 
+   }
+   try
+   {
+      "{" statementList() "}"
+   }
+   catch (ParseException ex)
+   {
+      handleError(ex, syncSet, true);
+   }
 }
 
 void ifStatement(HashSet syncSet) : {}
 {
-    {
-        syncSet.add(IF); // skip to next if, else, or else if
-        syncSet.add(ELSE);
-    }
-    try
-    {
-        <IF> expression() block(syncSet) (LOOKAHEAD(2)
-                <ELSE> <IF> expression() block(syncSet)) * (<ELSE> block(syncSet)) ?
-    }
-    catch (ParseException ex)
-    {
-        handleError(ex, syncSet, true);
-    }
-    finally
-    {
-        syncSet.remove(IF);
-        syncSet.remove(ELSE);
-    }
+   {
+      syncSet.add(IF); // skip to next if, else, or else if
+      syncSet.add(ELSE);
+   }
+   try
+   {
+      <IF> expression() block(syncSet) (LOOKAHEAD(2)
+            <ELSE> <IF> expression() block(syncSet)) * (<ELSE> block(syncSet)) ?
+   }
+   catch (ParseException ex)
+   {
+      handleError(ex, syncSet, true);
+   }
+   finally
+   {
+      syncSet.remove(IF);
+      syncSet.remove(ELSE);
+   }
 }
 
 void switchStatement(HashSet syncSet) : {}
 {
     <SWITCH>
-        ( expression())?  switchBlock() {}
+    ( expression())?  switchBlock() {}
 }
 
 void switchBlock() : {}
 {
-    "{" caseGroup() "}"
+   "{" caseGroup() "}"
 }
 
 void caseGroup() :
 {
-    HashSet syncSet = new HashSet();
-    syncSet.add(EOF);
-    syncSet.add(SEMICOLON);
-    syncSet.add(CASE);
-    syncSet.add(DEFAULT_TOKEN); // skip to next case
+   HashSet syncSet = new HashSet();
+   syncSet.add(EOF);
+   syncSet.add(SEMICOLON);
+   syncSet.add(CASE);
+   syncSet.add(DEFAULT_TOKEN); // skip to next case
 }
 {
     ( <CASE> expressionList() ":" statementList() )*
-        ( <DEFAULT_TOKEN> ":" statementList())?
+    ( <DEFAULT_TOKEN> ":" statementList())?
 }
 
 void assignmentStatement(HashSet syncSet) : { SimpleNode variableNode; }
 {
+   (
     (
+     variableNode = identifier()
+     {
+        SymTabEntry variableId = symTabStack.lookup(token.image);
+        TypeSpec typeId = variableId.getTypeSpec();
+        variableNode.setAttribute(ID, variableId);
+     }
      (
-      variableNode = identifier()
-      {
-      SymTabEntry variableId = symTabStack.lookup(token.image);
-      TypeSpec typeId = variableId.getTypeSpec();
-      variableNode.setAttribute(ID, variableId);
-      }
-      (
-       <EQUALS> expression() | incOrDec() {
-       if (typeId.getIdentifier() == Predefined.integerId) {
-       if (token.image == "++") {
-       //int number = variableId.getAttribute(VALUE) + 1;
-       //variableId.setAttribute(number);
-       }
-       }
-       else if (token.image == "--") {
-       //int number = variableId.getAttribute(VALUE) - 1;
-       //variableId.setAttribute(number);
-       }
-       }
-      )
-          )
-          |
-          ( incOrDec() identifier())
-          )
-          < SEMICOLON >
+      <EQUALS> expression() | incOrDec() {
+         if (typeId.getIdentifier() == Predefined.integerId) {
+            if (token.image == "++") { 
+                //int number = variableId.getAttribute(VALUE) + 1;
+                //variableId.setAttribute(number);
+            }
+        }
+        else if (token.image == "--") { 
+            //int number = variableId.getAttribute(VALUE) - 1;
+            //variableId.setAttribute(number);
+        }
+     }
+     )
+    )
+    | 
+    ( incOrDec() identifier())
+   )
+    < SEMICOLON >
 }
 
 void incOrDec() : {}
 {
-    ( "++" | "--")
+   ( "++" | "--")
 }
 
 void forStatement(HashSet syncSet) : {}
 {
-    <FOR> forClause() block(syncSet)
+   <FOR> forClause() block(syncSet)
 }
 
 void forClause() : {
-    HashSet syncSet = new HashSet();
-    syncSet.add(EOF);
-    syncSet.add(SEMICOLON);
-    syncSet.add(FOR);
+   HashSet syncSet = new HashSet();
+   syncSet.add(EOF);
+   syncSet.add(SEMICOLON);
+   syncSet.add(FOR);
 }
 {
-    ( LOOKAHEAD(2) assignmentStatement(syncSet))?
-        ( LOOKAHEAD(2) expression())?
-        (< SEMICOLON >)
-        ( assignmentStatement(syncSet))?
+   ( LOOKAHEAD(2) assignmentStatement(syncSet))?
+      ( LOOKAHEAD(2) expression())?
+      (< SEMICOLON >)
+      ( assignmentStatement(syncSet))?
 }
 
 void operand() #void : {}
 {
-    (
-     (identifier() | integerConstant() | realConstant() | booleanConstant()
+    ( 
+     (identifier() | integerConstant() | realConstant() | booleanConstant() 
       | interpretedString()) | <OPEN_PAREN> expression() <CLOSE_PAREN>
-    )
+     )
 }
 
 void relationalOperators() #void : {}
@@ -355,12 +355,12 @@ void relationalOperators() #void : {}
 void expression() #void : {}
 {
     operand()
-        (
-         //TODO: This implementation is very limited. Need to change eventually.
-         relationalOperators() operand() #relationalOperators(2)
-         |
-         ((<PLUS>|<MINUS>) operand() #add(2))*
-        )
+    (
+        //TODO: This implementation is very limited. Need to change eventually.
+        relationalOperators() operand() #relationalOperators(2)
+        |
+        ((<PLUS>|<MINUS>) operand() #add(2))*
+    )
 }
 
 void expressionList() : {}
@@ -437,140 +437,140 @@ void type() #void : {}
 
 // Reserved words token
 TOKEN: {
-           <BREAK: "break">
-           { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-           | <DEFAULT_TOKEN: "default">
-           { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-           | <FUNC: "func">
-           { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-           | <CASE: "case">
-           { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-           | <STRUCT: "struct">
-           { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-           | <ELSE: "else">
-           { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-           | <PACKAGE: "package">
-           { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-           | <SWITCH: "switch">
-           { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-           | <CONST: "const">
-           { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-           | <FALLTHROUGH: "fallthrough">
-           { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-           | <IF: "if">
-           { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-           | <RANGE: "range">
-           { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-           | <TYPE: "type">
-           { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-           | <CONTINUE: "continue">
-           { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-           | <FOR: "for">
-           { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-           | <RETURN: "return">
-           { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-           | <VAR : "var" >
-           { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-           | <INT: "int">
-           { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-           | <FLOAT: "float">
-           { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-           | <STRING: "string">
-           { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-           | <BOOL: "bool">
-           { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-       }
+      <BREAK: "break">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <DEFAULT_TOKEN: "default">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <FUNC: "func">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <CASE: "case">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <STRUCT: "struct">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <ELSE: "else">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <PACKAGE: "package">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <SWITCH: "switch">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <CONST: "const">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <FALLTHROUGH: "fallthrough">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <IF: "if">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <RANGE: "range">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <TYPE: "type">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <CONTINUE: "continue">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <FOR: "for">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <RETURN: "return">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <VAR : "var" >
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <INT: "int">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <FLOAT: "float">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <STRING: "string">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <BOOL: "bool">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+}
 
 // Misc tokens
 TOKEN: {
-           <#NEWLINE : [ "\r", "\n" ] >
-               | <#WHITE_SPACE : < NEWLINE > | "\t" | " " >
-               | <SEMICOLON : ";" >
-               | <COMMA : "," >
-               | <DOT: ".">
-               | <OPEN_PAREN: "(">
-               | <CLOSE_PAREN: ")">
-       }
+      <#NEWLINE : [ "\r", "\n" ] >
+      | <#WHITE_SPACE : < NEWLINE > | "\t" | " " >
+      | <SEMICOLON : ";" >
+      | <COMMA : "," >
+      | <DOT: ".">
+      | <OPEN_PAREN: "(">
+      | <CLOSE_PAREN: ")">
+}
 
 // Special character tokens
 TOKEN: {
-           <PLUS: "+">
-           {debugStream.println("PLUS token: " + matchedToken.image); }
-           | <MINUS: "-">
-           {debugStream.println("MINUS token: " + matchedToken.image); }
-           | <MULTIPLY: "*">
-           {debugStream.println("MULTIPLY token: " + matchedToken.image); }
-           | <DIVIDE: "/">
-           {debugStream.println("DIVIDE token: " + matchedToken.image); }
-           | <MODULO: "%">
-           {debugStream.println("MODULO token: " + matchedToken.image); }
-           | <EQUALS: "=">
-           {debugStream.println("EQUALS token: " + matchedToken.image); }
-           | <EQUAL_EQUAL: "==">
-           {debugStream.println("EQUAL_EQUAL token: " + matchedToken.image); }
-           | <PLUS_EQUAL: "+=">
-           {debugStream.println("PLUS_EQUAL token: " + matchedToken.image); }
-           | <MINUS_EQUAL: "-=">
-           {debugStream.println("MINUS_EQUAL token: " + matchedToken.image); }
-           | <LESS_THAN: "<">
-           {debugStream.println("LESS_THAN token: " + matchedToken.image); }
-           | <GREATER_THAN: ">">
-           {debugStream.println("GREATER_THAN token: " + matchedToken.image); }
-           | <LESS_EQUALS: "<=">
-           {debugStream.println("LESS_EQUALS token: " + matchedToken.image); }
-           | <GREATER_EQUALS: ">=">
-           {debugStream.println("GREATER_EQUALS token: " + matchedToken.image); }
-           | <OR: "|">
-           {debugStream.println("OR token: " + matchedToken.image); }
-           | <OR_OR: "||">
-           {debugStream.println("OR_OR token: " + matchedToken.image); }
-           | <AND: "&">
-           {debugStream.println("AND token: " + matchedToken.image); }
-           | <AND_EQUALS: "&=">
-           {debugStream.println("AND_EQUALS token: " + matchedToken.image); }
-           | <AND_AND: "&&">
-           {debugStream.println("AND_AND token: " + matchedToken.image); }
-           | <NOT_EQUALS: "!=">
-           {debugStream.println("NOT_EQUALS token: " + matchedToken.image); }
-           | <NOT: "!">
-           {debugStream.println("NOT token: " + matchedToken.image); }
-           | <CARET: "^">
-           {debugStream.println("CARET token: " + matchedToken.image); }
-       }
+    <PLUS: "+">
+        {debugStream.println("PLUS token: " + matchedToken.image); }
+    | <MINUS: "-">
+        {debugStream.println("MINUS token: " + matchedToken.image); }
+    | <MULTIPLY: "*">
+        {debugStream.println("MULTIPLY token: " + matchedToken.image); }
+    | <DIVIDE: "/">
+        {debugStream.println("DIVIDE token: " + matchedToken.image); }
+    | <MODULO: "%">
+        {debugStream.println("MODULO token: " + matchedToken.image); }
+    | <EQUALS: "=">
+        {debugStream.println("EQUALS token: " + matchedToken.image); }
+    | <EQUAL_EQUAL: "==">
+        {debugStream.println("EQUAL_EQUAL token: " + matchedToken.image); }
+    | <PLUS_EQUAL: "+=">
+        {debugStream.println("PLUS_EQUAL token: " + matchedToken.image); }
+    | <MINUS_EQUAL: "-=">
+        {debugStream.println("MINUS_EQUAL token: " + matchedToken.image); }
+    | <LESS_THAN: "<">
+        {debugStream.println("LESS_THAN token: " + matchedToken.image); }
+    | <GREATER_THAN: ">">
+        {debugStream.println("GREATER_THAN token: " + matchedToken.image); }
+    | <LESS_EQUALS: "<=">
+        {debugStream.println("LESS_EQUALS token: " + matchedToken.image); }
+    | <GREATER_EQUALS: ">=">
+        {debugStream.println("GREATER_EQUALS token: " + matchedToken.image); }
+    | <OR: "|">
+        {debugStream.println("OR token: " + matchedToken.image); }
+    | <OR_OR: "||">
+        {debugStream.println("OR_OR token: " + matchedToken.image); }
+    | <AND: "&">
+        {debugStream.println("AND token: " + matchedToken.image); }
+    | <AND_EQUALS: "&=">
+        {debugStream.println("AND_EQUALS token: " + matchedToken.image); }
+    | <AND_AND: "&&">
+        {debugStream.println("AND_AND token: " + matchedToken.image); }
+    | <NOT_EQUALS: "!=">
+        {debugStream.println("NOT_EQUALS token: " + matchedToken.image); }
+    | <NOT: "!">
+        {debugStream.println("NOT token: " + matchedToken.image); }
+    | <CARET: "^">
+        {debugStream.println("CARET token: " + matchedToken.image); }
+}
 
 // Types
 TOKEN :
 {
-    <INTEGER_NUMBER : < DIGIT > (< DIGIT >)* >
-    { debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
-    | < REAL_NUMBER : < INTEGER_NUMBER > "." (< INTEGER_NUMBER >)? >
-    { debugStream.println("REAL_NUMBER token: " + matchedToken.image); }
-    | < BOOL_CONSTANT : ( "true" | "false")>
-    { debugStream.println("BOOL_CONSTANT token: " + matchedToken.image); }
-    | < INTERPRETED_STRING : "\"" ( < ALPHANUMERIC > | < ESCAPED_CHAR >
-            | < INTERPRETED_LITERAL_SYMBOL > | < WHITE_SPACE >)* "\"" >
-    { debugStream.println("INTERPRETED_STRING token: " + matchedToken.image); }
-    | < IDENTIFIER : < LETTER > ( < LETTER > | < DIGIT > | "_")* >
-    { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
-    | < #ALPHANUMERIC : ( < LETTER > | < DIGIT >)+ >
-        | < #ESCAPED_CHAR : "\\" ( "a" | "b" | "f" | "n" | "r" | "t" | "v" | "\\" | "'" | "\"") >
-        | < #LETTER : [ "a"-"z", "A"-"Z" ] >
-        | < #DIGIT : [ "0"-"9" ] >
-        |
-        <#INTERPRETED_LITERAL_SYMBOL : "'" | "~" | "!" | "@" | "#" | "$" | "%" | "^" | "&"
-        | "*" | "_" | "-" | "+" | "=" | "<" | ">" | "." | "/" | "?"
-        | ";" | "[" | "]" | "{" | "}" | "|" | "`">
+      <INTEGER_NUMBER : < DIGIT > (< DIGIT >)* >
+        { debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
+      | < REAL_NUMBER : < INTEGER_NUMBER > "." (< INTEGER_NUMBER >)? >
+        { debugStream.println("REAL_NUMBER token: " + matchedToken.image); }
+      | < BOOL_CONSTANT : ( "true" | "false")>
+        { debugStream.println("BOOL_CONSTANT token: " + matchedToken.image); }
+      | < INTERPRETED_STRING : "\"" ( < ALPHANUMERIC > | < ESCAPED_CHAR >
+             | < INTERPRETED_LITERAL_SYMBOL > | < WHITE_SPACE >)* "\"" >
+        { debugStream.println("INTERPRETED_STRING token: " + matchedToken.image); }
+      | < IDENTIFIER : < LETTER > ( < LETTER > | < DIGIT > | "_")* >
+        { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
+      | < #ALPHANUMERIC : ( < LETTER > | < DIGIT >)+ > 
+      | < #ESCAPED_CHAR : "\\" ( "a" | "b" | "f" | "n" | "r" | "t" | "v" | "\\" | "'" | "\"") >
+      | < #LETTER : [ "a"-"z", "A"-"Z" ] >
+      | < #DIGIT : [ "0"-"9" ] >
+      |
+      <#INTERPRETED_LITERAL_SYMBOL : "'" | "~" | "!" | "@" | "#" | "$" | "%" | "^" | "&"
+      | "*" | "_" | "-" | "+" | "=" | "<" | ">" | "." | "/" | "?"
+      | ";" | "[" | "]" | "{" | "}" | "|" | "`">
 
-        /* I have a feeling we don't need these TOKENS so I am commenting it for now.
-           | <SPECIAL_SYMBOL: "|=" | "[" | "]" | "*="
-           | "^=" | "<-" | "{" | "}" | "<<" | "/=" | "<<=" | "++"
-           | ">>" | "%=" | ">>=" | "--" | "." | ":" | "&^" | "&^=" >
-         */
+      /* I have a feeling we don't need these TOKENS so I am commenting it for now.
+      | <SPECIAL_SYMBOL: "|=" | "[" | "]" | "*="
+      | "^=" | "<-" | "{" | "}" | "<<" | "/=" | "<<=" | "++"
+      | ">>" | "%=" | ">>=" | "--" | "." | ":" | "&^" | "&^=" >
+      */
 }
 
 TOKEN: { /* Error token */
-           <ERROR : ~["\r", "\n"]>
-       }
+    <ERROR : ~["\r", "\n"]>
+}
 
 JAVACODE String handleError(ParseException ex, HashSet syncSet, boolean doPop) #void
 {
