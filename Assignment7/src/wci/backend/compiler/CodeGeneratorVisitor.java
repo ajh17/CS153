@@ -72,6 +72,17 @@ public class CodeGeneratorVisitor
         return data;
     }
 
+    public Object visit(ASTinterpretedString node, Object data)
+    {
+        String value = (String) node.getAttribute(VALUE);
+
+        // Emit a load constant instruction.
+        CodeGenerator.objectFile.println("    ldc " + value);
+        CodeGenerator.objectFile.flush();
+
+        return data;
+    }
+
     public Object visit(ASTrealConstant node, Object data)
     {
         float value = (Float) node.getAttribute(VALUE);

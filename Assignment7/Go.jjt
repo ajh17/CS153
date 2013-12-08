@@ -138,6 +138,7 @@ void statement() #void :
          | switchStatement(syncSet)
          | ifStatement(syncSet)
          | forStatement(syncSet)
+         | printStatement(syncSet)
          | < SEMICOLON >
    }
    catch (ParseException ex)
@@ -209,7 +210,7 @@ void functionDeclaration(HashSet syncSet) :
    <FUNC> id = identifier()
    { // Enter into symbol table
    }
-   "(" parameterList() ")"
+   <OPEN_PAREN> parameterList() <CLOSE_PAREN>
    (type())? block(syncSet)
 }
 
@@ -342,7 +343,7 @@ void operand() #void : {}
 {
     ( 
      (identifier() | integerConstant() | realConstant() | booleanConstant() 
-      | interpretedString()) | "(" expression() ")"
+      | interpretedString()) | <OPEN_PAREN> expression() <CLOSE_PAREN>
      )
 }
 
@@ -365,6 +366,11 @@ void expression() #void : {}
 void expressionList() : {}
 {
     expression() ( < COMMA > expression())*
+}
+
+void printStatement(HashSet syncSet) #printStatement : {}
+{
+    "Println" <OPEN_PAREN> expression() <CLOSE_PAREN> <SEMICOLON>
 }
 
 SimpleNode identifier() : {}
@@ -477,10 +483,13 @@ TOKEN: {
 
 // Misc tokens
 TOKEN: {
-      < #NEWLINE : [ "\r", "\n" ] >
-      | < #WHITE_SPACE : < NEWLINE > | "\t" | " " >
-      | < SEMICOLON : ";" >
-      | < COMMA : "," >
+      <#NEWLINE : [ "\r", "\n" ] >
+      | <#WHITE_SPACE : < NEWLINE > | "\t" | " " >
+      | <SEMICOLON : ";" >
+      | <COMMA : "," >
+      | <DOT: ".">
+      | <OPEN_PAREN: "(">
+      | <CLOSE_PAREN: ")">
 }
 
 // Special character tokens
@@ -549,7 +558,7 @@ TOKEN :
       | < #DIGIT : [ "0"-"9" ] >
       |
       <#INTERPRETED_LITERAL_SYMBOL : "'" | "~" | "!" | "@" | "#" | "$" | "%" | "^" | "&"
-      | "*" | "(" | ")" | "_" | "-" | "+" | "=" | "<" | ">" | "." | "/" | "?"
+      | "*" | "_" | "-" | "+" | "=" | "<" | ">" | "." | "/" | "?"
       | ";" | "[" | "]" | "{" | "}" | "|" | "`">
 
       /* I have a feeling we don't need these TOKENS so I am commenting it for now.
