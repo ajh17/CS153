@@ -18,6 +18,9 @@ public class TypeSetterVisitor extends GoParserVisitorAdapter
             if (childType == Predefined.realType) {
                 type = Predefined.realType;
             }
+            else if (childType == Predefined.charType) {
+                type = Predefined.charType;
+            }
         }
         
         node.setTypeSpec(type);
