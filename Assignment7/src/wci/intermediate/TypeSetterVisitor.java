@@ -21,6 +21,9 @@ public class TypeSetterVisitor extends GoParserVisitorAdapter
             else if (childType == Predefined.charType) {
                 type = Predefined.charType;
             }
+            else if (childType == Predefined.booleanType) {
+                type = Predefined.booleanType;
+            }
         }
         
         node.setTypeSpec(type);
@@ -58,6 +61,11 @@ public class TypeSetterVisitor extends GoParserVisitorAdapter
     }
     
     public Object visit(ASTrealConstant node, Object data)
+    {
+        return data;
+    }
+
+    public Object visit(ASTbooleanConstant node, Object data)
     {
         return data;
     }

@@ -404,7 +404,12 @@ void booleanConstant() : {}
     < BOOL_CONSTANT >
     {
         jjtThis.setTypeSpec(Predefined.booleanType);
-        jjtThis.setAttribute(VALUE, Boolean.parseBoolean(token.image));
+        if (token.image.equals("true")) {
+            jjtThis.setAttribute(VALUE, "true");
+        }
+        else {
+            jjtThis.setAttribute(VALUE, "false");
+        }
     }
 }
 
