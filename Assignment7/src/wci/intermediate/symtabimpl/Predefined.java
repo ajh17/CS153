@@ -92,7 +92,7 @@ public class Predefined
         realId.setTypeSpec(realType);
 
         // Type boolean.
-        booleanId = symTabStack.enterLocal("boolean");
+        booleanId = symTabStack.enterLocal("bool");
         booleanType = TypeFactory.createType(ENUMERATION);
         booleanType.setIdentifier(booleanId);
         booleanId.setDefinition(DefinitionImpl.TYPE);

@@ -399,8 +399,6 @@ void integerConstant() : {}
     }
 }
 
-// TODO: For some really annoying reason, the parser gives a NullPointerException
-// when it encounters a "bool" keyword. -_-
 void booleanConstant() : {}
 {
     < BOOL_CONSTANT >
