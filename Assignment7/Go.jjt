@@ -227,11 +227,11 @@ void parameterList() : {}
 void block(HashSet syncSet) : {}
 {
    {
-      syncSet.add("}"); // skip to the next closing brace
+      syncSet.add(CLOSE_BRACE); // skip to the next closing brace
    }
    try
    {
-      "{" statementList() "}"
+      <OPEN_BRACE> statementList() <CLOSE_BRACE>
    }
    catch (ParseException ex)
    {
@@ -269,7 +269,7 @@ void switchStatement(HashSet syncSet) : {}
 
 void switchBlock() : {}
 {
-   "{" caseGroup() "}"
+   <OPEN_BRACE> caseGroup() <CLOSE_BRACE>
 }
 
 void caseGroup() :
@@ -318,7 +318,7 @@ void assignmentStatement(HashSet syncSet) : { SimpleNode variableNode; }
 
 void incOrDec() : {}
 {
-   ( "++" | "--")
+   ( <INCREMENT> | <DECREMENT>)
 }
 
 void forStatement(HashSet syncSet) : {}
@@ -488,19 +488,31 @@ TOKEN: {
 
 // Misc tokens
 TOKEN: {
-      <#NEWLINE : [ "\r", "\n" ] >
-      | <#WHITE_SPACE : < NEWLINE > | "\t" | " " >
-      | <SEMICOLON : ";" >
-      | <COMMA : "," >
-      | <DOT: ".">
-      | <OPEN_PAREN: "(">
-      | <CLOSE_PAREN: ")">
+    <#NEWLINE : [ "\r", "\n" ] >
+    | <#WHITE_SPACE : < NEWLINE > | "\t" | " " >
+    | <SEMICOLON : ";" >
+    | <COMMA : "," >
+    | <DOT: ".">
+    | <OPEN_PAREN: "(">
+        {debugStream.println("OPEN_PAREN token: " + matchedToken.image); }
+    | <CLOSE_PAREN: ")">
+        {debugStream.println("CLOSE_PAREN token: " + matchedToken.image); }
+    | <OPEN_BRACE: "{">
+        {debugStream.println("OPEN_BRACE token: " + matchedToken.image); }
+    | <CLOSE_BRACE: "}">
+        {debugStream.println("CLOSE_BRACE token: " + matchedToken.image); }
 }
 
 // Special character tokens
 TOKEN: {
     <PLUS: "+">
         {debugStream.println("PLUS token: " + matchedToken.image); }
+    |
+    <INCREMENT: "++">
+        {debugStream.println("INCREMENT token: " + matchedToken.image); }
+    |
+    <DECREMENT: "--">
+        {debugStream.println("DECREMENT token: " + matchedToken.image); }
     | <MINUS: "-">
         {debugStream.println("MINUS token: " + matchedToken.image); }
     | <MULTIPLY: "*">
