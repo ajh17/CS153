@@ -540,6 +540,10 @@ TOKEN: {
         {debugStream.println("OPEN_BRACE token: " + matchedToken.image); }
     | <CLOSE_BRACE: "}">
         {debugStream.println("CLOSE_BRACE token: " + matchedToken.image); }
+    | <OPEN_BRACKET: "[">
+        {debugStream.println("OPEN_BRACKET token: " + matchedToken.image); }
+    | <CLOSE_BRACKET: "]">
+        {debugStream.println("CLOSE_BRACKET token: " + matchedToken.image); }
 }
 
 // Special character tokens
