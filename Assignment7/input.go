@@ -9,3 +9,7 @@ if x < 5 {
     Println("hello world!");
     Println("Testing..1..2...3");
 }
+
+if x < 100 {
+    Println("It works!");
+}
