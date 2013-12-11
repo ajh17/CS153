@@ -318,7 +318,7 @@ void assignmentStatement(HashSet syncSet) : { SimpleNode variableNode; }
 
 void incOrDec() : {}
 {
-   ( <INCREMENT> | <DECREMENT>)
+    (<INCREMENT> | <DECREMENT>)
 }
 
 void forStatement(HashSet syncSet) : {}
@@ -333,10 +333,8 @@ void forClause() : {
    syncSet.add(FOR);
 }
 {
-   ( LOOKAHEAD(2) assignmentStatement(syncSet))?
-      ( LOOKAHEAD(2) expression())?
-      (< SEMICOLON >)
-      ( assignmentStatement(syncSet))?
+    // TODO: For now, parse a very simple for loop (this is a while loop in go)
+    <OPEN_PAREN> identifier() (relationalOperators()) operand() <CLOSE_PAREN>
 }
 
 void operand() #void : {}
