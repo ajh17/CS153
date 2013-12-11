@@ -373,7 +373,8 @@ void expressionList() : {}
 
 void printStatement(HashSet syncSet) #printStatement : {}
 {
-    "Println" <OPEN_PAREN> expression() <CLOSE_PAREN> <SEMICOLON>
+    //TODO: Changed printing expression to operand so that it can print the string "5 < 6"
+    "Println" <OPEN_PAREN> operand() <CLOSE_PAREN> <SEMICOLON>
 }
 
 SimpleNode identifier() : {}
@@ -585,7 +586,7 @@ TOKEN :
       |
       <#INTERPRETED_LITERAL_SYMBOL : "'" | "~" | "!" | "@" | "#" | "$" | "%" | "^" | "&"
       | "*" | "_" | "-" | "+" | "=" | "<" | ">" | "." | "/" | "?"
-      | ";" | "(" | ")" | "[" | "]" | "{" | "}" | "|" | "`">
+      | ";" | "(" | ")" | "[" | "]" | "{" | "}" | "|" | "`" | ":" >
 
       /* I have a feeling we don't need these TOKENS so I am commenting it for now.
       | <SPECIAL_SYMBOL: "|=" | "[" | "]" | "*="
