@@ -1,92 +1,92 @@
 options
 {
-   BUILD_PARSER = true;
-   JJTREE_OUTPUT_DIRECTORY = "src/wci/frontend";
-   NODE_EXTENDS = "wci.intermediate.icodeimpl.ICodeNodeImpl";
-   MULTI = true;
-   VISITOR = true;
-   DEBUG_PARSER=true;
+    BUILD_PARSER = true;
+    JJTREE_OUTPUT_DIRECTORY = "src/wci/frontend";
+    NODE_EXTENDS = "wci.intermediate.icodeimpl.ICodeNodeImpl";
+    MULTI = true;
+    VISITOR = true;
+    DEBUG_PARSER=true;
 }
 
 PARSER_BEGIN(GoParser)
-   package wci.frontend;
-   import java.util.ArrayList;
-   import java.util.HashSet;
-   import java.io.*;
-   import wci.intermediate.*;
-   import wci.intermediate.symtabimpl.*;
-   import wci.backend.*;
-   import wci.util.*;
-   import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
-   import static wci.intermediate.symtabimpl.DefinitionImpl.*;
-   import static wci.intermediate.symtabimpl.RoutineCodeImpl.*;
-   import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
-   import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
+    package wci.frontend;
+    import java.util.ArrayList;
+    import java.util.HashSet;
+    import java.io.*;
+    import wci.intermediate.*;
+    import wci.intermediate.symtabimpl.*;
+    import wci.backend.*;
+    import wci.util.*;
+    import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
+    import static wci.intermediate.symtabimpl.DefinitionImpl.*;
+    import static wci.intermediate.symtabimpl.RoutineCodeImpl.*;
+    import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
+    import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 
 public class GoParser
 {
-   private static int counter = 0;
-   private static final String SOURCE_SUFFIX = ".go";
-   private static final String OUTPUT_SUFFIX = ".j";
-   private static SymTabStack symTabStack;
-   private static SymTabEntry programId;
+    private static int counter = 0;
+    private static final String SOURCE_SUFFIX = ".go";
+    private static final String OUTPUT_SUFFIX = ".j";
+    private static SymTabStack symTabStack;
+    private static SymTabEntry programId;
 
-   public static void main(String [] args) throws Exception
-   {
-      // Create and initialize the symbol table stack.
-      symTabStack = SymTabFactory.createSymTabStack();
-      Predefined.initialize(symTabStack);
-      // Process the source file path which ends in .go
-      // and create the output file path which ends in .j
-      String sourceFilePath = args [0];
-      int truncatedLength = sourceFilePath.length() - SOURCE_SUFFIX.length();
-      int suffixIndex = sourceFilePath.lastIndexOf(SOURCE_SUFFIX);
-      String objectFilePath =
-        (suffixIndex == truncatedLength) ?
+    public static void main(String [] args) throws Exception
+    {
+        // Create and initialize the symbol table stack.
+        symTabStack = SymTabFactory.createSymTabStack();
+        Predefined.initialize(symTabStack);
+        // Process the source file path which ends in .go
+        // and create the output file path which ends in .j
+        String sourceFilePath = args [0];
+        int truncatedLength = sourceFilePath.length() - SOURCE_SUFFIX.length();
+        int suffixIndex = sourceFilePath.lastIndexOf(SOURCE_SUFFIX);
+        String objectFilePath =
+            (suffixIndex == truncatedLength) ?
             sourceFilePath.substring(0, truncatedLength) + OUTPUT_SUFFIX :
             sourceFilePath + OUTPUT_SUFFIX;
-      // Parse a Go program.
-      Reader reader = new FileReader(sourceFilePath);
-      GoParser parser = new GoParser(reader);
-      SimpleNode rootNode = parser.start();
-      // Print the cross-reference table.
-      CrossReferencer crossReferencer = new CrossReferencer();
-      crossReferencer.print(symTabStack);
-      // Visit the parse tree nodes to decorate them with type information.
-      // Haven't done Go Types yet.
-      TypeSetterVisitor typeVisitor = new TypeSetterVisitor();
-      rootNode.jjtAccept(typeVisitor, null);
-      // Create and initialize the ICode wrapper for the parse tree.
-      ICode iCode = ICodeFactory.createICode();
-      iCode.setRoot(rootNode);
-      programId.setAttribute(ROUTINE_ICODE, iCode);
-      // Print the parse tree.
-      ParseTreePrinter treePrinter = new ParseTreePrinter(System.out);
-      treePrinter.print(symTabStack);
-      // Create the compiler backend and generate code.
-      Backend backend = BackendFactory.createBackend("compile");
-      backend.process(iCode, symTabStack, objectFilePath);
-   }
+        // Parse a Go program.
+        Reader reader = new FileReader(sourceFilePath);
+        GoParser parser = new GoParser(reader);
+        SimpleNode rootNode = parser.start();
+        // Print the cross-reference table.
+        CrossReferencer crossReferencer = new CrossReferencer();
+        crossReferencer.print(symTabStack);
+        // Visit the parse tree nodes to decorate them with type information.
+        // Haven't done Go Types yet.
+        TypeSetterVisitor typeVisitor = new TypeSetterVisitor();
+        rootNode.jjtAccept(typeVisitor, null);
+        // Create and initialize the ICode wrapper for the parse tree.
+        ICode iCode = ICodeFactory.createICode();
+        iCode.setRoot(rootNode);
+        programId.setAttribute(ROUTINE_ICODE, iCode);
+        // Print the parse tree.
+        ParseTreePrinter treePrinter = new ParseTreePrinter(System.out);
+        treePrinter.print(symTabStack);
+        // Create the compiler backend and generate code.
+        Backend backend = BackendFactory.createBackend("compile");
+        backend.process(iCode, symTabStack, objectFilePath);
+    }
 }
 PARSER_END(GoParser)
 
 SKIP:
 {
-   < IGNORE : [ " ", "\r", "\n", "\t" ] >
-      | < "//" (~[ "\n", "\r" ])* >
-      | < "/*" > : MULTI_LINE_COMMENT
+    < IGNORE : [ " ", "\r", "\n", "\t" ] >
+        | < "//" (~[ "\n", "\r" ])* >
+        | < "/*" > : MULTI_LINE_COMMENT
 }
 
 < MULTI_LINE_COMMENT >
 SKIP:
 {
-   "*/" : DEFAULT
+    "*/" : DEFAULT
 }
 
 < MULTI_LINE_COMMENT >
 MORE:
 {
-   < ~[ ] >
+    < ~[ ] >
 }
 
 /*************************
@@ -94,32 +94,32 @@ MORE:
  *************************/
 SimpleNode start() #void :
 {
-   SimpleNode rootNode = null;
-   HashSet syncSet = new HashSet();
-   syncSet.add(EOF);
+    SimpleNode rootNode = null;
+    HashSet syncSet = new HashSet();
+    syncSet.add(EOF);
 }
 {
-   try
-   {
-      <PACKAGE> < IDENTIFIER >
-      {
-         programId = symTabStack.enterLocal(token.image);
-         programId.setDefinition(DefinitionImpl.PACKAGE);
-         programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
-         symTabStack.setProgramId(programId);
-      }
-      rootNode = statementList() < EOF >
+    try
+    {
+        <PACKAGE> < IDENTIFIER >
+        {
+            programId = symTabStack.enterLocal(token.image);
+            programId.setDefinition(DefinitionImpl.PACKAGE);
+            programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
+            symTabStack.setProgramId(programId);
+        }
+        rootNode = statementList() < EOF >
 
-      {
-         programId.setAttribute(ROUTINE_LOCALS_COUNT, counter);
-         return rootNode;
-      }
-   }
-   catch (ParseException ex)
-   {
-      handleError(ex, syncSet, true);
-      return null;
-   }
+        {
+            programId.setAttribute(ROUTINE_LOCALS_COUNT, counter);
+            return rootNode;
+        }
+    }
+    catch (ParseException ex)
+    {
+        handleError(ex, syncSet, true);
+        return null;
+    }
 }
 
 void statement() #void :
