@@ -396,7 +396,7 @@ SimpleNode identifier() : {}
 
 void integerConstant() : {}
 {
-    < INTEGER_NUMBER >
+    ((<PLUS> | <MINUS>)? < INTEGER_NUMBER >)
     {
         jjtThis.setTypeSpec(Predefined.integerType);
         jjtThis.setAttribute(VALUE, Integer.parseInt(token.image));
