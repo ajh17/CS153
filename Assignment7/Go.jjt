@@ -333,8 +333,17 @@ void forClause() : {
    syncSet.add(FOR);
 }
 {
-    // TODO: For now, parse a very simple for loop (this is a while loop in go)
-    (<OPEN_PAREN>)? identifier() (relationalOperators()) operand() (<CLOSE_PAREN>)?
+    // This is a while loop in Go.
+    (<OPEN_PAREN>)? identifier() relationalOperators() operand() (<CLOSE_PAREN>)?
+    // TODO: Will continue in the morning
+    //|
+    // A regular c-style for loop
+    /*
+    LOOKAHEAD(3) (<OPEN_PAREN>)? assignmentStatement(syncSet) <SEMICOLON>
+                    identifier() relationalOperators() <SEMICOLON>
+                    identifier() incOrDec()
+    (<CLOSE_PAREN>)?
+    */
 }
 
 void operand() #void : {}

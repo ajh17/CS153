@@ -44,6 +44,7 @@ if x < 100 {
 
 var loop int;
 loop = 5;
+/* while loops */
 for loop <= 0 {
 
 }
@@ -51,3 +52,10 @@ for loop <= 0 {
 for (loop <= -2) {
 
 }
+
+/* C-Style for loops */
+/*
+for (loop = 0; loop <= 100; loop++) {
+
+}
+*/
