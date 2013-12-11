@@ -419,7 +419,7 @@ void booleanConstant() : {}
 
 void realConstant() : {}
 {
-    < REAL_NUMBER >
+    (<PLUS> | <MINUS>)? < REAL_NUMBER >
     {
         jjtThis.setTypeSpec(Predefined.realType);
         jjtThis.setAttribute(VALUE, Float.parseFloat(token.image));
