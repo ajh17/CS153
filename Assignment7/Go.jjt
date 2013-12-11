@@ -424,7 +424,7 @@ SimpleNode identifier() : {}
 
 void integerConstant() : {}
 {
-    ((<PLUS> | <MINUS>)? < INTEGER_NUMBER >)
+    <INTEGER_NUMBER>
     {
         jjtThis.setTypeSpec(Predefined.integerType);
         jjtThis.setAttribute(VALUE, Integer.parseInt(token.image));
@@ -447,7 +447,7 @@ void booleanConstant() : {}
 
 void realConstant() : {}
 {
-    (<PLUS> | <MINUS>)? < REAL_NUMBER >
+    <REAL_NUMBER>
     {
         jjtThis.setTypeSpec(Predefined.realType);
         jjtThis.setAttribute(VALUE, Float.parseFloat(token.image));
