@@ -4,6 +4,8 @@ import wci.frontend.*;
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.Predefined;
 
+import java.util.ArrayList;
+
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 
 public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoParserTreeConstants
@@ -197,24 +199,52 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         SimpleNode forClause = (SimpleNode) node.jjtGetChild(0);
         SimpleNode block = (SimpleNode) node.jjtGetChild(1);
 
-        String beginLabel = getNextLabel();
-        CodeGenerator.objectFile.println(beginLabel + ":");
-        CodeGenerator.objectFile.flush();
+        // If the for clause has 1 child, it is a while loop, so create a label
+        if (forClause.jjtGetNumChildren() == 1) {
+            String beginLabel = getNextLabel();
+            CodeGenerator.objectFile.println(beginLabel + ":");
+            CodeGenerator.objectFile.flush();
+            String endLabel = (String) forClause.jjtAccept(this, data);
+            block.jjtAccept(this, data);
+            CodeGenerator.objectFile.println("    goto " + beginLabel);
+            CodeGenerator.objectFile.println(endLabel + ":");
+        }
+        else {
+            ArrayList<String> labels = (ArrayList<String>) forClause.jjtAccept(this, data);
+            block.jjtAccept(this, data);
+            CodeGenerator.objectFile.println("    goto " + labels.get(0));
+            CodeGenerator.objectFile.println(labels.get(1) + ":");
+        }
 
-        String endLabel = (String) forClause.jjtAccept(this, data);
-        block.jjtAccept(this, data);
-        CodeGenerator.objectFile.println("    goto " + beginLabel);
-        CodeGenerator.objectFile.println(endLabel + ":");
         CodeGenerator.objectFile.flush();
 
         return data;
     }
 
     public Object visit(ASTforClause node, Object data) {
-        // TODO: Need to add more in here to accomodate a for loop.
-        // TODO: This return statement only handles the while loop.
+        ArrayList<String> labels = new ArrayList<String>();
 
-        return node.jjtGetChild(0).jjtAccept(this, data);
+        // If it has 1 child, it is a while loop
+        if (node.jjtGetNumChildren() == 1) {
+            return node.jjtGetChild(0).jjtAccept(this, data);
+        }
+
+        for (int i = 0; i < node.jjtGetNumChildren(); i++) {
+            if (i == 1) {
+                String beginLabel = getNextLabel();
+                CodeGenerator.objectFile.println(beginLabel + ":");
+                CodeGenerator.objectFile.flush();
+                String endLabel = (String) node.jjtGetChild(i).jjtAccept(this, data);
+
+                labels.add(beginLabel);
+                labels.add(endLabel);
+            }
+            else {
+                node.jjtGetChild(i).jjtAccept(this, data);
+            }
+        }
+
+        return labels;
     }
 
     public Object visit(ASTifStatement node, Object data)
