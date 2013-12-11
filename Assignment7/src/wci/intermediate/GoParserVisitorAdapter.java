@@ -17,10 +17,6 @@ public class GoParserVisitorAdapter implements GoParserVisitor {
         return node.childrenAccept(this, data);
     }
 
-    public Object visit(ASTrelationalOperators node, Object data) {
-        return node.childrenAccept(this, data);
-    }
-
     public Object visit(ASTassignmentStatement node, Object data) {
         return node.childrenAccept(this, data);
     }
@@ -111,6 +107,32 @@ public class GoParserVisitorAdapter implements GoParserVisitor {
     }
 
     public Object visit(ASTprintStatement node, Object data) {
+        return node.childrenAccept(this, data);
+    }
+
+
+    // Relational operators
+    public Object visit(ASTequalEqual node, Object data) {
+        return node.childrenAccept(this, data);
+    }
+
+    public Object visit(ASTlessThan node, Object data) {
+        return node.childrenAccept(this, data);
+    }
+
+    public Object visit(ASTgreaterThan node, Object data) {
+        return node.childrenAccept(this, data);
+    }
+
+    public Object visit(ASTnotEqual node, Object data) {
+        return node.childrenAccept(this, data);
+    }
+
+    public Object visit(ASTlessEqual node, Object data) {
+        return node.childrenAccept(this, data);
+    }
+
+    public Object visit(ASTgreaterEqual node, Object data) {
         return node.childrenAccept(this, data);
     }
 }

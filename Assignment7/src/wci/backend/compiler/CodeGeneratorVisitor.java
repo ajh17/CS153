@@ -6,9 +6,7 @@ import wci.intermediate.symtabimpl.Predefined;
 
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 
-public class CodeGeneratorVisitor
-        extends GoParserVisitorAdapter
-        implements GoParserTreeConstants
+public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoParserTreeConstants
 {
     
     public Object visit(ASTassignmentStatement node, Object data)
@@ -142,6 +140,90 @@ public class CodeGeneratorVisitor
         // Emit the appropriate add instruction.
         CodeGenerator.objectFile.println("    " + typePrefix + "add");
         CodeGenerator.objectFile.flush();
+
+        return data;
+    }
+
+    public Object visit(ASTequalEqual node, Object data)
+    {
+        SimpleNode conditionNode = (SimpleNode) node.jjtGetChild(0);
+        SimpleNode blockNode = (SimpleNode) node.jjtGetChild(1);
+
+        TypeSpec type0 = conditionNode.getTypeSpec();
+        TypeSpec type1 = blockNode.getTypeSpec();
+        String typePrefix = "i"; // 0 = false, 1 = true
+
+        //TODO: Thinking about how to generate if statement code
+
+        return data;
+    }
+
+    public Object visit(ASTlessThan node, Object data)
+    {
+        SimpleNode conditionNode = (SimpleNode) node.jjtGetChild(0);
+        SimpleNode blockNode = (SimpleNode) node.jjtGetChild(1);
+
+        TypeSpec type0 = conditionNode.getTypeSpec();
+        TypeSpec type1 = blockNode.getTypeSpec();
+        String typePrefix = "i"; // 0 = false, 1 = true
+
+        //TODO: Thinking about how to generate if statement code
+
+        return data;
+    }
+
+    public Object visit(ASTgreaterThan node, Object data)
+    {
+        SimpleNode conditionNode = (SimpleNode) node.jjtGetChild(0);
+        SimpleNode blockNode = (SimpleNode) node.jjtGetChild(1);
+
+        TypeSpec type0 = conditionNode.getTypeSpec();
+        TypeSpec type1 = blockNode.getTypeSpec();
+        String typePrefix = "i"; // 0 = false, 1 = true
+
+        //TODO: Thinking about how to generate if statement code
+
+        return data;
+    }
+
+    public Object visit(ASTnotEqual node, Object data)
+    {
+        SimpleNode conditionNode = (SimpleNode) node.jjtGetChild(0);
+        SimpleNode blockNode = (SimpleNode) node.jjtGetChild(1);
+
+        TypeSpec type0 = conditionNode.getTypeSpec();
+        TypeSpec type1 = blockNode.getTypeSpec();
+        String typePrefix = "i"; // 0 = false, 1 = true
+
+        //TODO: Thinking about how to generate if statement code
+
+        return data;
+    }
+
+    public Object visit(ASTlessEqual node, Object data)
+    {
+        SimpleNode conditionNode = (SimpleNode) node.jjtGetChild(0);
+        SimpleNode blockNode = (SimpleNode) node.jjtGetChild(1);
+
+        TypeSpec type0 = conditionNode.getTypeSpec();
+        TypeSpec type1 = blockNode.getTypeSpec();
+        String typePrefix = "i"; // 0 = false, 1 = true
+
+        //TODO: Thinking about how to generate if statement code
+
+        return data;
+    }
+
+    public Object visit(ASTgreaterEqual node, Object data)
+    {
+        SimpleNode conditionNode = (SimpleNode) node.jjtGetChild(0);
+        SimpleNode blockNode = (SimpleNode) node.jjtGetChild(1);
+
+        TypeSpec type0 = conditionNode.getTypeSpec();
+        TypeSpec type1 = blockNode.getTypeSpec();
+        String typePrefix = "i"; // 0 = false, 1 = true
+
+        //TODO: Thinking about how to generate if statement code
 
         return data;
     }

@@ -349,15 +349,20 @@ void operand() #void : {}
 
 void relationalOperators() #void : {}
 {
-    <EQUAL_EQUAL> | <NOT_EQUALS> | <LESS_THAN> | <LESS_EQUALS> | <GREATER_THAN> | <GREATER_EQUALS>
+    <EQUAL_EQUAL> | <NOT_EQUAL> | <LESS_THAN> | <LESS_EQUAL> | <GREATER_THAN> | <GREATER_EQUAL>
 }
 
 void expression() #void : {}
 {
+    //TODO: Need to add multiplication and division with operator precedence
     operand()
     (
-        //TODO: This implementation is very limited. Need to change eventually.
-        relationalOperators() operand() #relationalOperators(2)
+          <EQUAL_EQUAL> operand() #equalEqual(2)
+        | <NOT_EQUAL> operand() #notEqual(2)
+        | <LESS_THAN> operand() #lessThan(2)
+        | <LESS_EQUAL> operand() #lessEqual(2)
+        | <GREATER_THAN> operand() #greaterThan(2)
+        | <GREATER_EQUAL> operand() #greaterEqual(2)
         |
         ((<PLUS>|<MINUS>) operand() #add(2))*
     )
@@ -509,11 +514,11 @@ TOKEN: {
         {debugStream.println("DIVIDE token: " + matchedToken.image); }
     | <MODULO: "%">
         {debugStream.println("MODULO token: " + matchedToken.image); }
-    | <STAR_EQUALS: "*=">
+    | <STAR_EQUAL: "*=">
         {debugStream.println("STAR_EQUALS token: " + matchedToken.image); }
-    | <DIVIDE_EQUALS: "/=">
+    | <DIVIDE_EQUAL: "/=">
         {debugStream.println("DIVIDE_EQUALS token: " + matchedToken.image); }
-    | <MODULO_EQUALS: "%=">
+    | <MODULO_EQUAL: "%=">
         {debugStream.println("MODULO_EQUALS token: " + matchedToken.image); }
     | <EQUALS: "=">
         {debugStream.println("EQUALS token: " + matchedToken.image); }
@@ -527,9 +532,9 @@ TOKEN: {
         {debugStream.println("LESS_THAN token: " + matchedToken.image); }
     | <GREATER_THAN: ">">
         {debugStream.println("GREATER_THAN token: " + matchedToken.image); }
-    | <LESS_EQUALS: "<=">
+    | <LESS_EQUAL: "<=">
         {debugStream.println("LESS_EQUALS token: " + matchedToken.image); }
-    | <GREATER_EQUALS: ">=">
+    | <GREATER_EQUAL: ">=">
         {debugStream.println("GREATER_EQUALS token: " + matchedToken.image); }
     | <OR: "|">
         {debugStream.println("OR token: " + matchedToken.image); }
@@ -537,11 +542,11 @@ TOKEN: {
         {debugStream.println("OR_OR token: " + matchedToken.image); }
     | <AND: "&">
         {debugStream.println("AND token: " + matchedToken.image); }
-    | <AND_EQUALS: "&=">
+    | <AND_EQUAL: "&=">
         {debugStream.println("AND_EQUALS token: " + matchedToken.image); }
     | <AND_AND: "&&">
         {debugStream.println("AND_AND token: " + matchedToken.image); }
-    | <NOT_EQUALS: "!=">
+    | <NOT_EQUAL: "!=">
         {debugStream.println("NOT_EQUALS token: " + matchedToken.image); }
     | <NOT: "!">
         {debugStream.println("NOT token: " + matchedToken.image); }
