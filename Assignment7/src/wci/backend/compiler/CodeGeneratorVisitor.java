@@ -134,9 +134,22 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         CodeGenerator.objectFile.println("    getstatic java/lang/System/out Ljava/io/PrintStream;");
         CodeGenerator.objectFile.flush();
 
-        SimpleNode append0Node = (SimpleNode) node.jjtGetChild(0);
-        append0Node.jjtAccept(this, data);
-        CodeGenerator.objectFile.println("    invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V");
+        SimpleNode printNode = (SimpleNode) node.jjtGetChild(0);
+        TypeSpec type = printNode.getTypeSpec();
+        String typeCode;
+        printNode.jjtAccept(this, data);
+
+        if (type == Predefined.integerType) {
+            typeCode = "I";
+        }
+        else if (type == Predefined.realType) {
+            typeCode = "F";
+        }
+        else {
+            typeCode = "Ljava/lang/String;";
+        }
+
+        CodeGenerator.objectFile.println("    invokevirtual java/io/PrintStream/println(" + typeCode + ")V");
         CodeGenerator.objectFile.flush();
 
         return data;

@@ -115,7 +115,7 @@ public class CodeGenerator extends Backend
         rootNode.jjtAccept(codeVisitor, programName);
         objectFile.println();
 
-        
+        /*
         // try and print out all variables
         for (SymTabEntry id : locals) {
             Definition defn = id.getDefinition();
@@ -132,9 +132,7 @@ public class CodeGenerator extends Backend
             }
         }
         objectFile.println();
-        
-       
-        
+        */
 
         // Generate the main method epilogue.
         objectFile.println("    getstatic	" + programName + "/_runTimer LRunTimer;");
