@@ -124,52 +124,49 @@ SimpleNode start() #void :
 
 void statement() #void :
 {
-   HashSet syncSet = new HashSet();
-   syncSet.add(EOF);
-   syncSet.add(SEMICOLON);
+    HashSet syncSet = new HashSet();
+    syncSet.add(EOF);
+    syncSet.add(SEMICOLON);
 }
 {
-   try
-   {
-      LOOKAHEAD(2)
-         declarationStatement(syncSet)
-         | LOOKAHEAD(2)
-         assignmentStatement(syncSet)
-         | switchStatement(syncSet)
-         | ifStatement(syncSet)
-         | forStatement(syncSet)
-         | printStatement(syncSet)
-         | < SEMICOLON >
-   }
-   catch (ParseException ex)
-   {
-      handleError(ex, syncSet, false);
-   }
+    try
+    {
+        LOOKAHEAD(2)
+            declarationStatement(syncSet)
+            | LOOKAHEAD(2)
+            assignmentStatement(syncSet)
+            | switchStatement(syncSet)
+            | ifStatement(syncSet)
+            | forStatement(syncSet)
+            | printStatement(syncSet)
+            | < SEMICOLON >
+    }
+    catch (ParseException ex)
+    {
+        handleError(ex, syncSet, false);
+    }
 }
 
 SimpleNode statementList() :
 {}
 {
-   (
-    statement()
-   )*
-   {
-      return jjtThis;
-   }
+    (statement())*
+    {
+        return jjtThis;
+    }
 }
 
 void declarationStatement(HashSet syncSet) #void :
 {}
 {
-   try
-   {
-      variableDeclaration(syncSet)
-         | functionDeclaration(syncSet)
-   }
-   catch (ParseException ex)
-   {
-      handleError(ex, syncSet, false);
-   }
+    try
+    {
+        variableDeclaration(syncSet) | functionDeclaration(syncSet)
+    }
+    catch (ParseException ex)
+    {
+        handleError(ex, syncSet, false);
+    }
 }
 
 void variableDeclaration(HashSet syncSet) throws ParseException :
@@ -180,22 +177,22 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
    // Our implementation of Go's variable declaration will be either these forms:
    // var x int; OR x = 5 (provided that they also used the first form to declare the variable)
 
-   < VAR > variableNode = identifier()
-   {
-      counter++;
-      SymTabEntry variableId = symTabStack.enterLocal(token.image);
-      variableId.appendLineNumber(token.beginLine);
-      variableId.setDefinition(DefinitionImpl.VARIABLE);
-      variableNode.setAttribute(ID, variableId);
-   }
-   type()
-   {
-      SymTabEntry typeId = symTabStack.lookup(token.image);
-      TypeSpec type = typeId.getTypeSpec();
-      variableId.setTypeSpec(type);
-      variableNode.setTypeSpec(type);
-   }
-   < SEMICOLON >
+    < VAR > variableNode = identifier()
+    {
+        counter++;
+        SymTabEntry variableId = symTabStack.enterLocal(token.image);
+        variableId.appendLineNumber(token.beginLine);
+        variableId.setDefinition(DefinitionImpl.VARIABLE);
+        variableNode.setAttribute(ID, variableId);
+    }
+    type()
+    {
+        SymTabEntry typeId = symTabStack.lookup(token.image);
+        TypeSpec type = typeId.getTypeSpec();
+        variableId.setTypeSpec(type);
+        variableNode.setTypeSpec(type);
+    }
+    < SEMICOLON >
 }
 
 void functionDeclaration(HashSet syncSet) :
@@ -203,40 +200,40 @@ void functionDeclaration(HashSet syncSet) :
    SimpleNode id;
 }
 {
-   {
-      syncSet.add(FUNC); // skip to next function delaration
-      syncSet.add(VAR); // skip to a variable declaration
-   }
-   <FUNC> id = identifier()
-   { // Enter into symbol table
-   }
-   <OPEN_PAREN> parameterList() <CLOSE_PAREN>
-   (type())? block(syncSet)
+    {
+        syncSet.add(FUNC); // skip to next function delaration
+        syncSet.add(VAR); // skip to a variable declaration
+    }
+    <FUNC> id = identifier()
+    { // Enter into symbol table
+    }
+    <OPEN_PAREN> parameterList() <CLOSE_PAREN>
+        (type())? block(syncSet)
 }
 
 void parameter() : {}
 {
-   identifier() type()
+    identifier() type()
 }
 
 void parameterList() : {}
 {
-   ( parameter() ( < COMMA > parameter())*)?
+    (parameter() ( < COMMA > parameter())*)?
 }
 
 void block(HashSet syncSet) : {}
 {
-   {
-      syncSet.add(CLOSE_BRACE); // skip to the next closing brace
-   }
-   try
-   {
-      <OPEN_BRACE> statementList() <CLOSE_BRACE>
-   }
-   catch (ParseException ex)
-   {
-      handleError(ex, syncSet, true);
-   }
+    {
+        syncSet.add(CLOSE_BRACE); // skip to the next closing brace
+    }
+    try
+    {
+        <OPEN_BRACE> statementList() <CLOSE_BRACE>
+    }
+    catch (ParseException ex)
+    {
+        handleError(ex, syncSet, true);
+    }
 }
 
 void ifStatement(HashSet syncSet) : { syncSet.add(IF); }
@@ -259,11 +256,8 @@ void elseStatement(HashSet syncSet) : { syncSet.add(ELSE); }
 {
     try
     {
-        <ELSE>
-        (
-            LOOKAHEAD(2) ifStatement(syncSet)
-            |
-            block(syncSet)
+        <ELSE> (
+            LOOKAHEAD(2) ifStatement(syncSet) | block(syncSet)
         )
     }
     catch (ParseException ex)
@@ -278,8 +272,7 @@ void elseStatement(HashSet syncSet) : { syncSet.add(ELSE); }
 
 void switchStatement(HashSet syncSet) : {}
 {
-    <SWITCH>
-    ( expression())?  switchBlock() {}
+    <SWITCH> ( expression())?  switchBlock() {}
 }
 
 void switchBlock() : {}
@@ -289,15 +282,15 @@ void switchBlock() : {}
 
 void caseGroup() :
 {
-   HashSet syncSet = new HashSet();
-   syncSet.add(EOF);
-   syncSet.add(SEMICOLON);
-   syncSet.add(CASE);
-   syncSet.add(DEFAULT_TOKEN); // skip to next case
+    HashSet syncSet = new HashSet();
+    syncSet.add(EOF);
+    syncSet.add(SEMICOLON);
+    syncSet.add(CASE);
+    syncSet.add(DEFAULT_TOKEN); // skip to next case
 }
 {
-    ( <CASE> expressionList() ":" statementList() )*
-    ( <DEFAULT_TOKEN> ":" statementList())?
+    (<CASE> expressionList() ":" statementList())*
+    (<DEFAULT_TOKEN> ":" statementList())?
 }
 
 void assignmentStatement(HashSet syncSet) : { SimpleNode variableNode; }
@@ -326,7 +319,7 @@ void assignmentStatement(HashSet syncSet) : { SimpleNode variableNode; }
      )
     )
     |
-    ( incOrDec() identifier())
+    (incOrDec() identifier())
    )
     // TODO: I had to make the semicolon optional here to accomdate for loops. The 3rd expression in
     // TODO: the for loop doesn't have a semicolon. We might be able to just go with this.
@@ -340,14 +333,14 @@ void incOrDec() : {}
 
 void forStatement(HashSet syncSet) : {}
 {
-   <FOR> forClause() block(syncSet)
+    <FOR> forClause() block(syncSet)
 }
 
 void forClause() : {
-   HashSet syncSet = new HashSet();
-   syncSet.add(EOF);
-   syncSet.add(SEMICOLON);
-   syncSet.add(FOR);
+    HashSet syncSet = new HashSet();
+    syncSet.add(EOF);
+    syncSet.add(SEMICOLON);
+    syncSet.add(FOR);
 }
 {
     try {
@@ -368,9 +361,12 @@ void forClause() : {
 void operand() #void : {}
 {
     (
-     (identifier() | LOOKAHEAD(2) integerConstant() | LOOKAHEAD(2) realConstant() | booleanConstant()
-        | interpretedString()) | <OPEN_PAREN> expression() <CLOSE_PAREN>
-     )
+        (
+            identifier() | LOOKAHEAD(2) integerConstant() | LOOKAHEAD(2) realConstant()
+            | booleanConstant() | interpretedString()
+        )
+        | <OPEN_PAREN> expression() <CLOSE_PAREN>
+    )
 }
 
 void relationalOperators() #void : {}
@@ -464,7 +460,7 @@ void interpretedString() : {}
 
 void type() #void : {}
 {
-    < INT > | < FLOAT > | < STRING > | < BOOL >
+    <INT> | <FLOAT> | <STRING> | <BOOL>
 }
 
 /********************s
