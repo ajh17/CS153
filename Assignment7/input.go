@@ -44,6 +44,9 @@ if 5 < 6 {
 else if 4 == 4 {
     Println("4 == 4");
 }
+else {
+    Println("In ELSE");
+}
 
 if x < 100 {
     Println("It works!");
