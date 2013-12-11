@@ -192,6 +192,28 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         return data;
     }
 
+    public Object visit(ASTforStatement node, Object data)
+    {
+        SimpleNode forClause = (SimpleNode) node.jjtGetChild(0);
+        SimpleNode block = (SimpleNode) node.jjtGetChild(1);
+
+        String beginLabel = getNextLabel();
+        CodeGenerator.objectFile.println(beginLabel + ":");
+        CodeGenerator.objectFile.flush();
+
+        String endLabel = (String) forClause.jjtAccept(this, data);
+        block.jjtAccept(this, data);
+        CodeGenerator.objectFile.println("    goto " + beginLabel);
+        CodeGenerator.objectFile.println(endLabel + ":");
+        CodeGenerator.objectFile.flush();
+
+        return data;
+    }
+
+    public Object visit(ASTforClause node, Object data) {
+        return node.jjtGetChild(0).jjtAccept(this, data);
+    }
+
     public Object visit(ASTifStatement node, Object data)
     {
         SimpleNode condition = (SimpleNode) node.jjtGetChild(0);

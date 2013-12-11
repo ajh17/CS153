@@ -349,12 +349,15 @@ void forClause() : {
 }
 {
     // This is a while loop in Go.
-    (<OPEN_PAREN>)? identifier() relationalOperators() operand() (<CLOSE_PAREN>)?
+    expression()
+
+
+
     // TODO: Will continue in the morning
     //|
     // A regular c-style for loop
     /*
-    LOOKAHEAD(3) (<OPEN_PAREN>)? assignmentStatement(syncSet) <SEMICOLON>
+    LOOKAHEAD(3) (<OPEN_PAREN>)? assignmentStatement(syncSet)
                     identifier() relationalOperators() <SEMICOLON>
                     identifier() incOrDec()
     (<CLOSE_PAREN>)?
