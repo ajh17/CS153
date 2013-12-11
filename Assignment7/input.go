@@ -1,8 +1,10 @@
 package main
-var x float;
+var x int;
 var y bool;
-x = 1 + 2 + 1.2 + 1.5 + 2 + 4 + 4.5;
+x = 10;
 y = true;
+
+// Relational operator only works for integers at the moment
 if x < 5 {
     Println("hello world!");
     Println("Testing..1..2...3");

@@ -8,6 +8,7 @@ import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 
 public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoParserTreeConstants
 {
+    public static int tagNumber = 0;
     
     public Object visit(ASTassignmentStatement node, Object data)
     {
@@ -144,15 +145,22 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         return data;
     }
 
+    public Object visit(ASTifStatement node, Object data)
+    {
+        SimpleNode condition = (SimpleNode) node.jjtGetChild(0);
+        SimpleNode block = (SimpleNode) node.jjtGetChild(1);
+
+        condition.jjtAccept(this, data);
+        block.jjtAccept(this, data);
+
+        CodeGenerator.objectFile.println("label" + tagNumber++ + ":");
+        CodeGenerator.objectFile.flush();
+
+        return data;
+    }
+
     public Object visit(ASTequalEqual node, Object data)
     {
-        SimpleNode conditionNode = (SimpleNode) node.jjtGetChild(0);
-        SimpleNode blockNode = (SimpleNode) node.jjtGetChild(1);
-
-        TypeSpec type0 = conditionNode.getTypeSpec();
-        TypeSpec type1 = blockNode.getTypeSpec();
-        String typePrefix = "i"; // 0 = false, 1 = true
-
         //TODO: Thinking about how to generate if statement code
 
         return data;
@@ -160,27 +168,31 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
     public Object visit(ASTlessThan node, Object data)
     {
-        SimpleNode conditionNode = (SimpleNode) node.jjtGetChild(0);
-        SimpleNode blockNode = (SimpleNode) node.jjtGetChild(1);
+        SimpleNode lhs = (SimpleNode) node.jjtGetChild(0);
+        SimpleNode rhs = (SimpleNode) node.jjtGetChild(1);
+        String typeCode = "i"; //TODO: Need to generalize the type
 
-        TypeSpec type0 = conditionNode.getTypeSpec();
-        TypeSpec type1 = blockNode.getTypeSpec();
-        String typePrefix = "i"; // 0 = false, 1 = true
+        lhs.jjtAccept(this, data);
+        rhs.jjtAccept(this, data);
 
-        //TODO: Thinking about how to generate if statement code
+        CodeGenerator.objectFile.println("    if_" + typeCode + "cmpge label" + tagNumber);
+        CodeGenerator.objectFile.flush();
 
+        /* THIS IS THE CODE TO COMPARE LESS THAN. USING THIS AS REFERENCE.
+        0: iconst_5
+        1: istore_1
+        2: iload_1
+        3: bipush        10
+        5: if_icmpge     15
+        8: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+        11: iload_1
+        12: invokevirtual #3                  // Method java/io/PrintStream.println:(I)V
+        */
         return data;
     }
 
     public Object visit(ASTgreaterThan node, Object data)
     {
-        SimpleNode conditionNode = (SimpleNode) node.jjtGetChild(0);
-        SimpleNode blockNode = (SimpleNode) node.jjtGetChild(1);
-
-        TypeSpec type0 = conditionNode.getTypeSpec();
-        TypeSpec type1 = blockNode.getTypeSpec();
-        String typePrefix = "i"; // 0 = false, 1 = true
-
         //TODO: Thinking about how to generate if statement code
 
         return data;
@@ -188,13 +200,6 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
     public Object visit(ASTnotEqual node, Object data)
     {
-        SimpleNode conditionNode = (SimpleNode) node.jjtGetChild(0);
-        SimpleNode blockNode = (SimpleNode) node.jjtGetChild(1);
-
-        TypeSpec type0 = conditionNode.getTypeSpec();
-        TypeSpec type1 = blockNode.getTypeSpec();
-        String typePrefix = "i"; // 0 = false, 1 = true
-
         //TODO: Thinking about how to generate if statement code
 
         return data;
@@ -202,13 +207,6 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
     public Object visit(ASTlessEqual node, Object data)
     {
-        SimpleNode conditionNode = (SimpleNode) node.jjtGetChild(0);
-        SimpleNode blockNode = (SimpleNode) node.jjtGetChild(1);
-
-        TypeSpec type0 = conditionNode.getTypeSpec();
-        TypeSpec type1 = blockNode.getTypeSpec();
-        String typePrefix = "i"; // 0 = false, 1 = true
-
         //TODO: Thinking about how to generate if statement code
 
         return data;
@@ -216,13 +214,6 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
     public Object visit(ASTgreaterEqual node, Object data)
     {
-        SimpleNode conditionNode = (SimpleNode) node.jjtGetChild(0);
-        SimpleNode blockNode = (SimpleNode) node.jjtGetChild(1);
-
-        TypeSpec type0 = conditionNode.getTypeSpec();
-        TypeSpec type1 = blockNode.getTypeSpec();
-        String typePrefix = "i"; // 0 = false, 1 = true
-
         //TODO: Thinking about how to generate if statement code
 
         return data;
