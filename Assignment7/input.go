@@ -15,6 +15,7 @@ if x < 100 {
 }
 
 var loop int;
+loop = 5;
 for (loop <= 0) {
 
 }
