@@ -210,10 +210,11 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
             CodeGenerator.objectFile.println(endLabel + ":");
         }
         else {
-            ArrayList<String> labels = (ArrayList<String>) forClause.jjtAccept(this, data);
+            ArrayList<Object> loopData = (ArrayList<Object>) forClause.jjtAccept(this, data);
             block.jjtAccept(this, data);
-            CodeGenerator.objectFile.println("    goto " + labels.get(0));
-            CodeGenerator.objectFile.println(labels.get(1) + ":");
+            ((Node) loopData.get(0)).jjtAccept(this, data); // Incrementing after running the body
+            CodeGenerator.objectFile.println("    goto " + loopData.get(1));
+            CodeGenerator.objectFile.println(loopData.get(2) + ":");
         }
 
         CodeGenerator.objectFile.flush();
@@ -222,29 +223,25 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
     }
 
     public Object visit(ASTforClause node, Object data) {
-        ArrayList<String> labels = new ArrayList<String>();
+        ArrayList<Object> loopData = new ArrayList<Object>();
 
         // If it has 1 child, it is a while loop
         if (node.jjtGetNumChildren() == 1) {
             return node.jjtGetChild(0).jjtAccept(this, data);
         }
 
-        for (int i = 0; i < node.jjtGetNumChildren(); i++) {
-            if (i == 1) {
-                String beginLabel = getNextLabel();
-                CodeGenerator.objectFile.println(beginLabel + ":");
-                CodeGenerator.objectFile.flush();
-                String endLabel = (String) node.jjtGetChild(i).jjtAccept(this, data);
+        node.jjtGetChild(0).jjtAccept(this, data);
 
-                labels.add(beginLabel);
-                labels.add(endLabel);
-            }
-            else {
-                node.jjtGetChild(i).jjtAccept(this, data);
-            }
-        }
+        String beginLabel = getNextLabel();
+        CodeGenerator.objectFile.println(beginLabel + ":");
+        CodeGenerator.objectFile.flush();
+        String endLabel = (String) node.jjtGetChild(1).jjtAccept(this, data);
 
-        return labels;
+        loopData.add(node.jjtGetChild(2)); // Delay incrementing until after the loop
+        loopData.add(beginLabel);
+        loopData.add(endLabel);
+
+        return loopData;
     }
 
     public Object visit(ASTifStatement node, Object data)
