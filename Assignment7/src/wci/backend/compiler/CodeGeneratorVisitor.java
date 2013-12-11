@@ -181,7 +181,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
     public Object visit(ASTblock node, Object data)
     {
-        node.childrenAccept(this, data);
+        node.childrenAccept(this, programName);
 
         if ((String) data != programName) {
             String label = (String) data;
