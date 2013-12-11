@@ -359,6 +359,8 @@ void forClause() : {
                     identifier() incOrDec()
     (<CLOSE_PAREN>)?
     */
+    // TODO: Don't forget to remove items from syncSet when it leaves this scope
+    // TODO: because all productions rely on the same syncSet reference.
 }
 
 void operand() #void : {}
