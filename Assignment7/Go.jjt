@@ -350,21 +350,19 @@ void forClause() : {
    syncSet.add(FOR);
 }
 {
-
-
-    // A regular c-style for loop
-    LOOKAHEAD(2) (assignmentStatement(syncSet) // SEMICOLON is part of the assignmentStatement
-    expression() <SEMICOLON>
-    assignmentStatement(syncSet))
-
-    |
-
-    // This is a while loop in Go.
-    expression()
-
-    // TODO: Don't forget to remove items from syncSet when it leaves this scope because
-    // TODO: all productions currently rely on the same syncSet reference. All productions
-    // TODO: should probably be in a try/catch block eventually, I think...
+    try {
+        // A regular c-style for loop
+        (LOOKAHEAD(2) (assignmentStatement(syncSet) expression() <SEMICOLON> assignmentStatement(syncSet))
+        |
+        expression())
+        // ^ a while loop
+    }
+    catch (ParseException ex) {
+        handleError(ex, syncSet, true);
+    }
+    finally {
+        syncSet.remove(FOR);
+    }
 }
 
 void operand() #void : {}
