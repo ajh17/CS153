@@ -198,7 +198,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
     {
         node.childrenAccept(this, programName);
 
-        if ((String) data != programName) {
+        if (data != programName) {
             String label = (String) data;
             CodeGenerator.objectFile.println("    goto " + label);
             CodeGenerator.objectFile.flush();
