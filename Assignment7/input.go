@@ -14,6 +14,6 @@ for x < 5 {
     }
 }
 
-for x = 0; x < 5; x = x + 1 {
-    Println("For loop");
-}
+/* for x = 0; x < 5; x = x + 1 { */
+/*     Println("For loop"); */
+/* } */
