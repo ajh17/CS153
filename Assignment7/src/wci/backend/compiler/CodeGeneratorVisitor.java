@@ -9,6 +9,31 @@ import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoParserTreeConstants
 {
     public static int tagNumber = 0;
+
+    public String getCurrentLabel() { return "label" + tagNumber; }
+    public String getNextLabel() { return "label" + ++tagNumber; }
+
+    public void emitComparisonCode(SimpleNode node, Object data) {
+        SimpleNode lhs = (SimpleNode) node.jjtGetChild(0);
+        SimpleNode rhs = (SimpleNode) node.jjtGetChild(1);
+
+        TypeSpec lhsType = lhs.getTypeSpec();
+        TypeSpec rhsType = rhs.getTypeSpec();
+
+        lhs.jjtAccept(this, data);
+        if (lhsType == Predefined.integerType) {
+            CodeGenerator.objectFile.println("    i2f");
+            CodeGenerator.objectFile.flush();
+        }
+
+        rhs.jjtAccept(this, data);
+        if (rhsType == Predefined.integerType) {
+            CodeGenerator.objectFile.println("    i2f");
+            CodeGenerator.objectFile.flush();
+        }
+
+        CodeGenerator.objectFile.println("    fcmpg");
+    }
     
     public Object visit(ASTassignmentStatement node, Object data)
     {
@@ -153,7 +178,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         condition.jjtAccept(this, data);
         block.jjtAccept(this, data);
 
-        CodeGenerator.objectFile.println("label" + tagNumber++ + ":");
+        CodeGenerator.objectFile.println(getCurrentLabel() + ":");
         CodeGenerator.objectFile.flush();
 
         return data;
@@ -161,60 +186,54 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
     public Object visit(ASTequalEqual node, Object data)
     {
-        //TODO: Thinking about how to generate if statement code
+        emitComparisonCode(node, data);
+        CodeGenerator.objectFile.println("    ifne " + getNextLabel());
+        CodeGenerator.objectFile.flush();
 
         return data;
     }
 
     public Object visit(ASTlessThan node, Object data)
     {
-        SimpleNode lhs = (SimpleNode) node.jjtGetChild(0);
-        SimpleNode rhs = (SimpleNode) node.jjtGetChild(1);
-        String typeCode = "i"; //TODO: Need to generalize the type
-
-        lhs.jjtAccept(this, data);
-        rhs.jjtAccept(this, data);
-
-        CodeGenerator.objectFile.println("    if_" + typeCode + "cmpge label" + tagNumber);
+        emitComparisonCode(node, data);
+        CodeGenerator.objectFile.println("    ifge " + getNextLabel());
         CodeGenerator.objectFile.flush();
 
-        /* THIS IS THE CODE TO COMPARE LESS THAN. USING THIS AS REFERENCE.
-        0: iconst_5
-        1: istore_1
-        2: iload_1
-        3: bipush        10
-        5: if_icmpge     15
-        8: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
-        11: iload_1
-        12: invokevirtual #3                  // Method java/io/PrintStream.println:(I)V
-        */
         return data;
     }
 
     public Object visit(ASTgreaterThan node, Object data)
     {
-        //TODO: Thinking about how to generate if statement code
+        emitComparisonCode(node, data);
+        CodeGenerator.objectFile.println("    ifle " + getNextLabel());
+        CodeGenerator.objectFile.flush();
 
         return data;
     }
 
     public Object visit(ASTnotEqual node, Object data)
     {
-        //TODO: Thinking about how to generate if statement code
+        emitComparisonCode(node, data);
+        CodeGenerator.objectFile.println("    ifeq " + getNextLabel());
+        CodeGenerator.objectFile.flush();
 
         return data;
     }
 
     public Object visit(ASTlessEqual node, Object data)
     {
-        //TODO: Thinking about how to generate if statement code
+        emitComparisonCode(node, data);
+        CodeGenerator.objectFile.println("    ifgt " + getNextLabel());
+        CodeGenerator.objectFile.flush();
 
         return data;
     }
 
     public Object visit(ASTgreaterEqual node, Object data)
     {
-        //TODO: Thinking about how to generate if statement code
+        emitComparisonCode(node, data);
+        CodeGenerator.objectFile.println("    iflt " + getNextLabel());
+        CodeGenerator.objectFile.flush();
 
         return data;
     }
