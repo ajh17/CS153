@@ -340,8 +340,8 @@ void forClause() : {
 void operand() #void : {}
 {
     (
-     (identifier() | integerConstant() | realConstant() | booleanConstant()
-      | interpretedString()) | <OPEN_PAREN> expression() <CLOSE_PAREN>
+     (identifier() | LOOKAHEAD(2) integerConstant() | LOOKAHEAD(2) realConstant() | booleanConstant()
+        | interpretedString()) | <OPEN_PAREN> expression() <CLOSE_PAREN>
      )
 }
 
