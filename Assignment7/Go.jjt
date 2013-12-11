@@ -109,7 +109,7 @@ SimpleNode start() #void :
          symTabStack.setProgramId(programId);
       }
       rootNode = statementList() < EOF >
-      
+
       {
          programId.setAttribute(ROUTINE_LOCALS_COUNT, counter);
          return rootNode;
@@ -227,11 +227,11 @@ void parameterList() : {}
 void block(HashSet syncSet) : {}
 {
    {
-      syncSet.add("}"); // skip to the next closing brace 
+      syncSet.add(CLOSE_BRACE); // skip to the next closing brace
    }
    try
    {
-      "{" statementList() "}"
+      <OPEN_BRACE> statementList() <CLOSE_BRACE>
    }
    catch (ParseException ex)
    {
@@ -269,7 +269,7 @@ void switchStatement(HashSet syncSet) : {}
 
 void switchBlock() : {}
 {
-   "{" caseGroup() "}"
+   <OPEN_BRACE> caseGroup() <CLOSE_BRACE>
 }
 
 void caseGroup() :
@@ -298,19 +298,19 @@ void assignmentStatement(HashSet syncSet) : { SimpleNode variableNode; }
      (
       <EQUALS> expression() | incOrDec() {
          if (typeId.getIdentifier() == Predefined.integerId) {
-            if (token.image == "++") { 
+            if (token.image == "++") {
                 //int number = variableId.getAttribute(VALUE) + 1;
                 //variableId.setAttribute(number);
             }
         }
-        else if (token.image == "--") { 
+        else if (token.image == "--") {
             //int number = variableId.getAttribute(VALUE) - 1;
             //variableId.setAttribute(number);
         }
      }
      )
     )
-    | 
+    |
     ( incOrDec() identifier())
    )
     < SEMICOLON >
@@ -318,7 +318,7 @@ void assignmentStatement(HashSet syncSet) : { SimpleNode variableNode; }
 
 void incOrDec() : {}
 {
-   ( "++" | "--")
+   ( <INCREMENT> | <DECREMENT>)
 }
 
 void forStatement(HashSet syncSet) : {}
@@ -341,8 +341,8 @@ void forClause() : {
 
 void operand() #void : {}
 {
-    ( 
-     (identifier() | integerConstant() | realConstant() | booleanConstant() 
+    (
+     (identifier() | integerConstant() | realConstant() | booleanConstant()
       | interpretedString()) | <OPEN_PAREN> expression() <CLOSE_PAREN>
      )
 }
@@ -493,19 +493,31 @@ TOKEN: {
 
 // Misc tokens
 TOKEN: {
-      <#NEWLINE : [ "\r", "\n" ] >
-      | <#WHITE_SPACE : < NEWLINE > | "\t" | " " >
-      | <SEMICOLON : ";" >
-      | <COMMA : "," >
-      | <DOT: ".">
-      | <OPEN_PAREN: "(">
-      | <CLOSE_PAREN: ")">
+    <#NEWLINE : [ "\r", "\n" ] >
+    | <#WHITE_SPACE : < NEWLINE > | "\t" | " " >
+    | <SEMICOLON : ";" >
+    | <COMMA : "," >
+    | <DOT: ".">
+    | <OPEN_PAREN: "(">
+        {debugStream.println("OPEN_PAREN token: " + matchedToken.image); }
+    | <CLOSE_PAREN: ")">
+        {debugStream.println("CLOSE_PAREN token: " + matchedToken.image); }
+    | <OPEN_BRACE: "{">
+        {debugStream.println("OPEN_BRACE token: " + matchedToken.image); }
+    | <CLOSE_BRACE: "}">
+        {debugStream.println("CLOSE_BRACE token: " + matchedToken.image); }
 }
 
 // Special character tokens
 TOKEN: {
     <PLUS: "+">
         {debugStream.println("PLUS token: " + matchedToken.image); }
+    |
+    <INCREMENT: "++">
+        {debugStream.println("INCREMENT token: " + matchedToken.image); }
+    |
+    <DECREMENT: "--">
+        {debugStream.println("DECREMENT token: " + matchedToken.image); }
     | <MINUS: "-">
         {debugStream.println("MINUS token: " + matchedToken.image); }
     | <MULTIPLY: "*">
@@ -568,7 +580,7 @@ TOKEN :
         { debugStream.println("INTERPRETED_STRING token: " + matchedToken.image); }
       | < IDENTIFIER : < LETTER > ( < LETTER > | < DIGIT > | "_")* >
         { debugStream.println("IDENTIFIER token: " + matchedToken.image); }
-      | < #ALPHANUMERIC : ( < LETTER > | < DIGIT >)+ > 
+      | < #ALPHANUMERIC : ( < LETTER > | < DIGIT >)+ >
       | < #ESCAPED_CHAR : "\\" ( "a" | "b" | "f" | "n" | "r" | "t" | "v" | "\\" | "'" | "\"") >
       | < #LETTER : [ "a"-"z", "A"-"Z" ] >
       | < #DIGIT : [ "0"-"9" ] >
