@@ -211,6 +211,9 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
     }
 
     public Object visit(ASTforClause node, Object data) {
+        // TODO: Need to add more in here to accomodate a for loop.
+        // TODO: This return statement only handles the while loop.
+
         return node.jjtGetChild(0).jjtAccept(this, data);
     }
 
