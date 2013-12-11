@@ -407,7 +407,6 @@ void integerConstant() : {}
     ((<PLUS> | <MINUS>)? < INTEGER_NUMBER >)
     {
         jjtThis.setTypeSpec(Predefined.integerType);
-        // TODO: This only parses negative integers correctly. Still figuring out how to set negative integers
         jjtThis.setAttribute(VALUE, Integer.parseInt(token.image));
     }
 }
@@ -431,7 +430,6 @@ void realConstant() : {}
     (<PLUS> | <MINUS>)? < REAL_NUMBER >
     {
         jjtThis.setTypeSpec(Predefined.realType);
-        // TODO: This only parses negative integers correctly. Still figuring out how to set negative floats
         jjtThis.setAttribute(VALUE, Float.parseFloat(token.image));
     }
 }
@@ -578,7 +576,7 @@ TOKEN: {
 // Types
 TOKEN :
 {
-      <INTEGER_NUMBER: < DIGIT > (< DIGIT >)* >
+      <INTEGER_NUMBER: ("-")? (<DIGIT>)+ >
         { debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
       | < REAL_NUMBER : < INTEGER_NUMBER > "." (< INTEGER_NUMBER >)? >
         { debugStream.println("REAL_NUMBER token: " + matchedToken.image); }
