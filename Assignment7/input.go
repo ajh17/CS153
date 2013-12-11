@@ -24,6 +24,9 @@ if 5 < 6 {
     if 3 > 5 {
         Println("err: 3 > 5");
     }
+    else {
+        Println("else from: 3 > 5");
+    }
 
     if 10.5 <= 11 {
         Println("10.5 <= 11");
@@ -45,7 +48,7 @@ else if 4 == 4 {
     Println("4 == 4");
 }
 else {
-    Println("In ELSE");
+    Println("else from: 4 == 4");
 }
 
 if x < 100 {

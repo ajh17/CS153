@@ -67,7 +67,6 @@ public class CodeGenerator extends Backend
 
         // Generate code for the timer and standard input fields.
         objectFile.println(".field private static _runTimer LRunTimer;");
-        objectFile.println(".field private static _standardIn LPascalTextIn;");
         objectFile.println();
 
         // Generate code for fields.
@@ -105,11 +104,6 @@ public class CodeGenerator extends Backend
         objectFile.println("    dup");
         objectFile.println("    invokenonvirtual	RunTimer/<init>()V");
         objectFile.println("    putstatic	" + programName + "/_runTimer LRunTimer;");
-        objectFile.println("    new	 PascalTextIn");
-        objectFile.println("    dup");
-        objectFile.println("    invokenonvirtual	PascalTextIn/<init>()V");
-        objectFile.println("    putstatic	" + programName +
-                "/_standardIn LPascalTextIn;");
         objectFile.println();
         objectFile.flush();
 
@@ -120,7 +114,7 @@ public class CodeGenerator extends Backend
         Node rootNode = iCode.getRoot();
         rootNode.jjtAccept(codeVisitor, programName);
         objectFile.println();
-        
+
         
         // try and print out all variables
         for (SymTabEntry id : locals) {
@@ -132,7 +126,7 @@ public class CodeGenerator extends Backend
                 TypeSpec type = id.getTypeSpec();
                 String typeCode = type == Predefined.integerType ? "I" : "F";
                 objectFile.println("getstatic java/lang/System/out Ljava/io/PrintStream;");
-               objectFile.println("getstatic Input/"+ fieldName  + " " + typeCode);
+                objectFile.println("getstatic Input/"+ fieldName  + " " + typeCode);
                 objectFile.println("invokevirtual java/io/PrintStream/println(" + typeCode + ")V");
                         
             }

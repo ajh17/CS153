@@ -8,8 +8,10 @@ import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 
 public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoParserTreeConstants
 {
-    public static int tagNumber = 0;
+    private String programName = null;
+    private int tagNumber = 0;
 
+    public String getCurrentLabel() { return "label" + tagNumber; }
     public String getNextLabel() { return "label" + ++tagNumber; }
 
     public void emitComparisonCode(SimpleNode node, Object data) {
@@ -32,6 +34,14 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         }
 
         CodeGenerator.objectFile.println("    fcmpg");
+    }
+
+    public Object visit(ASTstatementList node, Object data) {
+        if (this.programName == null) {
+            this.programName = (String) data;
+        }
+
+        return node.childrenAccept(this, data);
     }
     
     public Object visit(ASTassignmentStatement node, Object data)
@@ -169,15 +179,40 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         return data;
     }
 
+    public Object visit(ASTblock node, Object data)
+    {
+        node.childrenAccept(this, data);
+
+        if ((String) data != programName) {
+            String label = (String) data;
+            CodeGenerator.objectFile.println("    goto " + label);
+            CodeGenerator.objectFile.flush();
+        }
+
+        return data;
+    }
+
     public Object visit(ASTifStatement node, Object data)
     {
         SimpleNode condition = (SimpleNode) node.jjtGetChild(0);
         SimpleNode block = (SimpleNode) node.jjtGetChild(1);
+        SimpleNode elseStatement = null;
+
+        if (node.jjtGetNumChildren() == 3) {
+            elseStatement = (SimpleNode) node.jjtGetChild(2);
+        }
 
         String label = (String) condition.jjtAccept(this, data);
-        block.jjtAccept(this, data);
-
+        String label2 = getNextLabel();
+        block.jjtAccept(this, label2);
         CodeGenerator.objectFile.println(label + ":");
+        CodeGenerator.objectFile.flush();
+
+        if (elseStatement != null) {
+            elseStatement.jjtAccept(this, data);
+        }
+
+        CodeGenerator.objectFile.println(label2 + ":");
         CodeGenerator.objectFile.flush();
 
         return data;
