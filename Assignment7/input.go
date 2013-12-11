@@ -15,4 +15,11 @@ for i = 1; i <= 5; i = i + 1 {
             Println("I'm greater or equal than 30");
         }
     }
+    else {
+        Println("I'm NOT 3");
+    }
+}
+
+for x = 0; x < 5; x = x + 1 {
+    Println("For loop");
 }
