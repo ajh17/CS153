@@ -10,7 +10,6 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 {
     public static int tagNumber = 0;
 
-    public String getCurrentLabel() { return "label" + tagNumber; }
     public String getNextLabel() { return "label" + ++tagNumber; }
 
     public void emitComparisonCode(SimpleNode node, Object data) {
@@ -175,10 +174,10 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         SimpleNode condition = (SimpleNode) node.jjtGetChild(0);
         SimpleNode block = (SimpleNode) node.jjtGetChild(1);
 
-        condition.jjtAccept(this, data);
+        String label = (String) condition.jjtAccept(this, data);
         block.jjtAccept(this, data);
 
-        CodeGenerator.objectFile.println(getCurrentLabel() + ":");
+        CodeGenerator.objectFile.println(label + ":");
         CodeGenerator.objectFile.flush();
 
         return data;
@@ -186,56 +185,62 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
     public Object visit(ASTequalEqual node, Object data)
     {
+        String label = getNextLabel();
         emitComparisonCode(node, data);
-        CodeGenerator.objectFile.println("    ifne " + getNextLabel());
+        CodeGenerator.objectFile.println("    ifne " + label);
         CodeGenerator.objectFile.flush();
 
-        return data;
+        return label;
     }
 
     public Object visit(ASTlessThan node, Object data)
     {
+        String label = getNextLabel();
         emitComparisonCode(node, data);
-        CodeGenerator.objectFile.println("    ifge " + getNextLabel());
+        CodeGenerator.objectFile.println("    ifge " + label);
         CodeGenerator.objectFile.flush();
 
-        return data;
+        return label;
     }
 
     public Object visit(ASTgreaterThan node, Object data)
     {
+        String label = getNextLabel();
         emitComparisonCode(node, data);
-        CodeGenerator.objectFile.println("    ifle " + getNextLabel());
+        CodeGenerator.objectFile.println("    ifle " + label);
         CodeGenerator.objectFile.flush();
 
-        return data;
+        return label;
     }
 
     public Object visit(ASTnotEqual node, Object data)
     {
+        String label = getNextLabel();
         emitComparisonCode(node, data);
-        CodeGenerator.objectFile.println("    ifeq " + getNextLabel());
+        CodeGenerator.objectFile.println("    ifeq " + label);
         CodeGenerator.objectFile.flush();
 
-        return data;
+        return label;
     }
 
     public Object visit(ASTlessEqual node, Object data)
     {
+        String label = getNextLabel();
         emitComparisonCode(node, data);
-        CodeGenerator.objectFile.println("    ifgt " + getNextLabel());
+        CodeGenerator.objectFile.println("    ifgt " + label);
         CodeGenerator.objectFile.flush();
 
-        return data;
+        return label;
     }
 
     public Object visit(ASTgreaterEqual node, Object data)
     {
+        String label = getNextLabel();
         emitComparisonCode(node, data);
-        CodeGenerator.objectFile.println("    iflt " + getNextLabel());
+        CodeGenerator.objectFile.println("    iflt " + label);
         CodeGenerator.objectFile.flush();
 
-        return data;
+        return label;
     }
 
 /*    public Object visit(ASTsubtract node, Object data)
