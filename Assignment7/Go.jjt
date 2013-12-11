@@ -111,7 +111,9 @@ SimpleNode start() #void :
         rootNode = statementList() < EOF >
 
         {
-            programId.setAttribute(ROUTINE_LOCALS_COUNT, counter);
+            // I'm inserting 1 instead of counter because if no variables are declared,
+            // the program will not run. The counter is used for method scopes.
+            programId.setAttribute(ROUTINE_LOCALS_COUNT, 1);
             return rootNode;
         }
     }
