@@ -568,7 +568,7 @@ TOKEN: {
 // Types
 TOKEN :
 {
-      <INTEGER_NUMBER : < DIGIT > (< DIGIT >)* >
+      <INTEGER_NUMBER: < DIGIT > (< DIGIT >)* >
         { debugStream.println("INTEGER_NUMBER token: " + matchedToken.image); }
       | < REAL_NUMBER : < INTEGER_NUMBER > "." (< INTEGER_NUMBER >)? >
         { debugStream.println("REAL_NUMBER token: " + matchedToken.image); }
