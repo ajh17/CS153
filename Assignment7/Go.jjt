@@ -239,25 +239,20 @@ void block(HashSet syncSet) : {}
    }
 }
 
-void ifStatement(HashSet syncSet) : {}
+void ifStatement(HashSet syncSet) : { syncSet.add(IF); }
 {
-   {
-      syncSet.add(IF); // skip to next if, else, or else if
-      syncSet.add(ELSE);
-   }
-   try
-   {
-      <IF> expression() block(syncSet) (elseStatement(syncSet))?
-   }
-   catch (ParseException ex)
-   {
-      handleError(ex, syncSet, true);
-   }
-   finally
-   {
-      syncSet.remove(IF);
-      syncSet.remove(ELSE);
-   }
+    try
+    {
+        <IF> expression() block(syncSet) (elseStatement(syncSet))?
+    }
+    catch (ParseException ex)
+    {
+        handleError(ex, syncSet, true);
+    }
+    finally
+    {
+        syncSet.remove(IF);
+    }
 }
 
 void elseStatement(HashSet syncSet) : { syncSet.add(ELSE); }
