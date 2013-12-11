@@ -17,6 +17,6 @@ for i = 1; i <= 5; i = i + 1 {
     }
 }
 
-/* func reverse(s string) { */
-
-/* } */
+// An array of 32 integers
+var arr [32]int;
+var primes [100]bool;

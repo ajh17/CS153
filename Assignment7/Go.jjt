@@ -187,13 +187,18 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
         variableId.setDefinition(DefinitionImpl.VARIABLE);
         variableNode.setAttribute(ID, variableId);
     }
-    type()
-    {
-        SymTabEntry typeId = symTabStack.lookup(token.image);
-        TypeSpec type = typeId.getTypeSpec();
-        variableId.setTypeSpec(type);
-        variableNode.setTypeSpec(type);
-    }
+    (
+        // TODO: An Array in Go. Not sure how to do this yet, but I have a few ideas.
+        (<OPEN_BRACKET> ((<INTEGER_NUMBER>) | identifier()) <CLOSE_BRACKET> type()) #array
+        |
+        (type()
+        {
+            SymTabEntry typeId = symTabStack.lookup(token.image);
+            TypeSpec type = typeId.getTypeSpec();
+            variableId.setTypeSpec(type);
+            variableNode.setTypeSpec(type);
+        })
+    )
     < SEMICOLON >
 }
 
@@ -204,7 +209,7 @@ void functionDeclaration(HashSet syncSet) #function :
 }
 {
     {
-        syncSet.add(FUNC); // skip to next function delaration
+        syncSet.add(FUNC); // skip to next function declaration
         syncSet.add(VAR); // skip to a variable declaration
     }
     <FUNC> identifier() {
