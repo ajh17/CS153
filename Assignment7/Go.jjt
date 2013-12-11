@@ -197,17 +197,22 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
     < SEMICOLON >
 }
 
-void functionDeclaration(HashSet syncSet) :
+void functionDeclaration(HashSet syncSet) #function :
 {
-   SimpleNode id;
+    SimpleNode id;
+    SymTabEntry functionID;
 }
 {
     {
         syncSet.add(FUNC); // skip to next function delaration
         syncSet.add(VAR); // skip to a variable declaration
     }
-    <FUNC> id = identifier()
-    { // Enter into symbol table
+    <FUNC> identifier() {
+        // TODO: Not yet complete. We need to think about nesting, variable scoping and
+        // TODO: how to properly set function attributes.
+        functionID = symTabStack.enterLocal(token.image);
+        functionID.setDefinition(DefinitionImpl.FUNCTION);
+        functionID.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
     }
     <OPEN_PAREN> parameterList() <CLOSE_PAREN>
         (type())? block(syncSet)
