@@ -334,7 +334,7 @@ void forClause() : {
 }
 {
     // TODO: For now, parse a very simple for loop (this is a while loop in go)
-    <OPEN_PAREN> identifier() (relationalOperators()) operand() <CLOSE_PAREN>
+    (<OPEN_PAREN>)? identifier() (relationalOperators()) operand() (<CLOSE_PAREN>)?
 }
 
 void operand() #void : {}
