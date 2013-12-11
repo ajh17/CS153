@@ -247,8 +247,7 @@ void ifStatement(HashSet syncSet) : {}
    }
    try
    {
-      <IF> expression() block(syncSet) (LOOKAHEAD(2)
-            <ELSE> <IF> expression() block(syncSet)) * (<ELSE> block(syncSet)) ?
+      <IF> expression() block(syncSet) (elseStatement(syncSet))?
    }
    catch (ParseException ex)
    {
@@ -259,6 +258,27 @@ void ifStatement(HashSet syncSet) : {}
       syncSet.remove(IF);
       syncSet.remove(ELSE);
    }
+}
+
+void elseStatement(HashSet syncSet) : { syncSet.add(ELSE); }
+{
+    try
+    {
+        <ELSE>
+        (
+            LOOKAHEAD(2) ifStatement(syncSet)
+            |
+            block(syncSet)
+        )
+    }
+    catch (ParseException ex)
+    {
+        handleError(ex, syncSet, true);
+    }
+    finally
+    {
+        syncSet.remove(ELSE);
+    }
 }
 
 void switchStatement(HashSet syncSet) : {}
