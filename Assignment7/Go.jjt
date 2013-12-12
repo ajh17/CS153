@@ -415,6 +415,7 @@ void term() #void : {}
     operand() (
           < MULTIPLY > operand() #multiply(2)
         | < DIVIDE > operand() #divide(2)
+        | <MODULO> operand() #modulo(2)
     )*
 }
 
