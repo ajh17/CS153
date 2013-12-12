@@ -340,11 +340,15 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
     public Object visit(ASTincrement node, Object data)
     {
-        String var =  node.toString();
+        // TODO: Figure out how to implement this.
+        // Jasmin uses iinc for incrementing integers
+        return data;
+    }
 
-        CodeGenerator.objectFile.println("    " + var);
-        CodeGenerator.objectFile.flush();
-
+    public Object visit(ASTdecrement node, Object data)
+    {
+        // TODO: Figure out how to implement this.
+        // Jasmin uses idec for decrementing integers
         return data;
     }
 
