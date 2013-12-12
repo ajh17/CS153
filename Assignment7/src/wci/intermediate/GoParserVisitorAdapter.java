@@ -118,6 +118,20 @@ public class GoParserVisitorAdapter implements GoParserVisitor {
         return node.childrenAccept(this, data);
     }
 
+    public Object visit(ASTbitwiseAnd node, Object data) {
+        return node.childrenAccept(this, data);
+    }
+
+
+    public Object visit(ASTbitwiseOr node, Object data) {
+        return node.childrenAccept(this, data);
+    }
+
+
+    public Object visit(ASTxor node, Object data) {
+        return node.childrenAccept(this, data);
+    }
+
     public Object visit(ASTmodulo node, Object data) {
         return node.childrenAccept(this, data);
     }

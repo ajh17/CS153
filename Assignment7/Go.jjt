@@ -416,6 +416,9 @@ void term() #void : {}
           < MULTIPLY > operand() #multiply(2)
         | < DIVIDE > operand() #divide(2)
         | <MODULO> operand() #modulo(2)
+        | <AND> operand() #bitwiseAnd(2)
+        | <OR> operand() #bitwiseOr(2)
+        | <CARET> operand() #xor(2)
     )*
 }
 
