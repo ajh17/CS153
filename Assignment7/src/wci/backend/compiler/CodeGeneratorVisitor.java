@@ -2,6 +2,7 @@ package wci.backend.compiler;
 
 import wci.frontend.*;
 import wci.intermediate.*;
+import wci.intermediate.icodeimpl.ICodeKeyImpl;
 import wci.intermediate.symtabimpl.Predefined;
 
 import java.util.ArrayList;
@@ -111,6 +112,16 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
                 "/" + fieldName + " " + typeCode);
         CodeGenerator.objectFile.flush();
 
+        return data;
+    }
+
+    public Object visit(ASTfunctionCall node, Object data) {
+        // Still working on this.
+        String id = node.getAttribute(ICodeKeyImpl.ID).toString();
+        // Going by jasmin's function call instructions
+        // It also refers to functions by numbers. #2, #3, etc. Seems like #1 is main.
+        CodeGenerator.objectFile.println("invokestatic  " + id);
+        CodeGenerator.objectFile.flush();
         return data;
     }
 

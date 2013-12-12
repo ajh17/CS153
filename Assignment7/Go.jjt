@@ -141,6 +141,7 @@ void statement() #void :
             | ifStatement(syncSet)
             | forStatement(syncSet)
             | printStatement(syncSet)
+            | functionCall(syncSet)
             | < SEMICOLON >
     }
     catch (ParseException ex)
@@ -264,7 +265,7 @@ SimpleNode parameterList(HashSet syncSet) : {}
 
 // TODO: Not complete yet.
 // Will work on it after I take a look at function declaration.
-void functionCall() : {}
+void functionCall(HashSet syncSet) #functionCall: {}
 {
     identifier() {
         SymTabEntry id = symTabStack.lookup(token.image);
