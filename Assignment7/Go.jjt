@@ -187,13 +187,24 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
         variableId.setDefinition(DefinitionImpl.VARIABLE);
         variableNode.setAttribute(ID, variableId);
     }
-    type()
-    {
-        SymTabEntry typeId = symTabStack.lookup(token.image);
-        TypeSpec type = typeId.getTypeSpec();
-        variableId.setTypeSpec(type);
-        variableNode.setTypeSpec(type);
-    }
+    (
+        // TODO: An Array in Go. Not sure how to do this yet, but I have a few ideas.
+        // TODO: THE FOLLOWING IS ONLY TEMPORARY.
+        (<OPEN_BRACKET> ((<INTEGER_NUMBER>) | identifier()) <CLOSE_BRACKET> type()) #array {
+            SymTabEntry typeId = symTabStack.lookup(token.image);
+            TypeSpec type = typeId.getTypeSpec();
+            variableId.setTypeSpec(type);
+            variableNode.setTypeSpec(type);
+        }
+        |
+        (type()
+        {
+            typeId = symTabStack.lookup(token.image);
+            type = typeId.getTypeSpec();
+            variableId.setTypeSpec(type);
+            variableNode.setTypeSpec(type);
+        })
+    )
     < SEMICOLON >
 }
 
@@ -204,7 +215,7 @@ void functionDeclaration(HashSet syncSet) #function :
 }
 {
     {
-        syncSet.add(FUNC); // skip to next function delaration
+        syncSet.add(FUNC); // skip to next function declaration
         syncSet.add(VAR); // skip to a variable declaration
     }
     <FUNC> identifier() {
@@ -545,6 +556,10 @@ TOKEN: {
         {debugStream.println("OPEN_BRACE token: " + matchedToken.image); }
     | <CLOSE_BRACE: "}">
         {debugStream.println("CLOSE_BRACE token: " + matchedToken.image); }
+    | <OPEN_BRACKET: "[">
+        {debugStream.println("OPEN_BRACKET token: " + matchedToken.image); }
+    | <CLOSE_BRACKET: "]">
+        {debugStream.println("CLOSE_BRACKET token: " + matchedToken.image); }
 }
 
 // Special character tokens
