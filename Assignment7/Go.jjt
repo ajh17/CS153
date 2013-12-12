@@ -547,15 +547,7 @@ TOKEN: {
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
       | <SWITCH: "switch">
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-      | <CONST: "const">
-        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-      | <FALLTHROUGH: "fallthrough">
-        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
       | <IF: "if">
-        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-      | <RANGE: "range">
-        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-      | <TYPE: "type">
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
       | <CONTINUE: "continue">
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
