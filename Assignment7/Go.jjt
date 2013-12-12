@@ -268,8 +268,14 @@ void functionCall() : {}
 {
     identifier() {
         SymTabEntry id = symTabStack.lookup(token.image);
+
+        if (id != null) {
+            id.appendLineNumber(token.beginLine);
+            jjtThis.setAttribute(ID, token.image);
+        }
+        // If it's null, then the function has not been declared. Need to let the user know some how.
     }
-    <OPEN_PAREN> (identifier()) (<COMMA> identifier())* <CLOSE_PAREN>
+    <OPEN_PAREN> identifier() (<COMMA> identifier())* <CLOSE_PAREN>
 }
 
 void block(HashSet syncSet) : {}
