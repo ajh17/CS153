@@ -174,38 +174,49 @@ void declarationStatement(HashSet syncSet) #void :
 void variableDeclaration(HashSet syncSet) throws ParseException :
 {
     SimpleNode variableNode;
+    syncSet.add(VAR); // jump to the next var
+    syncSet.add(EOF);
+    syncSet.add(SEMICOLON);
 }
 {
-   // Our implementation of Go's variable declaration will be either these forms:
-   // var x int; OR x = 5 (provided that they also used the first form to declare the variable)
+    try {
+       // Our implementation of Go's variable declaration will be either these forms:
+       // var x int; OR x = 5 (provided that they also used the first form to declare the variable)
 
-    < VAR > variableNode = identifier()
-    {
-        counter++;
-        SymTabEntry variableId = symTabStack.enterLocal(token.image);
-        variableId.appendLineNumber(token.beginLine);
-        variableId.setDefinition(DefinitionImpl.VARIABLE);
-        variableNode.setAttribute(ID, variableId);
-    }
-    (
-        // TODO: An Array in Go. Not sure how to do this yet, but I have a few ideas.
-        // TODO: THE FOLLOWING IS ONLY TEMPORARY.
-        (<OPEN_BRACKET> ((<INTEGER_NUMBER>) | identifier()) <CLOSE_BRACKET> type()) #array {
-            SymTabEntry typeId = symTabStack.lookup(token.image);
-            TypeSpec type = typeId.getTypeSpec();
-            variableId.setTypeSpec(type);
-            variableNode.setTypeSpec(type);
-        }
-        |
-        (type()
+        < VAR > variableNode = identifier()
         {
-            typeId = symTabStack.lookup(token.image);
-            type = typeId.getTypeSpec();
-            variableId.setTypeSpec(type);
-            variableNode.setTypeSpec(type);
-        })
-    )
-    < SEMICOLON >
+            counter++;
+            SymTabEntry variableId = symTabStack.enterLocal(token.image);
+            variableId.appendLineNumber(token.beginLine);
+            variableId.setDefinition(DefinitionImpl.VARIABLE);
+            variableNode.setAttribute(ID, variableId);
+        }
+        (
+            // TODO: An Array in Go. Not sure how to do this yet, but I have a few ideas.
+            // TODO: THE FOLLOWING IS ONLY TEMPORARY.
+            (<OPEN_BRACKET> ((<INTEGER_NUMBER>) | identifier()) <CLOSE_BRACKET> type()) #array {
+                SymTabEntry typeId = symTabStack.lookup(token.image);
+                TypeSpec type = typeId.getTypeSpec();
+                variableId.setTypeSpec(type);
+                variableNode.setTypeSpec(type);
+            }
+            |
+            (type()
+            {
+                typeId = symTabStack.lookup(token.image);
+                type = typeId.getTypeSpec();
+                variableId.setTypeSpec(type);
+                variableNode.setTypeSpec(type);
+            })
+        )
+        < SEMICOLON >
+    }
+    catch (ParseException ex) {
+        handleError(ex, syncSet, true);
+    }
+    finally {
+        syncSet.remove(VAR);
+    }
 }
 
 void functionDeclaration(HashSet syncSet) #function :
