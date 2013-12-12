@@ -240,7 +240,7 @@ void functionDeclaration(HashSet syncSet) #function :
         functionID.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
     }
     <OPEN_PAREN> parameterList() <CLOSE_PAREN> (type())? {
-        syncSet.remove(FUNC); // Remove to calling production
+        syncSet.remove(FUNC); // Remove for calling production
         syncSet.remove(VAR);
         syncSet = new HashSet(); // New reference used only by the new function scope
         syncSet.add(EOF);

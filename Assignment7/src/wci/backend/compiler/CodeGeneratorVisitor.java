@@ -1,5 +1,6 @@
 package wci.backend.compiler;
 
+import sun.org.mozilla.javascript.internal.ast.Jump;
 import wci.frontend.*;
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.Predefined;
@@ -193,6 +194,8 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
     {
         node.childrenAccept(this, programName);
 
+        // If the data is not the programName, that means I overwrote the data, so use it.
+        // The data is always the programName unless you choose to send a child something else.
         if (data != programName) {
             String label = (String) data;
             CodeGenerator.objectFile.println("    goto " + label);
@@ -210,12 +213,12 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         // If the for clause has 1 child, it is a while loop, so create a label
         if (forClause.jjtGetNumChildren() == 1) {
             String beginLabel = getNextLabel();
-            CodeGenerator.objectFile.println(beginLabel + ":");
+            CodeGenerator.objectFile.println(beginLabel + ":"); // Jump back here after each iteration
             CodeGenerator.objectFile.flush();
-            String endLabel = (String) forClause.jjtAccept(this, data);
+            String endLabel = (String) forClause.jjtAccept(this, data); // Jump to returned label when loop ends
             block.jjtAccept(this, data);
-            CodeGenerator.objectFile.println("    goto " + beginLabel);
-            CodeGenerator.objectFile.println(endLabel + ":");
+            CodeGenerator.objectFile.println("    goto " + beginLabel); // Restart loop
+            CodeGenerator.objectFile.println(endLabel + ":"); // Jump here when the loop is done
         }
         else {
             ArrayList<Object> loopData = (ArrayList<Object>) forClause.jjtAccept(this, data);
@@ -235,15 +238,15 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
         // If it has 1 child, it is a while loop
         if (node.jjtGetNumChildren() == 1) {
-            return node.jjtGetChild(0).jjtAccept(this, data);
+            return node.jjtGetChild(0).jjtAccept(this, data); // This returns a string label it will be jumping to
         }
 
-        node.jjtGetChild(0).jjtAccept(this, data);
+        node.jjtGetChild(0).jjtAccept(this, data); // Perform the assignment, but don't include it as part of loop
 
-        String beginLabel = getNextLabel();
+        String beginLabel = getNextLabel(); // Prepare label for looping after the assignment has been done
         CodeGenerator.objectFile.println(beginLabel + ":");
         CodeGenerator.objectFile.flush();
-        String endLabel = (String) node.jjtGetChild(1).jjtAccept(this, data);
+        String endLabel = (String) node.jjtGetChild(1).jjtAccept(this, data); // Get label it will be jumping to in condition
 
         loopData.add(node.jjtGetChild(2)); // Delay incrementing until after the loop
         loopData.add(beginLabel);
@@ -258,21 +261,23 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         SimpleNode block = (SimpleNode) node.jjtGetChild(1);
         SimpleNode elseStatement = null;
 
+        // Check if an else block exists
         if (node.jjtGetNumChildren() == 3) {
             elseStatement = (SimpleNode) node.jjtGetChild(2);
         }
 
+        // When going into the condition, it will emit a conditional jump to the returned label
         String label = (String) condition.jjtAccept(this, data);
-        String label2 = getNextLabel();
-        block.jjtAccept(this, label2);
-        CodeGenerator.objectFile.println(label + ":");
+        String label2 = getNextLabel(); // If condition is true and there exist an else statement, jump to this label
+        block.jjtAccept(this, label2); // Going in here will emit all the code in the body
+        CodeGenerator.objectFile.println(label + ":"); // The label to jump to when the condition is false
         CodeGenerator.objectFile.flush();
 
         if (elseStatement != null) {
             elseStatement.jjtAccept(this, data);
         }
 
-        CodeGenerator.objectFile.println(label2 + ":");
+        CodeGenerator.objectFile.println(label2 + ":"); // Jump to this label if condition is true and there is an else
         CodeGenerator.objectFile.flush();
 
         return data;
