@@ -348,7 +348,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
     public Object visit(ASTdecrement node, Object data)
     {
         // TODO: Figure out how to implement this.
-        // Jasmin uses idec for decrementing integers
+        // Jasmin uses iinc -1 for decrementing integers
         return data;
     }
 
