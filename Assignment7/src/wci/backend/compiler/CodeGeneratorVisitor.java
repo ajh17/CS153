@@ -155,6 +155,155 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         return data;
     }
 
+    public Object visit(ASTblock node, Object data)
+    {
+        node.childrenAccept(this, programName);
+
+        if (data != programName) {
+            String label = (String) data;
+            CodeGenerator.objectFile.println("    goto " + label);
+            CodeGenerator.objectFile.flush();
+        }
+
+        return data;
+    }
+
+    public Object visit(ASTforStatement node, Object data)
+    {
+        SimpleNode forClause = (SimpleNode) node.jjtGetChild(0);
+        SimpleNode block = (SimpleNode) node.jjtGetChild(1);
+
+        // If the for clause has 1 child, it is a while loop, so create a label
+        if (forClause.jjtGetNumChildren() == 1) {
+            String beginLabel = getNextLabel();
+            CodeGenerator.objectFile.println(beginLabel + ":");
+            CodeGenerator.objectFile.flush();
+            String endLabel = (String) forClause.jjtAccept(this, data);
+            block.jjtAccept(this, data);
+            CodeGenerator.objectFile.println("    goto " + beginLabel);
+            CodeGenerator.objectFile.println(endLabel + ":");
+        }
+        else {
+            ArrayList<Object> loopData = (ArrayList<Object>) forClause.jjtAccept(this, data);
+            block.jjtAccept(this, data);
+            ((Node) loopData.get(0)).jjtAccept(this, data); // Incrementing after running the body
+            CodeGenerator.objectFile.println("    goto " + loopData.get(1));
+            CodeGenerator.objectFile.println(loopData.get(2) + ":");
+        }
+
+        CodeGenerator.objectFile.flush();
+
+        return data;
+    }
+
+    public Object visit(ASTforClause node, Object data) {
+        ArrayList<Object> loopData = new ArrayList<Object>();
+
+        // If it has 1 child, it is a while loop
+        if (node.jjtGetNumChildren() == 1) {
+            return node.jjtGetChild(0).jjtAccept(this, data);
+        }
+
+        node.jjtGetChild(0).jjtAccept(this, data);
+
+        String beginLabel = getNextLabel();
+        CodeGenerator.objectFile.println(beginLabel + ":");
+        CodeGenerator.objectFile.flush();
+        String endLabel = (String) node.jjtGetChild(1).jjtAccept(this, data);
+
+        loopData.add(node.jjtGetChild(2)); // Delay incrementing until after the loop
+        loopData.add(beginLabel);
+        loopData.add(endLabel);
+
+        return loopData;
+    }
+
+    public Object visit(ASTifStatement node, Object data)
+    {
+        SimpleNode condition = (SimpleNode) node.jjtGetChild(0);
+        SimpleNode block = (SimpleNode) node.jjtGetChild(1);
+        SimpleNode elseStatement = null;
+
+        if (node.jjtGetNumChildren() == 3) {
+            elseStatement = (SimpleNode) node.jjtGetChild(2);
+        }
+
+        String label = (String) condition.jjtAccept(this, data);
+        String label2 = getNextLabel();
+        block.jjtAccept(this, label2);
+        CodeGenerator.objectFile.println(label + ":");
+        CodeGenerator.objectFile.flush();
+
+        if (elseStatement != null) {
+            elseStatement.jjtAccept(this, data);
+        }
+
+        CodeGenerator.objectFile.println(label2 + ":");
+        CodeGenerator.objectFile.flush();
+
+        return data;
+    }
+
+    public Object visit(ASTequalEqual node, Object data)
+    {
+        String label = getNextLabel();
+        emitComparisonCode(node, data);
+        CodeGenerator.objectFile.println("    ifne " + label);
+        CodeGenerator.objectFile.flush();
+
+        return label;
+    }
+
+    public Object visit(ASTlessThan node, Object data)
+    {
+        String label = getNextLabel();
+        emitComparisonCode(node, data);
+        CodeGenerator.objectFile.println("    ifge " + label);
+        CodeGenerator.objectFile.flush();
+
+        return label;
+    }
+
+    public Object visit(ASTgreaterThan node, Object data)
+    {
+        String label = getNextLabel();
+        emitComparisonCode(node, data);
+        CodeGenerator.objectFile.println("    ifle " + label);
+        CodeGenerator.objectFile.flush();
+
+        return label;
+    }
+
+    public Object visit(ASTnotEqual node, Object data)
+    {
+        String label = getNextLabel();
+        emitComparisonCode(node, data);
+        CodeGenerator.objectFile.println("    ifeq " + label);
+        CodeGenerator.objectFile.flush();
+
+        return label;
+    }
+
+    public Object visit(ASTlessEqual node, Object data)
+    {
+        String label = getNextLabel();
+        emitComparisonCode(node, data);
+        CodeGenerator.objectFile.println("    ifgt " + label);
+        CodeGenerator.objectFile.flush();
+
+        return label;
+    }
+
+    public Object visit(ASTgreaterEqual node, Object data)
+    {
+        String label = getNextLabel();
+        emitComparisonCode(node, data);
+        CodeGenerator.objectFile.println("    iflt " + label);
+        CodeGenerator.objectFile.flush();
+
+        return label;
+    }
+
     public Object visit(ASTadd node, Object data)
     {
         SimpleNode addend0Node = (SimpleNode) node.jjtGetChild(0);
@@ -315,154 +464,5 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         CodeGenerator.objectFile.flush();
 
         return data;
-    }
-
-    public Object visit(ASTblock node, Object data)
-    {
-        node.childrenAccept(this, programName);
-
-        if (data != programName) {
-            String label = (String) data;
-            CodeGenerator.objectFile.println("    goto " + label);
-            CodeGenerator.objectFile.flush();
-        }
-
-        return data;
-    }
-
-    public Object visit(ASTforStatement node, Object data)
-    {
-        SimpleNode forClause = (SimpleNode) node.jjtGetChild(0);
-        SimpleNode block = (SimpleNode) node.jjtGetChild(1);
-
-        // If the for clause has 1 child, it is a while loop, so create a label
-        if (forClause.jjtGetNumChildren() == 1) {
-            String beginLabel = getNextLabel();
-            CodeGenerator.objectFile.println(beginLabel + ":");
-            CodeGenerator.objectFile.flush();
-            String endLabel = (String) forClause.jjtAccept(this, data);
-            block.jjtAccept(this, data);
-            CodeGenerator.objectFile.println("    goto " + beginLabel);
-            CodeGenerator.objectFile.println(endLabel + ":");
-        }
-        else {
-            ArrayList<Object> loopData = (ArrayList<Object>) forClause.jjtAccept(this, data);
-            block.jjtAccept(this, data);
-            ((Node) loopData.get(0)).jjtAccept(this, data); // Incrementing after running the body
-            CodeGenerator.objectFile.println("    goto " + loopData.get(1));
-            CodeGenerator.objectFile.println(loopData.get(2) + ":");
-        }
-
-        CodeGenerator.objectFile.flush();
-
-        return data;
-    }
-
-    public Object visit(ASTforClause node, Object data) {
-        ArrayList<Object> loopData = new ArrayList<Object>();
-
-        // If it has 1 child, it is a while loop
-        if (node.jjtGetNumChildren() == 1) {
-            return node.jjtGetChild(0).jjtAccept(this, data);
-        }
-
-        node.jjtGetChild(0).jjtAccept(this, data);
-
-        String beginLabel = getNextLabel();
-        CodeGenerator.objectFile.println(beginLabel + ":");
-        CodeGenerator.objectFile.flush();
-        String endLabel = (String) node.jjtGetChild(1).jjtAccept(this, data);
-
-        loopData.add(node.jjtGetChild(2)); // Delay incrementing until after the loop
-        loopData.add(beginLabel);
-        loopData.add(endLabel);
-
-        return loopData;
-    }
-
-    public Object visit(ASTifStatement node, Object data)
-    {
-        SimpleNode condition = (SimpleNode) node.jjtGetChild(0);
-        SimpleNode block = (SimpleNode) node.jjtGetChild(1);
-        SimpleNode elseStatement = null;
-
-        if (node.jjtGetNumChildren() == 3) {
-            elseStatement = (SimpleNode) node.jjtGetChild(2);
-        }
-
-        String label = (String) condition.jjtAccept(this, data);
-        String label2 = getNextLabel();
-        block.jjtAccept(this, label2);
-        CodeGenerator.objectFile.println(label + ":");
-        CodeGenerator.objectFile.flush();
-
-        if (elseStatement != null) {
-            elseStatement.jjtAccept(this, data);
-        }
-
-        CodeGenerator.objectFile.println(label2 + ":");
-        CodeGenerator.objectFile.flush();
-
-        return data;
-    }
-
-    public Object visit(ASTequalEqual node, Object data)
-    {
-        String label = getNextLabel();
-        emitComparisonCode(node, data);
-        CodeGenerator.objectFile.println("    ifne " + label);
-        CodeGenerator.objectFile.flush();
-
-        return label;
-    }
-
-    public Object visit(ASTlessThan node, Object data)
-    {
-        String label = getNextLabel();
-        emitComparisonCode(node, data);
-        CodeGenerator.objectFile.println("    ifge " + label);
-        CodeGenerator.objectFile.flush();
-
-        return label;
-    }
-
-    public Object visit(ASTgreaterThan node, Object data)
-    {
-        String label = getNextLabel();
-        emitComparisonCode(node, data);
-        CodeGenerator.objectFile.println("    ifle " + label);
-        CodeGenerator.objectFile.flush();
-
-        return label;
-    }
-
-    public Object visit(ASTnotEqual node, Object data)
-    {
-        String label = getNextLabel();
-        emitComparisonCode(node, data);
-        CodeGenerator.objectFile.println("    ifeq " + label);
-        CodeGenerator.objectFile.flush();
-
-        return label;
-    }
-
-    public Object visit(ASTlessEqual node, Object data)
-    {
-        String label = getNextLabel();
-        emitComparisonCode(node, data);
-        CodeGenerator.objectFile.println("    ifgt " + label);
-        CodeGenerator.objectFile.flush();
-
-        return label;
-    }
-
-    public Object visit(ASTgreaterEqual node, Object data)
-    {
-        String label = getNextLabel();
-        emitComparisonCode(node, data);
-        CodeGenerator.objectFile.println("    iflt " + label);
-        CodeGenerator.objectFile.flush();
-
-        return label;
     }
 }
