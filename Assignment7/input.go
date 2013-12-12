@@ -1,19 +1,14 @@
 package main
-var temp float;
-var temp2 float;
 var i int;
 
 for i = 1; i <= 100; i = i + 1 {
     Println(i);
 
-    temp = i % 3;
-    if temp == 0 {
+    if i % 3 == 0 {
         Println("fizz");
     }
 
-    temp2 = i % 5;
-
-    if temp2 == 0 {
+    if i % 5 == 0 {
         Println("buzz");
     }
 }
