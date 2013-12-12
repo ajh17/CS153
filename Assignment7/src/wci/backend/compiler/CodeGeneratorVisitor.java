@@ -1,6 +1,5 @@
 package wci.backend.compiler;
 
-import sun.org.mozilla.javascript.internal.ast.Jump;
 import wci.frontend.*;
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.Predefined;
