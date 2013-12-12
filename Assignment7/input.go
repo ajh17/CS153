@@ -1,24 +1,20 @@
 package main
-var i int;
-var remainder3 int;
-var remainder5 int;
 var temp float;
-remainder3 = 0;
-remainder5 = 0;
+var temp2 float;
+var i int;
 
 for i = 1; i <= 100; i = i + 1 {
     Println(i);
 
-    temp = i / 3;
-    if temp > remainder3 {
-        Println("Fizz");
-        remainder3 = remainder3 + 1;
+    temp = i % 3;
+    if temp == 0 {
+        Println("fizz");
     }
 
-    temp = i / 5;
-    if temp > remainder5 {
-        Println("Buzz");
-        remainder5 = remainder5 + 1;
+    temp2 = i % 5;
+
+    if temp2 == 0 {
+        Println("buzz");
     }
 }
 
