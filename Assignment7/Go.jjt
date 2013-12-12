@@ -383,8 +383,7 @@ void relationalOperators() #void : {}
 
 void expression() #void : {}
 {
-    //TODO: Need to add multiplication and division with operator precedence
-    operand()
+    LOOKAHEAD(2) operand()
     (
           <EQUAL_EQUAL> operand() #equalEqual(2)
         | <NOT_EQUAL> operand() #notEqual(2)
@@ -392,9 +391,20 @@ void expression() #void : {}
         | <LESS_EQUAL> operand() #lessEqual(2)
         | <GREATER_THAN> operand() #greaterThan(2)
         | <GREATER_EQUAL> operand() #greaterEqual(2)
-        |
-        ((<PLUS>|<MINUS>) operand() #add(2))*
     )
+    |
+    term() (
+          < PLUS > term() #add(2)
+        | < MINUS > term() #subtract(2)
+    )*
+}
+
+void term() #void : {}
+{
+    operand() (
+          < MULTIPLY > operand() #multiply(2)
+        | < DIVIDE > operand() #divide(2)
+    )*
 }
 
 void expressionList() : {}
