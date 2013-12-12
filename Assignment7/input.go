@@ -7,6 +7,8 @@ remainder3 = 0;
 remainder5 = 0;
 
 for i = 1; i <= 100; i = i + 1 {
+    Println(i);
+
     temp = i / 3;
     if temp > remainder3 {
         Println("Fizz");
@@ -18,8 +20,6 @@ for i = 1; i <= 100; i = i + 1 {
         Println("Buzz");
         remainder5 = remainder5 + 1;
     }
-
-    Println(i);
 }
 
 // An array of 32 integers
