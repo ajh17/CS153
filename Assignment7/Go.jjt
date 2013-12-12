@@ -189,12 +189,18 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
     }
     (
         // TODO: An Array in Go. Not sure how to do this yet, but I have a few ideas.
-        (<OPEN_BRACKET> ((<INTEGER_NUMBER>) | identifier()) <CLOSE_BRACKET> type()) #array
+        // TODO: THE FOLLOWING IS ONLY TEMPORARY.
+        (<OPEN_BRACKET> ((<INTEGER_NUMBER>) | identifier()) <CLOSE_BRACKET> type()) #array {
+            TypeKey key = TypeKey.ARRAY;
+            TypeSpec type = typeId.getTypeSpec();
+            variableId.setTypeSpec(type);
+            variableNode.setTypeSpec(type);
+        }
         |
         (type()
         {
-            SymTabEntry typeId = symTabStack.lookup(token.image);
-            TypeSpec type = typeId.getTypeSpec();
+            typeId = symTabStack.lookup(token.image);
+            type = typeId.getTypeSpec();
             variableId.setTypeSpec(type);
             variableNode.setTypeSpec(type);
         })
