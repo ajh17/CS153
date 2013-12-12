@@ -209,7 +209,8 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
                 variableNode.setTypeSpec(type);
             })
         )
-        < SEMICOLON >
+        // TODO: Once again, I'm making this optional for now for local scope variables for parameter lists
+        (LOOKAHEAD(2) < SEMICOLON >)?
     }
     catch (ParseException ex) {
         handleError(ex, syncSet, true);
@@ -228,6 +229,7 @@ void functionDeclaration(HashSet syncSet) #function :
 {
     <FUNC> {
         symTabStack.push();
+        syncSet.remove(FUNC);
     }
     identifier() {
         // TODO: Not yet complete. We need to think about nesting, variable scoping and
@@ -235,15 +237,15 @@ void functionDeclaration(HashSet syncSet) #function :
         SymTabEntry functionID = symTabStack.enterLocal(token.image);
         functionID.setDefinition(DefinitionImpl.FUNCTION);
         functionID.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
+
     }
     <OPEN_PAREN>
-    parameters = parameterList() {
+    parameters = parameterList(syncSet) {
         functionID.setAttribute(ROUTINE_LOCALS_COUNT, parameters.jjtGetNumChildren());
     }
     <CLOSE_PAREN>
     (type())? {
-        syncSet.remove(FUNC); // Remove for calling production
-        syncSet.remove(VAR);
+        syncSet.remove(VAR); // Remove for calling production
         syncSet = new HashSet(); // New reference used only by the new function scope
         syncSet.add(EOF);
         syncSet.add(SEMICOLON);
@@ -253,14 +255,9 @@ void functionDeclaration(HashSet syncSet) #function :
     }
 }
 
-void parameter() : {}
+SimpleNode parameterList(HashSet syncSet) : {}
 {
-    identifier() type()
-}
-
-SimpleNode parameterList() : {}
-{
-    (parameter() ( < COMMA > parameter())*)? {
+    (variableDeclaration(syncSet) ( < COMMA > variableDeclaration(syncSet))*)? {
         return jjtThis;
     }
 }
@@ -465,17 +462,18 @@ void printStatement(HashSet syncSet) #printStatement : {}
     "Println" <OPEN_PAREN> expression() <CLOSE_PAREN> <SEMICOLON>
 }
 
-// This production is used for retrieving an already declared variable.
-// When declaring a variable, use < IDENTIFIER > instead.
 SimpleNode identifier() : {}
 {
     < IDENTIFIER >
     {
         SymTabEntry variableId = symTabStack.lookup(token.image);
-        variableId.appendLineNumber(token.beginLine);
-        TypeSpec type = variableId.getTypeSpec();
-        jjtThis.setTypeSpec(type);
-        jjtThis.setAttribute(ID, variableId);
+
+        if (variableId != null) {
+            variableId.appendLineNumber(token.beginLine);
+            TypeSpec type = variableId.getTypeSpec();
+            jjtThis.setTypeSpec(type);
+            jjtThis.setAttribute(ID, variableId);
+        }
 
         return jjtThis;
     }

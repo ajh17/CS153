@@ -46,10 +46,6 @@ public class GoParserVisitorAdapter implements GoParserVisitor {
         return node.childrenAccept(this, data);
     }
 
-    public Object visit(ASTparameter node, Object data) {
-        return node.childrenAccept(this, data);
-    }
-
     public Object visit(ASTparameterList node, Object data) {
         return node.childrenAccept(this, data);
     }
