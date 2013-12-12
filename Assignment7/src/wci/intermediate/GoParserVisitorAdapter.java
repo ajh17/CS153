@@ -130,7 +130,6 @@ public class GoParserVisitorAdapter implements GoParserVisitor {
         return node.childrenAccept(this, data);
     }
 
-    // Relational operators
     public Object visit(ASTequalEqual node, Object data) {
         return node.childrenAccept(this, data);
     }

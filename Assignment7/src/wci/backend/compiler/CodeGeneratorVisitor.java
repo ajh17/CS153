@@ -155,45 +155,6 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         return data;
     }
 
-    public Object visit(ASTadd node, Object data)
-    {
-        SimpleNode addend0Node = (SimpleNode) node.jjtGetChild(0);
-        SimpleNode addend1Node = (SimpleNode) node.jjtGetChild(1);
-
-        TypeSpec type0 = addend0Node.getTypeSpec();
-        TypeSpec type1 = addend1Node.getTypeSpec();
-
-        // Get the addition type.
-        TypeSpec type = node.getTypeSpec();
-        String typePrefix = (type == Predefined.integerType) ? "i" : "f";
-
-        // Emit code for the first expression
-        // with type conversion if necessary.
-        addend0Node.jjtAccept(this, data);
-        if ((type == Predefined.realType) &&
-                (type0 == Predefined.integerType))
-        {
-            CodeGenerator.objectFile.println("    i2f");
-            CodeGenerator.objectFile.flush();
-        }
-
-        // Emit code for the second expression
-        // with type conversion if necessary.
-        addend1Node.jjtAccept(this, data);
-        if ((type == Predefined.realType) &&
-                (type1 == Predefined.integerType))
-        {
-            CodeGenerator.objectFile.println("    i2f");
-            CodeGenerator.objectFile.flush();
-        }
-
-        // Emit the appropriate add instruction.
-        CodeGenerator.objectFile.println("    " + typePrefix + "add");
-        CodeGenerator.objectFile.flush();
-
-        return data;
-    }
-
     public Object visit(ASTblock node, Object data)
     {
         node.childrenAccept(this, programName);
@@ -343,7 +304,46 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         return label;
     }
 
-/*    public Object visit(ASTsubtract node, Object data)
+    public Object visit(ASTadd node, Object data)
+    {
+        SimpleNode addend0Node = (SimpleNode) node.jjtGetChild(0);
+        SimpleNode addend1Node = (SimpleNode) node.jjtGetChild(1);
+
+        TypeSpec type0 = addend0Node.getTypeSpec();
+        TypeSpec type1 = addend1Node.getTypeSpec();
+
+        // Get the addition type.
+        TypeSpec type = node.getTypeSpec();
+        String typePrefix = (type == Predefined.integerType) ? "i" : "f";
+
+        // Emit code for the first expression
+        // with type conversion if necessary.
+        addend0Node.jjtAccept(this, data);
+        if ((type == Predefined.realType) &&
+                (type0 == Predefined.integerType))
+        {
+            CodeGenerator.objectFile.println("    i2f");
+            CodeGenerator.objectFile.flush();
+        }
+
+        // Emit code for the second expression
+        // with type conversion if necessary.
+        addend1Node.jjtAccept(this, data);
+        if ((type == Predefined.realType) &&
+                (type1 == Predefined.integerType))
+        {
+            CodeGenerator.objectFile.println("    i2f");
+            CodeGenerator.objectFile.flush();
+        }
+
+        // Emit the appropriate add instruction.
+        CodeGenerator.objectFile.println("    " + typePrefix + "add");
+        CodeGenerator.objectFile.flush();
+
+        return data;
+    }
+
+    public Object visit(ASTsubtract node, Object data)
     {
         SimpleNode addend0Node = (SimpleNode) node.jjtGetChild(0);
         SimpleNode addend1Node = (SimpleNode) node.jjtGetChild(1);
@@ -380,9 +380,9 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         CodeGenerator.objectFile.flush();
 
         return data;
-    }*/
+    }
 
- /*   public Object visit(ASTmultiply node, Object data)
+    public Object visit(ASTmultiply node, Object data)
     {
         SimpleNode addend0Node = (SimpleNode) node.jjtGetChild(0);
         SimpleNode addend1Node = (SimpleNode) node.jjtGetChild(1);
@@ -419,8 +419,8 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         CodeGenerator.objectFile.flush();
 
         return data;
-    }*/
-/*
+    }
+
     public Object visit(ASTdivide node, Object data)
     {
         SimpleNode addend0Node = (SimpleNode) node.jjtGetChild(0);
@@ -459,5 +459,4 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
         return data;
     }
-    */
 }
