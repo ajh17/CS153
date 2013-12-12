@@ -80,6 +80,40 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         return data;
     }
 
+    public Object visit(ASTpostCondition node, Object data)
+    {
+        String programName        = (String) data;
+        SimpleNode variableNode   = (SimpleNode) node.jjtGetChild(0);
+        SimpleNode expressionNode = (SimpleNode) node.jjtGetChild(1);
+
+        // Emit code for the expression.
+        expressionNode.jjtAccept(this, data);
+        TypeSpec expressionType = expressionNode.getTypeSpec();
+
+        // Get the assignment target type.
+        TypeSpec targetType = node.getTypeSpec();
+
+        // Convert an integer value to float if necessary.
+        if ((targetType == Predefined.realType) &&
+                (expressionType == Predefined.integerType))
+        {
+            CodeGenerator.objectFile.println("    i2f");
+            CodeGenerator.objectFile.flush();
+        }
+
+        SymTabEntry id = (SymTabEntry) variableNode.getAttribute(ID);
+        String fieldName = id.getName();
+        TypeSpec type = id.getTypeSpec();
+        String typeCode = type == Predefined.integerType ? "I" : "F";
+
+        // Emit the appropriate store instruction.
+        CodeGenerator.objectFile.println("    putstatic " + programName +
+                "/" + fieldName + " " + typeCode);
+        CodeGenerator.objectFile.flush();
+
+        return data;
+    }
+
     public Object visit(ASTidentifier node, Object data)
     {
         String programName = (String) data;

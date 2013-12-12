@@ -180,6 +180,10 @@ public class GoParserVisitorAdapter implements GoParserVisitor {
         return node.childrenAccept(this, data);
     }
 
+    public Object visit(ASTpostCondition node, Object data) {
+        return node.childrenAccept(this, data);
+    }
+
     public Object visit(ASTdecrement node, Object data) {
         return node.childrenAccept(this, data);
     }
