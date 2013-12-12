@@ -221,25 +221,27 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
 
 void functionDeclaration(HashSet syncSet) #function :
 {
-    SimpleNode id;
-    SymTabEntry functionID;
+    SimpleNode parameters;
+    syncSet.add(FUNC); // skip to next function declaration
+    syncSet.add(VAR); // skip to a variable declaration
 }
 {
-    {
-        syncSet.add(FUNC); // skip to next function declaration
-        syncSet.add(VAR); // skip to a variable declaration
-    }
     <FUNC> {
         symTabStack.push();
     }
     identifier() {
         // TODO: Not yet complete. We need to think about nesting, variable scoping and
         // TODO: how to properly set function attributes.
-        functionID = symTabStack.enterLocal(token.image);
+        SymTabEntry functionID = symTabStack.enterLocal(token.image);
         functionID.setDefinition(DefinitionImpl.FUNCTION);
         functionID.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
     }
-    <OPEN_PAREN> parameterList() <CLOSE_PAREN> (type())? {
+    <OPEN_PAREN>
+    parameters = parameterList() {
+        functionID.setAttribute(ROUTINE_LOCALS_COUNT, parameters.jjtGetNumChildren());
+    }
+    <CLOSE_PAREN>
+    (type())? {
         syncSet.remove(FUNC); // Remove for calling production
         syncSet.remove(VAR);
         syncSet = new HashSet(); // New reference used only by the new function scope
@@ -256,9 +258,11 @@ void parameter() : {}
     identifier() type()
 }
 
-void parameterList() : {}
+SimpleNode parameterList() : {}
 {
-    (parameter() ( < COMMA > parameter())*)?
+    (parameter() ( < COMMA > parameter())*)? {
+        return jjtThis;
+    }
 }
 
 void block(HashSet syncSet) : {}
