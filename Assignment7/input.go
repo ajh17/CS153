@@ -1,21 +1,25 @@
 package main
 var i int;
-var j int;
-var x float;
-x = 0;
+var remainder3 int;
+var remainder5 int;
+var temp float;
+remainder3 = 0;
+remainder5 = 0;
 
-for i = 5; i <= 10; i = i + 1 {
-    for j = 1; j <= 5; j = j + 1 {
-        x = x + i * j - 10 / 2;
-        Println(x);
-
-        if x < 100 {
-            Println("I'm still less than 100");
-        }
-        else {
-            Println("I'm greater or equal than 100");
-        }
+for i = 1; i <= 100; i = i + 1 {
+    temp = i / 3;
+    if temp > remainder3 {
+        Println("Fizz");
+        remainder3 = remainder3 + 1;
     }
+
+    temp = i / 5;
+    if temp > remainder5 {
+        Println("Buzz");
+        remainder5 = remainder5 + 1;
+    }
+
+    Println(i);
 }
 
 // An array of 32 integers
