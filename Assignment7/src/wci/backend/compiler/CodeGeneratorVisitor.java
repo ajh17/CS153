@@ -352,9 +352,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         TypeSpec type1 = addend1Node.getTypeSpec();
 
         // Get the addition type.
-        TypeSpec type = (type0 == Predefined.integerType &&
-                         type1 == Predefined.integerType)
-                    ? Predefined.integerType : Predefined.realType;
+        TypeSpec type = node.getTypeSpec();
         String typePrefix = (type == Predefined.integerType) ? "i" : "f";
 
         // Emit code for the first expression
@@ -393,9 +391,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         TypeSpec type1 = addend1Node.getTypeSpec();
 
         // Get the addition type.
-        TypeSpec type = (type0 == Predefined.integerType &&
-                type1 == Predefined.integerType)
-                ? Predefined.integerType : Predefined.realType;
+        TypeSpec type = node.getTypeSpec();
         String typePrefix = (type == Predefined.integerType) ? "i" : "f";
 
         // Emit code for the first expression
@@ -434,9 +430,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         TypeSpec type1 = addend1Node.getTypeSpec();
 
         // Get the addition type.
-        TypeSpec type = (type0 == Predefined.integerType &&
-                type1 == Predefined.integerType)
-                ? Predefined.integerType : Predefined.realType;
+        TypeSpec type = node.getTypeSpec();
         String typePrefix = (type == Predefined.integerType) ? "i" : "f";
 
         // Emit code for the first expression
