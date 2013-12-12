@@ -262,6 +262,16 @@ SimpleNode parameterList(HashSet syncSet) : {}
     }
 }
 
+// TODO: Not complete yet.
+// Will work on it after I take a look at function declaration.
+void functionCall() : {}
+{
+    identifier() {
+        SymTabEntry id = symTabStack.lookup(token.image);
+    }
+    <OPEN_PAREN> (identifier()) (<COMMA> identifier())* <CLOSE_PAREN>
+}
+
 void block(HashSet syncSet) : {}
 {
     {
