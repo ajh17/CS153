@@ -465,18 +465,17 @@ void printStatement(HashSet syncSet) #printStatement : {}
     "Println" <OPEN_PAREN> expression() <CLOSE_PAREN> <SEMICOLON>
 }
 
+// This production is used for retrieving an already declared variable.
+// When declaring a variable, use < IDENTIFIER > instead.
 SimpleNode identifier() : {}
 {
     < IDENTIFIER >
     {
         SymTabEntry variableId = symTabStack.lookup(token.image);
-
-        if (variableId != null) {
-            variableId.appendLineNumber(token.beginLine);
-            TypeSpec type = variableId.getTypeSpec();
-            jjtThis.setTypeSpec(type);
-            jjtThis.setAttribute(ID, variableId);
-        }
+        variableId.appendLineNumber(token.beginLine);
+        TypeSpec type = variableId.getTypeSpec();
+        jjtThis.setTypeSpec(type);
+        jjtThis.setAttribute(ID, variableId);
 
         return jjtThis;
     }
