@@ -175,4 +175,12 @@ public class GoParserVisitorAdapter implements GoParserVisitor {
     public Object visit(ASTfunction node, Object data) {
         return node.childrenAccept(this, data);
     }
+
+    public Object visit(ASTincrement node, Object data) {
+        return node.childrenAccept(this, data);
+    }
+
+    public Object visit(ASTdecrement node, Object data) {
+        return node.childrenAccept(this, data);
+    }
 }

@@ -324,40 +324,33 @@ void caseGroup() :
 
 void assignmentStatement(HashSet syncSet) : { SimpleNode variableNode; }
 {
-   (
     (
-     variableNode = identifier()
-     {
-        SymTabEntry variableId = symTabStack.lookup(token.image);
-        TypeSpec typeId = variableId.getTypeSpec();
-        variableNode.setAttribute(ID, variableId);
-     }
-     (
-      <EQUALS> expression() | incOrDec() {
-         if (typeId.getIdentifier() == Predefined.integerId) {
-            if (token.image == "++") {
-                //int number = variableId.getAttribute(VALUE) + 1;
-                //variableId.setAttribute(number);
+        LOOKAHEAD(3)
+        (
+            variableNode = identifier()
+            {
+                SymTabEntry variableId = symTabStack.lookup(token.image);
+                TypeSpec typeId = variableId.getTypeSpec();
+                variableNode.setAttribute(ID, variableId);
             }
-        }
-        else if (token.image == "--") {
-            //int number = variableId.getAttribute(VALUE) - 1;
-            //variableId.setAttribute(number);
-        }
-     }
-     )
+            (<EQUALS> expression() | (LOOKAHEAD(2) increment() | LOOKAHEAD(2) decrement()))
+        )
+        |
+        (LOOKAHEAD(2) increment() | LOOKAHEAD(2) decrement())
     )
-    |
-    (incOrDec() identifier())
-   )
     // TODO: I had to make the semicolon optional here to accomdate for loops. The 3rd expression in
     // TODO: the for loop doesn't have a semicolon. We might be able to just go with this.
     (LOOKAHEAD(2) < SEMICOLON >)?
 }
 
-void incOrDec() : {}
+void increment() #increment : {}
 {
-    (<INCREMENT> | <DECREMENT>)
+    <INCREMENT> identifier() | identifier() <INCREMENT>
+}
+
+void decrement() #decrement: {}
+{
+    <DECREMENT> identifier() | identifier() <DECREMENT>
 }
 
 void forStatement(HashSet syncSet) : {}

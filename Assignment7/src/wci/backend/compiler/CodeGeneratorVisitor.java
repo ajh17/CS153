@@ -304,6 +304,17 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         return label;
     }
 
+    public Object visit(ASTincrement node, Object data)
+    {
+        String var =  node.toString();
+
+        CodeGenerator.objectFile.println("    " + var);
+        CodeGenerator.objectFile.flush();
+
+        return data;
+    }
+
+
     public Object visit(ASTadd node, Object data)
     {
         SimpleNode addend0Node = (SimpleNode) node.jjtGetChild(0);
