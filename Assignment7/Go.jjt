@@ -136,7 +136,6 @@ void statement() #void :
         | ifStatement(syncSet)
         | forStatement(syncSet)
         | printStatement(syncSet) < SEMICOLON >
-        | functionDeclaration(syncSet)
         | functionCall(syncSet) < SEMICOLON >
     }
     catch (ParseException ex)
