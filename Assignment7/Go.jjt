@@ -142,7 +142,6 @@ void statement() #void :
             | forStatement(syncSet)
             | printStatement(syncSet)
             | functionCall(syncSet)
-            | < SEMICOLON >
     }
     catch (ParseException ex)
     {
@@ -276,7 +275,7 @@ void functionCall(HashSet syncSet) #functionCall: {}
         }
         // If it's null, then the function has not been declared. Need to let the user know some how.
     }
-    <OPEN_PAREN> identifier() (<COMMA> identifier())* <CLOSE_PAREN>
+    <OPEN_PAREN> identifier() (<COMMA> identifier())* <CLOSE_PAREN> <SEMICOLON>
 }
 
 void block(HashSet syncSet) : {}
