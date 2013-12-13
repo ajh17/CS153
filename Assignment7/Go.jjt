@@ -25,6 +25,7 @@ PARSER_BEGIN(GoParser)
 
 public class GoParser
 {
+    private static boolean definingFunction = false;
     private static int counter = 0;
     private static final String SOURCE_SUFFIX = ".go";
     private static final String OUTPUT_SUFFIX = ".j";
@@ -179,11 +180,14 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
 
         variableNode = identifier()
         {
-            counter++;
             SymTabEntry variableId = symTabStack.enterLocal(token.image);
             variableId.appendLineNumber(token.beginLine);
             variableId.setDefinition(DefinitionImpl.VARIABLE);
             variableNode.setAttribute(ID, variableId);
+
+            if (definingFunction) {
+                variableId.setIndex(counter++);
+            }
         }
         (
             // TODO: An Array in Go. Not sure how to do this yet, but I have a few ideas.
@@ -211,32 +215,33 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
 
 void functionDeclaration(HashSet syncSet):
 {
-    SimpleNode parameters;
+    SimpleNode variableNode;
     syncSet.add(FUNC); // skip to next function declaration
+    definingFunction = true;
 }
 {
     <FUNC> {
         syncSet.remove(FUNC);
     }
-    identifier() {
+    variableNode = identifier() {
         // TODO: Not yet complete. We need to think about nesting, variable scoping and
         // TODO: how to properly set function attributes.
         SymTabEntry functionID = symTabStack.enterLocal(token.image);
+        functionID.appendLineNumber(token.beginLine);
         functionID.setDefinition(DefinitionImpl.FUNCTION);
         functionID.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
+        variableNode.setAttribute(ID, functionID);
+        jjtThis.setAttribute(ID, functionID);
     }
-    <OPEN_PAREN>
-    parameters = parameterList(syncSet) {
-        functionID.setAttribute(ROUTINE_LOCALS_COUNT, parameters.jjtGetNumChildren());
-    }
-    <CLOSE_PAREN>
-    (type())? {
+    <OPEN_PAREN> parameterList(syncSet) <CLOSE_PAREN> (type())? {
         syncSet = new HashSet(); // New reference used only by the new function scope
         syncSet.add(EOF);
         syncSet.add(SEMICOLON);
     }
     block(syncSet) {
         symTabStack.pop();
+        definingFunction = false;
+        counter = 0;
     }
 }
 
