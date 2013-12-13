@@ -646,12 +646,6 @@ TOKEN :
       <#INTERPRETED_LITERAL_SYMBOL : "'" | "~" | "!" | "@" | "#" | "$" | "%" | "^" | "&"
       | "*" | "_" | "-" | "+" | "=" | "<" | ">" | "." | "/" | "?"
       | ";" | "(" | ")" | "[" | "]" | "{" | "}" | "|" | "`" | ":" >
-
-      /* I have a feeling we don't need these TOKENS so I am commenting it for now.
-      | <SPECIAL_SYMBOL: "|=" | "[" | "]" | "*="
-      | "^=" | "<-" | "{" | "}" | "<<" | "/=" | "<<=" | "++"
-      | ">>" | "%=" | ">>=" | "--" | "." | ":" | "&^" | "&^=" >
-      */
 }
 
 TOKEN: { /* Error token */
