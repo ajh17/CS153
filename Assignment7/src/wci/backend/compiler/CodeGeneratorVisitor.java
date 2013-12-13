@@ -285,6 +285,11 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         return data;
     }
 
+    public Object visit(ASTswitchStatement node, Object data)
+    {
+        return data;
+    }
+
     public Object visit(ASTequalEqual node, Object data)
     {
         String label = getNextLabel();
