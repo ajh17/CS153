@@ -133,15 +133,13 @@ void statement() #void :
 {
     try
     {
-        LOOKAHEAD(2)
-            declarationStatement(syncSet)
-            | LOOKAHEAD(2)
-            assignmentStatement(syncSet)
-            | switchStatement(syncSet)
-            | ifStatement(syncSet)
-            | forStatement(syncSet)
-            | printStatement(syncSet)
-            | functionCall(syncSet)
+          declarationStatement(syncSet) < SEMICOLON >
+        | LOOKAHEAD(2) assignmentStatement(syncSet) < SEMICOLON >
+        | switchStatement(syncSet)
+        | ifStatement(syncSet)
+        | forStatement(syncSet)
+        | printStatement(syncSet) < SEMICOLON >
+        | functionCall(syncSet) < SEMICOLON >
     }
     catch (ParseException ex)
     {
@@ -209,8 +207,6 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
                 variableNode.setTypeSpec(type);
             })
         )
-        // TODO: Once again, I'm making this optional for now for local scope variables for parameter lists
-        (LOOKAHEAD(2) < SEMICOLON >)?
     }
     catch (ParseException ex) {
         handleError(ex, syncSet, true);
@@ -239,11 +235,11 @@ void functionDeclaration(HashSet syncSet) #function :
     }
     <OPEN_PAREN>
     parameters = parameterList(syncSet) {
+        syncSet.remove(VAR); // Remove for calling production
         functionID.setAttribute(ROUTINE_LOCALS_COUNT, parameters.jjtGetNumChildren());
     }
     <CLOSE_PAREN>
     (type())? {
-        syncSet.remove(VAR); // Remove for calling production
         syncSet = new HashSet(); // New reference used only by the new function scope
         syncSet.add(EOF);
         syncSet.add(SEMICOLON);
@@ -273,7 +269,7 @@ void functionCall(HashSet syncSet) #functionCall: {}
         }
         // If it's null, then the function has not been declared. Need to let the user know some how.
     }
-    <OPEN_PAREN> identifier() (<COMMA> identifier())* <CLOSE_PAREN> <SEMICOLON>
+    <OPEN_PAREN> identifier() (<COMMA> identifier())* <CLOSE_PAREN>
 }
 
 void block(HashSet syncSet) : {}
@@ -364,7 +360,6 @@ void assignmentStatement(HashSet syncSet) : { SimpleNode variableNode; }
         |
         (LOOKAHEAD(2) increment() | LOOKAHEAD(2) decrement())
     )
-    < SEMICOLON >
 }
 
 void increment() #increment(2) : {}
@@ -391,7 +386,7 @@ void forClause() : {
 {
     try {
         // A regular c-style for loop
-        (LOOKAHEAD(2) (assignmentStatement(syncSet) expression() <SEMICOLON> postCondition(syncSet))
+        (LOOKAHEAD(2) (assignmentStatement(syncSet) <SEMICOLON> expression() <SEMICOLON> assignmentStatement(syncSet))
         |
         expression())
         // ^ a while loop
@@ -403,26 +398,6 @@ void forClause() : {
         syncSet.remove(FOR);
     }
 }
-
-// Yes this is a clone of the assignment statement, but without the semicolon. Sue me.
-void postCondition(HashSet syncSet) : { SimpleNode variableNode; }
-{
-    (
-        LOOKAHEAD(3)
-        (
-            variableNode = identifier()
-            {
-                SymTabEntry variableId = symTabStack.lookup(token.image);
-                TypeSpec typeId = variableId.getTypeSpec();
-                variableNode.setAttribute(ID, variableId);
-            }
-            (<EQUALS> expression() | (LOOKAHEAD(2) increment() | LOOKAHEAD(2) decrement()))
-        )
-        |
-        (LOOKAHEAD(2) increment() | LOOKAHEAD(2) decrement())
-    )
-}
-
 
 void operand() #void : {}
 {
@@ -473,7 +448,7 @@ void expressionList() : {}
 
 void printStatement(HashSet syncSet) #printStatement : {}
 {
-    "Println" <OPEN_PAREN> expression() <CLOSE_PAREN> <SEMICOLON>
+    "Println" <OPEN_PAREN> expression() <CLOSE_PAREN>
 }
 
 SimpleNode identifier() : {}
