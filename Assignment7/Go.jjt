@@ -131,7 +131,7 @@ void statement() #void :
 {
     try
     {
-          LOOKAHEAD(2) declarationStatement(syncSet) < SEMICOLON >
+          LOOKAHEAD(2) declarationStatement(syncSet)
         | LOOKAHEAD(2) assignmentStatement(syncSet) < SEMICOLON >
         | switchStatement(syncSet)
         | ifStatement(syncSet)
@@ -159,7 +159,7 @@ void declarationStatement(HashSet syncSet) #void :
 {
     try
     {
-        variableDeclaration(syncSet) | functionDeclaration(syncSet)
+        variableDeclaration(syncSet) < SEMICOLON > | functionDeclaration(syncSet)
     }
     catch (ParseException ex)
     {
