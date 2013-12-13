@@ -1,9 +1,9 @@
 package main
-var i int;
-var quarter int;
-var dime int;
-var nickel int;
-var penny int;
+i int;
+quarter int;
+dime int;
+nickel int;
+penny int;
 
 for i = 1; i <= 100; i = i + 1 {
     Println(i);
@@ -38,5 +38,5 @@ for quarter = 0; quarter <= 4; quarter = quarter + 1 {
 }
 
 // An array of 32 integers
-var arr [32]int;
-var primes [100]bool;
+arr [32]int;
+primes [100]bool;

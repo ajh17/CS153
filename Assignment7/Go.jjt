@@ -130,7 +130,7 @@ void statement() #void :
 {
     try
     {
-          declarationStatement(syncSet) < SEMICOLON >
+          LOOKAHEAD(2) declarationStatement(syncSet) < SEMICOLON >
         | LOOKAHEAD(2) assignmentStatement(syncSet) < SEMICOLON >
         | switchStatement(syncSet)
         | ifStatement(syncSet)
@@ -170,7 +170,6 @@ void declarationStatement(HashSet syncSet) #void :
 void variableDeclaration(HashSet syncSet) throws ParseException :
 {
     SimpleNode variableNode;
-    syncSet.add(VAR); // jump to the next var
     syncSet.add(EOF);
     syncSet.add(SEMICOLON);
 }
@@ -179,7 +178,7 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
        // Our implementation of Go's variable declaration will be either these forms:
        // var x int; OR x = 5 (provided that they also used the first form to declare the variable)
 
-        < VAR > variableNode = identifier()
+        variableNode = identifier()
         {
             counter++;
             SymTabEntry variableId = symTabStack.enterLocal(token.image);
@@ -209,16 +208,12 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
     catch (ParseException ex) {
         handleError(ex, syncSet, true);
     }
-    finally {
-        syncSet.remove(VAR);
-    }
 }
 
 void functionDeclaration(HashSet syncSet):
 {
     SimpleNode parameters;
     syncSet.add(FUNC); // skip to next function declaration
-    syncSet.add(VAR); // skip to a variable declaration
 }
 {
     <FUNC> {
@@ -233,7 +228,6 @@ void functionDeclaration(HashSet syncSet):
     }
     <OPEN_PAREN>
     parameters = parameterList(syncSet) {
-        syncSet.remove(VAR); // Remove for calling production
         functionID.setAttribute(ROUTINE_LOCALS_COUNT, parameters.jjtGetNumChildren());
     }
     <CLOSE_PAREN>
@@ -541,8 +535,6 @@ TOKEN: {
       | <FOR: "for">
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
       | <RETURN: "return">
-        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
-      | <VAR : "var" >
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
       | <INT: "int">
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
