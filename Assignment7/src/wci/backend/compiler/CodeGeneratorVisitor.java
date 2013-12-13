@@ -81,6 +81,12 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         return data;
     }
 
+    public Object visit(ASTfunctionDeclaration node, Object data) {
+        // TODO: Need to implement
+
+        return data;
+    }
+
     public Object visit(ASTfunctionCall node, Object data) {
         // Still working on this.
         String id = node.getAttribute(ICodeKeyImpl.ID).toString();
