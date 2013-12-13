@@ -348,11 +348,16 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
     // TODO: Still figuring out how incrementing works
     public Object visit(ASTincrement node, Object data)
     {
+        SimpleNode incNode = (SimpleNode) node.jjtGetChild(0);
         TypeSpec type = node.getTypeSpec();
         String typePrefix = (type == Predefined.integerType) ? "i" : "f";
-        int incAmount = 1;
 
-        CodeGenerator.objectFile.println("    " + typePrefix + "inc" + "the variable goes here" + incAmount);
+        incNode.jjtAccept(this, data);
+
+        CodeGenerator.objectFile.println("ldc 1");
+        CodeGenerator.objectFile.flush();
+
+        CodeGenerator.objectFile.println("    " + typePrefix + "add");
         CodeGenerator.objectFile.flush();
 
         return data;
@@ -361,11 +366,15 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
     // TODO: Still figuring how decrementing works
     public Object visit(ASTdecrement node, Object data)
     {
+        SimpleNode decNode = (SimpleNode) node.jjtGetChild(0);
         TypeSpec type = node.getTypeSpec();
         String typePrefix = (type == Predefined.integerType) ? "i" : "f";
-        int incAmount = -1;
 
-        CodeGenerator.objectFile.println("    " + typePrefix + "inc" + "the variable goes here" + incAmount);
+        decNode.jjtAccept(this, data);
+        CodeGenerator.objectFile.println("ldc 1");
+        CodeGenerator.objectFile.flush();
+
+        CodeGenerator.objectFile.println("    " + typePrefix + "sub");
         CodeGenerator.objectFile.flush();
 
         return data;
