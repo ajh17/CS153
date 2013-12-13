@@ -351,9 +351,9 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         SimpleNode incNode = (SimpleNode) node.jjtGetChild(0);
         TypeSpec type = node.getTypeSpec();
         String typePrefix = (type == Predefined.integerType) ? "i" : "f";
-
         incNode.jjtAccept(this, data);
 
+        // I have no idea how to use inc so why not just add 1
         CodeGenerator.objectFile.println("ldc 1");
         CodeGenerator.objectFile.flush();
 
@@ -369,8 +369,9 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         SimpleNode decNode = (SimpleNode) node.jjtGetChild(0);
         TypeSpec type = node.getTypeSpec();
         String typePrefix = (type == Predefined.integerType) ? "i" : "f";
-
         decNode.jjtAccept(this, data);
+
+        // I have no idea how to use inc so why not just subtract 1
         CodeGenerator.objectFile.println("ldc 1");
         CodeGenerator.objectFile.flush();
 

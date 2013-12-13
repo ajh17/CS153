@@ -317,9 +317,24 @@ void elseStatement(HashSet syncSet) : { syncSet.add(ELSE); }
     }
 }
 
-void switchStatement(HashSet syncSet) : {}
+void switchStatement(HashSet syncSet) #switchStatement :
 {
-    <SWITCH> ( expression())?  switchBlock() {}
+    syncSet.add(SWITCH);
+    syncSet.add(CASE);
+    syncSet.add(DEFAULT_TOKEN);
+}
+{
+    try {
+        <SWITCH> ( expression())?  switchBlock() {}
+    }
+    catch (ParseException ex) {
+        handleError(ex, syncSet, true);
+    }
+    finally {
+        syncSet.remove(SWITCH);
+        syncSet.remove(CASE);
+        syncSet.remove(DEFAULT_TOKEN);
+    }
 }
 
 void switchBlock() : {}
@@ -358,7 +373,7 @@ void assignmentStatement(HashSet syncSet) : { SimpleNode variableNode; }
     )
 }
 
-void increment() #increment() : {}
+void increment() #increment(2) : {}
 {
     <INCREMENT> identifier() | identifier() <INCREMENT>
 }
