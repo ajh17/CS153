@@ -73,7 +73,17 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         SymTabEntry id = (SymTabEntry) variableNode.getAttribute(ID);
         String fieldName = id.getName();
         TypeSpec type = id.getTypeSpec();
-        String typeCode = type == Predefined.integerType ? "I" : "F";
+        String typeCode = null;
+
+        if (type == Predefined.integerType) {
+            typeCode = "I";
+        }
+        else if (type == Predefined.realType) {
+            typeCode = "F";
+        }
+        else if (type == Predefined.charType) {
+            typeCode = "Ljava/lang/String;";
+        }
 
         // Emit the appropriate store instruction.
         CodeGenerator.objectFile.println("    putstatic " + programName +
@@ -147,7 +157,17 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         SymTabEntry id = (SymTabEntry) node.getAttribute(ID);
         String fieldName = id.getName();
         TypeSpec type = id.getTypeSpec();
-        String typeCode = type == Predefined.integerType ? "I" : "F";
+        String typeCode = null;
+
+        if (type == Predefined.integerType) {
+            typeCode = "I";
+        }
+        else if (type == Predefined.realType) {
+            typeCode = "F";
+        }
+        else if (type == Predefined.charType) {
+            typeCode = "Ljava/lang/String;";
+        }
 
         // Emit the appropriate load instruction.
         CodeGenerator.objectFile.println("    getstatic " + programName +
@@ -197,7 +217,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
         SimpleNode printNode = (SimpleNode) node.jjtGetChild(0);
         TypeSpec type = printNode.getTypeSpec();
-        String typeCode;
+        String typeCode = null;
         printNode.jjtAccept(this, data);
 
         if (type == Predefined.integerType) {
@@ -206,7 +226,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         else if (type == Predefined.realType) {
             typeCode = "F";
         }
-        else {
+        else if (type == Predefined.charType) {
             typeCode = "Ljava/lang/String;";
         }
 
@@ -396,29 +416,67 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         TypeSpec type = node.getTypeSpec();
         String typePrefix = (type == Predefined.integerType) ? "i" : "f";
 
-        // Emit code for the first expression
-        // with type conversion if necessary.
-        addend0Node.jjtAccept(this, data);
-        if ((type == Predefined.realType) &&
-                (type0 == Predefined.integerType))
-        {
-            CodeGenerator.objectFile.println("    i2f");
+        if (type != Predefined.charType) {
+            // Emit code for the first expression
+            // with type conversion if necessary.
+            addend0Node.jjtAccept(this, data);
+            if ((type == Predefined.realType) &&
+                    (type0 == Predefined.integerType))
+            {
+                CodeGenerator.objectFile.println("    i2f");
+                CodeGenerator.objectFile.flush();
+            }
+
+            // Emit code for the second expression
+            // with type conversion if necessary.
+            addend1Node.jjtAccept(this, data);
+            if ((type == Predefined.realType) &&
+                    (type1 == Predefined.integerType))
+            {
+                CodeGenerator.objectFile.println("    i2f");
+                CodeGenerator.objectFile.flush();
+            }
+
+            // Emit the appropriate add instruction.
+            CodeGenerator.objectFile.println("    " + typePrefix + "add");
             CodeGenerator.objectFile.flush();
         }
+        else {
+            String lhsType = null;
+            String rhsType = null;
 
-        // Emit code for the second expression
-        // with type conversion if necessary.
-        addend1Node.jjtAccept(this, data);
-        if ((type == Predefined.realType) &&
-                (type1 == Predefined.integerType))
-        {
-            CodeGenerator.objectFile.println("    i2f");
+            if (type0 == Predefined.integerType) {
+                lhsType = "I";
+            }
+            else if (type0 == Predefined.realType) {
+                lhsType = "F";
+            }
+            else if (type0 == Predefined.charType) {
+                lhsType = "Ljava/lang/String;";
+            }
+
+            if (type1 == Predefined.integerType) {
+                rhsType = "I";
+            }
+            else if (type1 == Predefined.realType) {
+                rhsType = "F";
+            }
+            else if (type1 == Predefined.charType) {
+                rhsType = "Ljava/lang/String;";
+            }
+
+            CodeGenerator.objectFile.println("    new       java/lang/StringBuilder");
+            CodeGenerator.objectFile.println("    dup");
+            CodeGenerator.objectFile.println("    invokenonvirtual java/lang/StringBuilder/<init>()V");
+            addend0Node.jjtAccept(this, data);
+            CodeGenerator.objectFile.println("    invokevirtual java/lang/StringBuilder/append("
+                    + lhsType + ")Ljava/lang/StringBuilder;");
+            addend1Node.jjtAccept(this, data);
+            CodeGenerator.objectFile.println("    invokevirtual java/lang/StringBuilder/append("
+                    + rhsType + ")Ljava/lang/StringBuilder;");
+            CodeGenerator.objectFile.println("    invokevirtual java/lang/StringBuilder/toString()Ljava/lang/String;");
             CodeGenerator.objectFile.flush();
         }
-
-        // Emit the appropriate add instruction.
-        CodeGenerator.objectFile.println("    " + typePrefix + "add");
-        CodeGenerator.objectFile.flush();
 
         return data;
     }

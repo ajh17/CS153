@@ -8,10 +8,11 @@ public class TypeSetterVisitor extends GoParserVisitorAdapter
 {
     private void setType(SimpleNode node)
     {
+        int i;
         int count = node.jjtGetNumChildren();
         TypeSpec type = Predefined.integerType;
-        
-        for (int i = 0; (i < count) && (type == Predefined.integerType); ++i) {
+
+        for (i = 0; i < count && type == Predefined.integerType; ++i) {
             SimpleNode child = (SimpleNode) node.jjtGetChild(i);
             TypeSpec childType = child.getTypeSpec();
             
@@ -21,11 +22,22 @@ public class TypeSetterVisitor extends GoParserVisitorAdapter
             else if (childType == Predefined.charType) {
                 type = Predefined.charType;
             }
+            /* TODO: Haven't implemented handling booleans yet so I am leaving it commented
             else if (childType == Predefined.booleanType) {
                 type = Predefined.booleanType;
             }
+            */
         }
-        
+
+        for (; i < count && type == Predefined.realType; i++) {
+            SimpleNode child = (SimpleNode) node.jjtGetChild(i);
+            TypeSpec childType = child.getTypeSpec();
+
+            if (childType == Predefined.charType) {
+                type = Predefined.charType;
+            }
+        }
+
         node.setTypeSpec(type);
     }
     

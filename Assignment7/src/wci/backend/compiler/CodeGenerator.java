@@ -76,7 +76,18 @@ public class CodeGenerator extends Backend
             if (defn == VARIABLE) {
                 String fieldName = id.getName();
                 TypeSpec type = id.getTypeSpec();
-                String typeCode = type == Predefined.integerType ? "I" : "F";
+                String typeCode = null;
+
+                if (type == Predefined.integerType) {
+                    typeCode = "I";
+                }
+                else if (type == Predefined.realType) {
+                    typeCode = "F";
+                }
+                else if (type == Predefined.charType) {
+                    typeCode = "Ljava/lang/String;";
+                }
+
                 objectFile.println(".field private static " + fieldName +
                         " " + typeCode);
             }

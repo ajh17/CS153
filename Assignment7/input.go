@@ -1,8 +1,15 @@
 package main
 x int;
-y int;
-x = 100;
+y string;
+x = 5;
 
-func printHello(x int, y int) {
-    Println(x);
-}
+y = x + "ASD";
+Println(y);
+y = "Hello " + "my" + " name is David";
+Println(y);
+y = y + y;
+Println(y);
+y = 5.1 + "Durr" + 3;
+Println(y);
+y = 5.1 + 3 + "Durr";
+Println(y);
