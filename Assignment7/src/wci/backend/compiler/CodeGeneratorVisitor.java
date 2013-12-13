@@ -389,17 +389,29 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         return label;
     }
 
+    // TODO: Still figuring out how incrementing works
     public Object visit(ASTincrement node, Object data)
     {
-        // TODO: Figure out how to implement this.
-        // Jasmin uses iinc for incrementing integers
+        TypeSpec type = node.getTypeSpec();
+        String typePrefix = (type == Predefined.integerType) ? "i" : "f";
+        int incAmount = 1;
+
+        CodeGenerator.objectFile.println("    " + typePrefix + "inc" + "the variable goes here" + incAmount);
+        CodeGenerator.objectFile.flush();
+
         return data;
     }
 
+    // TODO: Still figuring how decrementing works
     public Object visit(ASTdecrement node, Object data)
     {
-        // TODO: Figure out how to implement this.
-        // Jasmin uses iinc -1 for decrementing integers
+        TypeSpec type = node.getTypeSpec();
+        String typePrefix = (type == Predefined.integerType) ? "i" : "f";
+        int incAmount = -1;
+
+        CodeGenerator.objectFile.println("    " + typePrefix + "inc" + "the variable goes here" + incAmount);
+        CodeGenerator.objectFile.flush();
+
         return data;
     }
 
