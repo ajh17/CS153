@@ -213,7 +213,7 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
     }
 }
 
-void functionDeclaration(HashSet syncSet) #function :
+void functionDeclaration(HashSet syncSet):
 {
     SimpleNode parameters;
     syncSet.add(FUNC); // skip to next function declaration
@@ -432,8 +432,8 @@ void term() #void : {}
           < MULTIPLY > operand() #multiply(2)
         | < DIVIDE > operand() #divide(2)
         | < MODULO > operand() #modulo(2)
-        | < AND > operand() #bitwiseAnd(2)
-        | < OR > operand() #bitwiseOr(2)
+        | < AMPERSAND > operand() #bitwiseAnd(2)
+        | < PIPE > operand() #bitwiseOr(2)
         | < CARET > operand() #xor(2)
     )*
 }
@@ -614,15 +614,15 @@ TOKEN: {
         {debugStream.println("LESS_EQUALS token: " + matchedToken.image); }
     | <GREATER_EQUAL: ">=">
         {debugStream.println("GREATER_EQUALS token: " + matchedToken.image); }
-    | <OR: "|">
+    | <PIPE: "|">
         {debugStream.println("OR token: " + matchedToken.image); }
-    | <OR_OR: "||">
+    | <OR: "||">
         {debugStream.println("OR_OR token: " + matchedToken.image); }
-    | <AND: "&">
+    | <AMPERSAND: "&">
         {debugStream.println("AND token: " + matchedToken.image); }
-    | <AND_EQUAL: "&=">
+    | <AMPERSAND_EQUAL: "&=">
         {debugStream.println("AND_EQUALS token: " + matchedToken.image); }
-    | <AND_AND: "&&">
+    | <AND: "&&">
         {debugStream.println("AND_AND token: " + matchedToken.image); }
     | <NOT_EQUAL: "!=">
         {debugStream.println("NOT_EQUALS token: " + matchedToken.image); }
