@@ -29,8 +29,8 @@ public class MethodGeneratorVisitor extends GoParserVisitorAdapter
                 initBuffer.append("F\n");
             }
             else if (type == Predefined.charType) {
-                typeBuffer.append("C");
-                initBuffer.append("C\n");
+                typeBuffer.append("Ljava/lang/String;");
+                initBuffer.append("Ljava/lang/String;\n");
             }
             else if (type == Predefined.booleanType) {
                 typeBuffer.append("Z");
