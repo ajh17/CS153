@@ -358,7 +358,7 @@ void assignmentStatement(HashSet syncSet) : { SimpleNode variableNode; }
     )
 }
 
-void increment() #increment(2) : {}
+void increment() #increment() : {}
 {
     <INCREMENT> identifier() | identifier() <INCREMENT>
 }
