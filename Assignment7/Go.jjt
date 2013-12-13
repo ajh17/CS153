@@ -105,15 +105,12 @@ SimpleNode start() #void :
         {
             programId = symTabStack.enterLocal(token.image);
             programId.setDefinition(DefinitionImpl.PACKAGE);
+            programId.setAttribute(ROUTINE_LOCALS_COUNT, 1);
             programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
             symTabStack.setProgramId(programId);
         }
         rootNode = statementList() < EOF >
-
         {
-            // TODO: I'm inserting 1 instead of counter because if no variables are declared,
-            // TODO: the program will not run. The counter is used for function scopes.
-            programId.setAttribute(ROUTINE_LOCALS_COUNT, 1);
             return rootNode;
         }
     }
