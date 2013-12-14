@@ -143,6 +143,10 @@ public class GoParserVisitorAdapter implements GoParserVisitor {
         return node.childrenAccept(this, data);
     }
 
+    public Object visit(ASTarrayAssignmentStatement node, Object data) {
+        return node.childrenAccept(this, data);
+    }
+
     public Object visit(ASTprintStatement node, Object data) {
         return node.childrenAccept(this, data);
     }
