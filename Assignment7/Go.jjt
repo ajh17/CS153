@@ -218,19 +218,19 @@ void functionDeclaration(HashSet syncSet):
         syncSet.remove(FUNC);
     }
     variableNode = identifier(true) {
-        // TODO: Not yet complete. We need to think about nesting, variable scoping and
-        // TODO: how to properly set function attributes.
-        SymTabEntry functionID = (SymTabEntry) variableNode.getAttribute(ID);
-        functionID.setDefinition(DefinitionImpl.FUNCTION);
-        functionID.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
-        variableNode.setAttribute(ID, functionID);
-        jjtThis.setAttribute(ID, functionID);
+        SymTabEntry functionId = (SymTabEntry) variableNode.getAttribute(ID);
+        functionId.setDefinition(DefinitionImpl.FUNCTION);
+        functionId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
+        variableNode.setAttribute(ID, functionId);
+        jjtThis.setAttribute(ID, functionId);
     }
-    <OPEN_PAREN> parameterList(syncSet) <CLOSE_PAREN> returnType() {
-        counter = 0;
+    <OPEN_PAREN> parameterList(syncSet) <CLOSE_PAREN> returnTypeNode = returnType() {
+        functionId.setTypeSpec(returnTypeNode.getTypeSpec());
+        jjtThis.setTypeSpec(functionId.getTypeSpec());
         syncSet = new HashSet(); // New reference used only by the new function scope
         syncSet.add(EOF);
         syncSet.add(SEMICOLON);
+        counter = 0;
     }
     block(syncSet) {
         symTabStack.pop();
@@ -242,16 +242,14 @@ void parameterList(HashSet syncSet) : {}
     (variableDeclaration(syncSet) ( < COMMA > variableDeclaration(syncSet))*)?
 }
 
-// TODO: Not complete yet.
-// Will work on it after I take a look at function declaration.
-void functionCall(HashSet syncSet) #functionCall: {}
+void functionCall(HashSet syncSet) : { SimpleNode functionNode; }
 {
-    identifier(false) {
-        SymTabEntry id = symTabStack.lookup(token.image);
+    functionNode = identifier(false) {
+        SymTabEntry functionId = (SymTabEntry) functionNode.getAttribute(ID);
+        jjtThis.setTypeSpec(functionNode.getTypeSpec());
 
-        if (id != null) {
-            id.appendLineNumber(token.beginLine);
-            jjtThis.setAttribute(ID, token.image);
+        if (functionId != null) {
+            jjtThis.setAttribute(ID, functionId);
         }
         // If it's null, then the function has not been declared. Need to let the user know some how.
     }
@@ -539,11 +537,12 @@ void type() #void : {}
     <INT> | <FLOAT> | <STRING> | <BOOL>
 }
 
-void returnType() : {}
+SimpleNode returnType() : {}
 {
     (<INT> | <FLOAT> | <STRING> | <BOOL> | <VOID>) {
         SymTabEntry typeId = symTabStack.lookup(token.image);
         jjtThis.setTypeSpec(typeId.getTypeSpec());
+        return jjtThis;
     }
 }
 

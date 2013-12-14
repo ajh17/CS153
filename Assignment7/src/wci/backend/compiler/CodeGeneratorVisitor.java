@@ -116,7 +116,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
     }
 
     public Object visit(ASTfunctionCall node, Object data) {
-        String functionId = (String) node.getAttribute(ID);
+        SymTabEntry functionId = (SymTabEntry) node.getAttribute(ID);
         String returnType = "V"; // TODO: Need to dynamically check this
         StringBuilder parameters = new StringBuilder();
 
