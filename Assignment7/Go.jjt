@@ -340,10 +340,14 @@ void caseGroup() :
     syncSet.add(EOF);
     syncSet.add(SEMICOLON);
     syncSet.add(CASE);
-    syncSet.add(DEFAULT_TOKEN); // skip to next case
 }
 {
     (<CASE> expressionList() ":" statementList())*
+    defaultCase()
+}
+
+void defaultCase() #void : {}
+{
     (<DEFAULT_TOKEN> ":" statementList())?
 }
 
