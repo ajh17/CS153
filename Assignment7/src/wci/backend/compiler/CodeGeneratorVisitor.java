@@ -98,12 +98,20 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
     }
 
     public Object visit(ASTfunctionCall node, Object data) {
-        // Still working on this.
-        String id = node.getAttribute(ICodeKeyImpl.ID).toString();
-        // Going by jasmin's function call instructions
-        // It also refers to functions by numbers. #2, #3, etc. Seems like #1 is main.
-        CodeGenerator.objectFile.println("invokestatic  " + id);
+        String functionId = (String) node.getAttribute(ID);
+        String returnType = "V"; // TODO: Need to dynamically check this
+        StringBuilder parameters = new StringBuilder();
+
+        parameters.append("I"); // TODO: Hardcoding for my example
+
+        for (int i = 1; i < node.jjtGetNumChildren(); i++) { // Start at 1 to skip function name
+            node.jjtGetChild(i).jjtAccept(this, data);
+        }
+
+        CodeGenerator.objectFile.println("    invokestatic  " + programName + "/"
+                + functionId + "(" + parameters.toString() + ")" + returnType);
         CodeGenerator.objectFile.flush();
+
         return data;
     }
 

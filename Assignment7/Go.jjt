@@ -267,7 +267,7 @@ void functionCall(HashSet syncSet) #functionCall: {}
         }
         // If it's null, then the function has not been declared. Need to let the user know some how.
     }
-    <OPEN_PAREN> (operand() (<COMMA> operand())*)? <CLOSE_PAREN>
+    <OPEN_PAREN> (expression() (<COMMA> expression())*)? <CLOSE_PAREN>
 }
 
 void block(HashSet syncSet) : {}
