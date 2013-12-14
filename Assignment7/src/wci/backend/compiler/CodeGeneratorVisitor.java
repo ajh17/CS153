@@ -312,7 +312,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
     {
         SimpleNode switchVar = (SimpleNode) node.jjtGetChild(0);
         SimpleNode block = (SimpleNode) node.jjtGetChild(1);
-        SimpleNode caseGroup = (SimpleNode) block.jjtGetChild(0);
+        SimpleNode caseGroup = (SimpleNode) block.jjtGetChild(2);
         String defaultLabel = "defaultCaseLabel" + getNextLabel();
 
         ArrayList<SimpleNode> nodes = new ArrayList<SimpleNode>();
