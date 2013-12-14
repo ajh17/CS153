@@ -307,11 +307,32 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         return data;
     }
 
+    // TODO: Figure out how to do this.
     public Object visit(ASTswitchStatement node, Object data)
     {
         SimpleNode switchVar = (SimpleNode) node.jjtGetChild(0);
         SimpleNode block = (SimpleNode) node.jjtGetChild(1);
         SimpleNode caseGroup = (SimpleNode) block.jjtGetChild(0);
+        String defaultLabel = "defaultCaseLabel" + getNextLabel();
+
+        ArrayList<SimpleNode> nodes = new ArrayList<SimpleNode>();
+
+        for (int i = 0; i < node.jjtGetNumChildren(); ++i) {
+            nodes.add((SimpleNode) node.jjtGetChild(i));
+        }
+
+        ArrayList<ASTcaseGroup> cases = new ArrayList<ASTcaseGroup>();
+        ASTdefaultCase defaultCase = null;
+        // Not sure if this the way to do it yet.
+        for (SimpleNode aNode : nodes) {
+            if (aNode instanceof ASTcaseGroup) {
+                ASTcaseGroup aCase = (ASTcaseGroup) aNode;
+                cases.add(aCase);
+            }
+            else if (aNode instanceof ASTdefaultCase) {
+                defaultCase = (ASTdefaultCase) aNode;
+            }
+        }
 
         return data;
     }
