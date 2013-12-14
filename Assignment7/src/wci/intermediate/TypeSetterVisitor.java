@@ -146,4 +146,9 @@ public class TypeSetterVisitor extends GoParserVisitorAdapter
     {
         return data;
     }
+
+    public Object visit(ASTvoidConstant node, Object data)
+    {
+        return data;
+    }
 }

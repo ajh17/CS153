@@ -496,7 +496,7 @@ void voidConstant() : {}
 {
     <VOID>
     {
-        jjtThis.setTypeSpec(Predefined.undefinedType);
+        jjtThis.setTypeSpec(Predefined.voidType);
     }
 }
 
