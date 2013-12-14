@@ -189,6 +189,11 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         return data;
     }
 
+    public Object visit(ASTvariableDeclaration node, Object data)
+    {
+        return data;
+    }
+
     public Object visit(ASTidentifier node, Object data)
     {
         SymTabEntry id = (SymTabEntry) node.getAttribute(ID);
