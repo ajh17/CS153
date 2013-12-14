@@ -368,7 +368,6 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         CodeGenerator.objectFile.println("    " + typePrefix + "add");
         CodeGenerator.objectFile.flush();
 
-        // Yeah yeah, I know. This is temporary until I figure out how exactly to do this nicely.
         CodeGenerator.objectFile.println("    " + "putstatic " + data + "/" + fieldName + " " + typePrefix2);
         CodeGenerator.objectFile.flush();
 
@@ -393,7 +392,6 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         CodeGenerator.objectFile.println("    " + typePrefix + "add");
         CodeGenerator.objectFile.flush();
 
-        // Yeah yeah, I know. This is temporary until I figure out how exactly to do this nicely.
         CodeGenerator.objectFile.println("    " + "putstatic " + data + "/" + fieldName + " " + typePrefix2);
         CodeGenerator.objectFile.flush();
 
