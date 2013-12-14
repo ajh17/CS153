@@ -1,9 +1,10 @@
 package main
 i int;
 i = 5;
-++i;
-y int;
-y = 6;
-y--;
-Println(i);
-Println(y);
+
+func printStuff(i int) {
+    Println("Inside function");
+    Println(i);
+}
+
+printStuff(i);
