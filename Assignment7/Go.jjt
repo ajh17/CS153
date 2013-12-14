@@ -159,7 +159,8 @@ void declarationStatement(HashSet syncSet) #void :
 {
     try
     {
-        variableDeclaration(syncSet) < SEMICOLON > | functionDeclaration(syncSet)
+        LOOKAHEAD(2) variableDeclaration(syncSet) < SEMICOLON > | functionDeclaration(syncSet)
+      | LOOKAHEAD(2) arrayDeclaration(syncSet) < SEMICOLON >
     }
     catch (ParseException ex)
     {
@@ -186,26 +187,35 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
             routineSymTab.put(variableId.getName(), variableId);
         }
         (
-            // TODO: An Array in Go. Not sure how to do this yet, but I have a few ideas.
-            // TODO: THE FOLLOWING IS ONLY TEMPORARY.
-            (<OPEN_BRACKET> ((<INTEGER_NUMBER>) | identifier(false)) <CLOSE_BRACKET> type()) #array {
+            type()
+            {
                 SymTabEntry typeId = symTabStack.lookup(token.image);
                 TypeSpec type = typeId.getTypeSpec();
                 variableId.setTypeSpec(type);
                 variableNode.setTypeSpec(type);
             }
-            |
-            (type()
-            {
-                typeId = symTabStack.lookup(token.image);
-                type = typeId.getTypeSpec();
-                variableId.setTypeSpec(type);
-                variableNode.setTypeSpec(type);
-            })
         )
     }
     catch (ParseException ex) {
         handleError(ex, syncSet, true);
+    }
+}
+
+void arrayDeclaration(HashSet syncSet) #array : {
+    SimpleNode arrayNode;
+}
+{
+    arrayNode = identifier(true) {
+        SymTabEntry variableId = (SymTabEntry) arrayNode.getAttribute(ID);
+        arrayNode.setAttribute(ID, variableId);
+    }
+    <OPEN_BRACKET> <INTEGER_NUMBER> <CLOSE_BRACKET>
+    type()
+    {
+        SymTabEntry typeId = symTabStack.lookup(token.image);
+        TypeSpec type = typeId.getTypeSpec();
+        variableId.setTypeSpec(type);
+        arrayNode.setTypeSpec(type);
     }
 }
 

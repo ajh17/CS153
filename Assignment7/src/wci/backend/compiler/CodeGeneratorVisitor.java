@@ -244,6 +244,14 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         return data;
     }
 
+    public Object visit(ASTarray node, Object data)
+    {
+        SimpleNode arrayNode = (SimpleNode) node.jjtGetChild(0);
+        TypeSpec type = arrayNode.getTypeSpec();
+
+        return data;
+    }
+
     public Object visit(ASTinterpretedString node, Object data)
     {
         String value = (String) node.getAttribute(VALUE);
