@@ -142,6 +142,11 @@ public class TypeSetterVisitor extends GoParserVisitorAdapter
         return data;
     }
 
+    public Object visit(ASTarray node, Object data)
+    {
+        return data;
+    }
+
     public Object visit(ASTbooleanConstant node, Object data)
     {
         return data;
