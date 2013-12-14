@@ -519,7 +519,7 @@ void interpretedString() : {}
 
 void type() #void : {}
 {
-    <INT> | <FLOAT> | <STRING> | <BOOL>
+    <INT> | <FLOAT> | <STRING> | <BOOL> | <VOID>
 }
 
 /********************s
@@ -559,6 +559,8 @@ TOKEN: {
       | <STRING: "string">
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
       | <BOOL: "bool">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <VOID: "void">
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
 }
 
