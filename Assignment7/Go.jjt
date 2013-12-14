@@ -485,6 +485,14 @@ void integerConstant() : {}
     }
 }
 
+void voidConstant() : {}
+{
+    <VOID>
+    {
+        jjtThis.setTypeSpec(Predefined.undefinedType);
+    }
+}
+
 void booleanConstant() : {}
 {
     < BOOL_CONSTANT >
