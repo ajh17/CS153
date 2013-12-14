@@ -350,37 +350,51 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         return label;
     }
 
-    // TODO: Still figuring out how incrementing works
     public Object visit(ASTincrement node, Object data)
     {
         SimpleNode incNode = (SimpleNode) node.jjtGetChild(0);
         TypeSpec type = node.getTypeSpec();
-        String typePrefix = (type == Predefined.integerType) ? "i" : "f";
-        incNode.jjtAccept(this, data);
 
-        // I have no idea how to use inc so why not just add 1
+        SymTabEntry id = (SymTabEntry) incNode.getAttribute(ID);
+        String fieldName = id.getName();
+
+        String typePrefix = (type == Predefined.integerType) ? "i" : "f";
+        String typePrefix2 = (type == Predefined.integerType) ? "I" : "F";
+
         CodeGenerator.objectFile.println("    ldc 1");
         CodeGenerator.objectFile.flush();
 
+        incNode.jjtAccept(this, data);
         CodeGenerator.objectFile.println("    " + typePrefix + "add");
+        CodeGenerator.objectFile.flush();
+
+        // Yeah yeah, I know. This is temporary until I figure out how exactly to do this nicely.
+        CodeGenerator.objectFile.println("    " + "putstatic " + data + "/" + fieldName + " " + typePrefix2);
         CodeGenerator.objectFile.flush();
 
         return data;
     }
 
-    // TODO: Still figuring how decrementing works
     public Object visit(ASTdecrement node, Object data)
     {
         SimpleNode decNode = (SimpleNode) node.jjtGetChild(0);
         TypeSpec type = node.getTypeSpec();
-        String typePrefix = (type == Predefined.integerType) ? "i" : "f";
-        decNode.jjtAccept(this, data);
 
-        // I have no idea how to use inc so why not just subtract 1
-        CodeGenerator.objectFile.println("    ldc 1");
+        String typePrefix = (type == Predefined.integerType) ? "i" : "f";
+        String typePrefix2 = (type == Predefined.integerType) ? "I" : "F";
+
+        SymTabEntry id = (SymTabEntry) decNode.getAttribute(ID);
+        String fieldName = id.getName();
+
+        CodeGenerator.objectFile.println("    ldc -1");
         CodeGenerator.objectFile.flush();
 
-        CodeGenerator.objectFile.println("    " + typePrefix + "sub");
+        decNode.jjtAccept(this, data);
+        CodeGenerator.objectFile.println("    " + typePrefix + "add");
+        CodeGenerator.objectFile.flush();
+
+        // Yeah yeah, I know. This is temporary until I figure out how exactly to do this nicely.
+        CodeGenerator.objectFile.println("    " + "putstatic " + data + "/" + fieldName + " " + typePrefix2);
         CodeGenerator.objectFile.flush();
 
         return data;

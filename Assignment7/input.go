@@ -1,5 +1,9 @@
 package main
 i int;
 i = 5;
-i++;
+++i;
+y int;
+y = 6;
+y--;
 Println(i);
+Println(y);

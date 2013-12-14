@@ -30,7 +30,7 @@ public class CodeGenerator extends Backend
      * parser to generate machine-language instructions.
      * @param iCode the intermediate code.
      * @param symTabStack the symbol table stack.
-     * @param objectFile the object file path for the generated code.
+     * @param objectFilePath the object file path for the generated code.
      * @throws Exception if an error occurred.
      */
     public void process(ICode iCode, SymTabStack symTabStack,
