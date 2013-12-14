@@ -55,7 +55,7 @@ public class FunctionGeneratorVisitor extends GoParserVisitorAdapter
         CodeGenerator.objectFile.println();
         CodeGenerator.objectFile.println(".limit locals " + scope.size());
         CodeGenerator.objectFile.println(".limit stack  " + 16);
-        CodeGenerator.objectFile.println(".end method");
+        CodeGenerator.objectFile.println(".end method\n");
         CodeGenerator.objectFile.flush();
 
         return data;
