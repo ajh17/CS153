@@ -392,7 +392,9 @@ void forClause() : {
 {
     try {
         // A regular c-style for loop
-        (LOOKAHEAD(2) (assignmentStatement(syncSet) <SEMICOLON> expression() <SEMICOLON> assignmentStatement(syncSet))
+        (LOOKAHEAD(2) (assignmentStatement(syncSet) <SEMICOLON> expression() <SEMICOLON>
+                           (LOOKAHEAD(2) assignmentStatement(syncSet) | LOOKAHEAD(2) increment()
+                                                                      | LOOKAHEAD(2) decrement()))
         |
         expression())
         // ^ a while loop
