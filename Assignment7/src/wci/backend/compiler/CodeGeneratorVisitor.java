@@ -244,11 +244,6 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         SimpleNode arrayNode = (SimpleNode) node.jjtGetChild(0);
         TypeSpec type = arrayNode.getTypeSpec();
 
-        CodeGenerator.objectFile.println("    newarray " + type);
-        CodeGenerator.objectFile.flush();
-
-        CodeGenerator.objectFile.println(arrayNode.toString());
-        CodeGenerator.objectFile.flush();
         return data;
     }
 
