@@ -54,10 +54,7 @@ public class CodeGenerator extends Backend
                 programName.substring(1);
 
         SymTabEntry programId = symTabStack.getProgramId();
-        int localsCount =
-                (Integer) programId.getAttribute(ROUTINE_LOCALS_COUNT);
-        SymTab routineSymTab =
-                (SymTab) programId.getAttribute(ROUTINE_SYMTAB);
+        SymTab routineSymTab = (SymTab) programId.getAttribute(ROUTINE_SYMTAB);
         ArrayList<SymTabEntry> locals = routineSymTab.sortedEntries();
 
         // Generate the program header.
@@ -123,32 +120,11 @@ public class CodeGenerator extends Backend
         objectFile.println();
         objectFile.flush();
 
-
-        // Visit the parse tree nodes to generate code 
-        // for the main method's compound statement.
+        // Visit the parse tree nodes to generate code for the main method's compound statement.
         CodeGeneratorVisitor codeVisitor = new CodeGeneratorVisitor();
         Node rootNode = iCode.getRoot();
         rootNode.jjtAccept(codeVisitor, programName);
         objectFile.println();
-
-        /*
-        // try and print out all variables
-        for (SymTabEntry id : locals) {
-            Definition defn = id.getDefinition();
-
-            if (defn == VARIABLE) {
-                String fieldName = id.getName();
-            
-                TypeSpec type = id.getTypeSpec();
-                String typeCode = type == Predefined.integerType ? "I" : "F";
-                objectFile.println("getstatic java/lang/System/out Ljava/io/PrintStream;");
-                objectFile.println("getstatic Input/"+ fieldName  + " " + typeCode);
-                objectFile.println("invokevirtual java/io/PrintStream/println(" + typeCode + ")V");
-                        
-            }
-        }
-        objectFile.println();
-        */
 
         // Generate the main method epilogue.
         objectFile.println("    getstatic	" + programName + "/_runTimer LRunTimer;");
@@ -156,7 +132,7 @@ public class CodeGenerator extends Backend
         objectFile.println();
         objectFile.println("    return");
         objectFile.println();
-        objectFile.println(".limit locals " + localsCount);
+        objectFile.println(".limit locals 1");
         objectFile.println(".limit stack  " + STACK_LIMIT);
         objectFile.println(".end method");
         objectFile.flush();

@@ -105,7 +105,6 @@ SimpleNode start() #void :
         {
             programId = symTabStack.enterLocal(token.image);
             programId.setDefinition(DefinitionImpl.PACKAGE);
-            programId.setAttribute(ROUTINE_LOCALS_COUNT, 1);
             programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
             symTabStack.setProgramId(programId);
         }
@@ -182,6 +181,9 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
         variableNode = identifier(true) {
             SymTabEntry variableId = (SymTabEntry) variableNode.getAttribute(ID);
             variableNode.setAttribute(ID, variableId);
+
+            SymTabImpl routineSymTab = (SymTabImpl) programId.getAttribute(ROUTINE_SYMTAB);
+            routineSymTab.put(variableId.getName(), variableId);
         }
         (
             // TODO: An Array in Go. Not sure how to do this yet, but I have a few ideas.
