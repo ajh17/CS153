@@ -134,6 +134,7 @@ void statement() #void :
         | LOOKAHEAD(2) assignmentStatement(syncSet) < SEMICOLON >
         | LOOKAHEAD(2) increment() < SEMICOLON >
         | LOOKAHEAD(2) decrement() < SEMICOLON >
+        | LOOKAHEAD(2) arrayAssignmentStatement(syncSet) < SEMICOLON >
         | switchStatement(syncSet)
         | ifStatement(syncSet)
         | forStatement(syncSet)
@@ -204,17 +205,31 @@ void arrayDeclaration(HashSet syncSet) #array : {
 }
 {
     arrayNode = identifier(true) {
-        SymTabEntry variableId = (SymTabEntry) arrayNode.getAttribute(ID);
-        arrayNode.setAttribute(ID, variableId);
+        SymTabEntry arrayId = (SymTabEntry) arrayNode.getAttribute(ID);
+        arrayNode.setAttribute(ID, arrayId);
     }
     <OPEN_BRACKET> <INTEGER_NUMBER> <CLOSE_BRACKET>
     type()
     {
         SymTabEntry typeId = symTabStack.lookup(token.image);
         TypeSpec type = typeId.getTypeSpec();
-        variableId.setTypeSpec(type);
+        arrayId.setTypeSpec(type);
         arrayNode.setTypeSpec(type);
     }
+}
+
+void arrayAssignmentStatement(HashSet syncSet) :
+{
+    SimpleNode arrayNode;
+}
+{
+    arrayNode = identifier(false)
+    {
+        SymTabEntry arrayId = symTabStack.lookup(token.image);
+        TypeSpec typeId = arrayId.getTypeSpec();
+        arrayNode.setAttribute(ID, arrayId);
+    }
+    <EQUALS> operand()
 }
 
 void functionDeclaration(HashSet syncSet):
