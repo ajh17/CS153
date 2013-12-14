@@ -229,6 +229,9 @@ void arrayAssignmentStatement(HashSet syncSet) :
         TypeSpec typeId = arrayId.getTypeSpec();
         arrayNode.setAttribute(ID, arrayId);
     }
+    <OPEN_BRACKET>
+    <INTEGER_NUMBER> // do something with ARRAY_ELEMENT_NUMBER
+    <CLOSE_BRACKET>
     <EQUALS> operand()
 }
 
