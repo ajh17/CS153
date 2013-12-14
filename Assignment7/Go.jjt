@@ -133,6 +133,8 @@ void statement() #void :
     {
           LOOKAHEAD(2) declarationStatement(syncSet)
         | LOOKAHEAD(2) assignmentStatement(syncSet) < SEMICOLON >
+        | LOOKAHEAD(2) increment() < SEMICOLON >
+        | LOOKAHEAD(2) decrement() < SEMICOLON >
         | switchStatement(syncSet)
         | ifStatement(syncSet)
         | forStatement(syncSet)
@@ -317,7 +319,7 @@ void elseStatement(HashSet syncSet) : { syncSet.add(ELSE); }
     }
 }
 
-void switchStatement(HashSet syncSet) #switchStatement :
+void switchStatement(HashSet syncSet) :
 {
     syncSet.add(SWITCH);
     syncSet.add(CASE);
@@ -357,28 +359,21 @@ void caseGroup() :
 
 void assignmentStatement(HashSet syncSet) : { SimpleNode variableNode; }
 {
-    (
-        LOOKAHEAD(3)
-        (
-            variableNode = identifier()
-            {
-                SymTabEntry variableId = symTabStack.lookup(token.image);
-                TypeSpec typeId = variableId.getTypeSpec();
-                variableNode.setAttribute(ID, variableId);
-            }
-            (<EQUALS> expression() | (LOOKAHEAD(2) increment() | LOOKAHEAD(2) decrement()))
-        )
-        |
-        (LOOKAHEAD(2) increment() | LOOKAHEAD(2) decrement())
-    )
+    variableNode = identifier()
+    {
+        SymTabEntry variableId = symTabStack.lookup(token.image);
+        TypeSpec typeId = variableId.getTypeSpec();
+        variableNode.setAttribute(ID, variableId);
+    }
+    <EQUALS> expression()
 }
 
-void increment() #increment(2) : {}
+void increment() : {}
 {
     <INCREMENT> identifier() | identifier() <INCREMENT>
 }
 
-void decrement() #decrement: {}
+void decrement() : {}
 {
     <DECREMENT> identifier() | identifier() <DECREMENT>
 }

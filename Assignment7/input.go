@@ -1,7 +1,5 @@
 package main
-x int;
-x = 5;
-
-func printX(x int) {
-    Println(x);
-}
+i int;
+i = 5;
+i++;
+Println(i);

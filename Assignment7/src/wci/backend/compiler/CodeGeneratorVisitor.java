@@ -359,7 +359,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         incNode.jjtAccept(this, data);
 
         // I have no idea how to use inc so why not just add 1
-        CodeGenerator.objectFile.println("ldc 1");
+        CodeGenerator.objectFile.println("    ldc 1");
         CodeGenerator.objectFile.flush();
 
         CodeGenerator.objectFile.println("    " + typePrefix + "add");
@@ -377,7 +377,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         decNode.jjtAccept(this, data);
 
         // I have no idea how to use inc so why not just subtract 1
-        CodeGenerator.objectFile.println("ldc 1");
+        CodeGenerator.objectFile.println("    ldc 1");
         CodeGenerator.objectFile.flush();
 
         CodeGenerator.objectFile.println("    " + typePrefix + "sub");
