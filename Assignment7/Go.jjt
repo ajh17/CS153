@@ -235,7 +235,7 @@ void functionDeclaration(HashSet syncSet):
         variableNode.setAttribute(ID, functionID);
         jjtThis.setAttribute(ID, functionID);
     }
-    <OPEN_PAREN> parameterList(syncSet) <CLOSE_PAREN> type() {
+    <OPEN_PAREN> parameterList(syncSet) <CLOSE_PAREN> (type() | <VOID>) {
         syncSet = new HashSet(); // New reference used only by the new function scope
         syncSet.add(EOF);
         syncSet.add(SEMICOLON);
@@ -519,7 +519,7 @@ void interpretedString() : {}
 
 void type() #void : {}
 {
-    <INT> | <FLOAT> | <STRING> | <BOOL> | <VOID>
+    <INT> | <FLOAT> | <STRING> | <BOOL>
 }
 
 /********************s
