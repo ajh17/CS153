@@ -89,12 +89,16 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
             localTypeCode = "i";
         }
         else if (type == Predefined.realType) {
-            staticTypeCode = "I";
+            staticTypeCode = "F";
             localTypeCode = "f";
         }
         else if (type == Predefined.charType) {
-            staticTypeCode = "I";
+            staticTypeCode = "Ljava/lang/String;";
             localTypeCode = "Ljava/lang/String;"; // TODO: How to load a local variable string?
+        }
+        else if (type == Predefined.booleanType) {
+            staticTypeCode = "Z";
+            localTypeCode = "z";
         }
 
         // Emit the appropriate store instruction.
@@ -117,17 +121,69 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
     public Object visit(ASTfunctionCall node, Object data) {
         SymTabEntry functionId = (SymTabEntry) node.getAttribute(ID);
-        String returnType = "V"; // TODO: Need to dynamically check this
+        SymTabImpl scope = (SymTabImpl) functionId.getAttribute(SymTabKeyImpl.ROUTINE_SYMTAB);
+        TypeSpec returnType = node.getTypeSpec();
+        String returnTypeCode = null;
         StringBuilder parameters = new StringBuilder();
 
-        parameters.append("I"); // TODO: Hardcoding for my example
+        if (returnType == Predefined.integerType) {
+            returnTypeCode = "I";
+        }
+        else if (returnType == Predefined.realType) {
+            returnTypeCode = "F";
+        }
+        else if (returnType == Predefined.charType) {
+            returnTypeCode = "Ljava/lang/String;"; // TODO: How to load a local variable string?
+        }
+        else if (returnType == Predefined.booleanType) {
+            returnTypeCode = "Z";
+        }
+        else if (returnType == Predefined.voidType) {
+            returnTypeCode = "V";
+        }
 
-        for (int i = 1; i < node.jjtGetNumChildren(); i++) { // Start at 1 to skip function name
-            node.jjtGetChild(i).jjtAccept(this, data);
+        for (SymTabEntry entry : scope.values()) {
+            TypeSpec parameterType = entry.getTypeSpec();
+            String staticTypeCode = null;
+            String localTypeCode = null;
+
+            if (parameterType == Predefined.integerType) {
+                parameters.append("I");
+                staticTypeCode = "I";
+                localTypeCode = "i";
+            }
+            else if (parameterType == Predefined.realType) {
+                parameters.append("F");
+                staticTypeCode = "F";
+                localTypeCode = "f";
+            }
+            else if (parameterType == Predefined.charType) {
+                parameters.append("Ljava/lang/String;"); // TODO: How to load a local variable string?
+                staticTypeCode = "Ljava/lang/String;";
+                localTypeCode = "Ljava/lang/String;";
+            }
+            else if (parameterType == Predefined.booleanType) {
+                parameters.append("Z");
+                staticTypeCode = "Z";
+                localTypeCode = "z";
+            }
+            else if (parameterType == Predefined.voidType) {
+                parameters.append("V");
+            }
+
+            if (functionId.getSymTab().getNestingLevel() == 1) {
+                CodeGenerator.objectFile.println("    getstatic " + "Input" +
+                        "/" + entry.getName() + " " + staticTypeCode);
+            }
+            else {
+                CodeGenerator.objectFile.println("    " + localTypeCode + "load " + entry.getIndex());
+            }
+
+            CodeGenerator.objectFile.flush();
         }
 
         CodeGenerator.objectFile.println("    invokestatic  " + programName + "/"
-                + functionId + "(" + parameters.toString() + ")" + returnType);
+                + functionId.getName() + "(" + parameters.toString() + ")" + returnTypeCode);
         CodeGenerator.objectFile.flush();
 
         return data;
@@ -146,12 +202,16 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
             localTypeCode = "i";
         }
         else if (type == Predefined.realType) {
-            staticTypeCode = "I";
+            staticTypeCode = "F";
             localTypeCode = "f";
         }
         else if (type == Predefined.charType) {
-            staticTypeCode = "I";
+            staticTypeCode = "Ljava/lang/String;";
             localTypeCode = "Ljava/lang/String;"; // TODO: How to load a local variable string?
+        }
+        else if (type == Predefined.booleanType) {
+            staticTypeCode = "Z";
+            localTypeCode = "z";
         }
 
         // Emit the appropriate load instruction.
@@ -219,6 +279,9 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         }
         else if (type == Predefined.charType) {
             typeCode = "Ljava/lang/String;";
+        }
+        else if (type == Predefined.booleanType) {
+            typeCode = "Z";
         }
 
         CodeGenerator.objectFile.println("    invokevirtual java/io/PrintStream/println(" + typeCode + ")V");
