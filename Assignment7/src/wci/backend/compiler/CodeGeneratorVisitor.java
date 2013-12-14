@@ -13,8 +13,16 @@ import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 
 public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoParserTreeConstants
 {
-    private String programName = null;
-    private int tagNumber = 0;
+    private static String programName = null;
+    private static int tagNumber = 0;
+
+    private String functionName;
+
+    public CodeGeneratorVisitor() {}
+
+    public CodeGeneratorVisitor(String functionName) {
+        this.functionName = functionName;
+    }
 
     public String getCurrentLabel() { return "label" + tagNumber; }
     public String getNextLabel() { return "label" + ++tagNumber; }
@@ -48,7 +56,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
         return node.childrenAccept(this, data);
     }
-    
+
     public Object visit(ASTassignmentStatement node, Object data)
     {
         String programName        = (String) data;
@@ -73,21 +81,31 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         SymTabEntry id = (SymTabEntry) variableNode.getAttribute(ID);
         String fieldName = id.getName();
         TypeSpec type = id.getTypeSpec();
-        String typeCode = null;
+        String staticTypeCode = null;
+        String localTypeCode = null;
 
         if (type == Predefined.integerType) {
-            typeCode = "I";
+            staticTypeCode = "I";
+            localTypeCode = "i";
         }
         else if (type == Predefined.realType) {
-            typeCode = "F";
+            staticTypeCode = "I";
+            localTypeCode = "f";
         }
         else if (type == Predefined.charType) {
-            typeCode = "Ljava/lang/String;";
+            staticTypeCode = "I";
+            localTypeCode = "Ljava/lang/String;"; // TODO: How to load a local variable string?
         }
 
         // Emit the appropriate store instruction.
-        CodeGenerator.objectFile.println("    putstatic " + programName +
-                "/" + fieldName + " " + typeCode);
+        if (id.getSymTab().getNestingLevel() == 1) {
+            CodeGenerator.objectFile.println("    putstatic " + programName +
+                    "/" + fieldName + " " + staticTypeCode);
+        }
+        else {
+            CodeGenerator.objectFile.println("    " + localTypeCode + "store " + id.getIndex());
+        }
+
         CodeGenerator.objectFile.flush();
 
         return data;
@@ -117,25 +135,34 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
     public Object visit(ASTidentifier node, Object data)
     {
-        String programName = (String) data;
         SymTabEntry id = (SymTabEntry) node.getAttribute(ID);
         String fieldName = id.getName();
         TypeSpec type = id.getTypeSpec();
-        String typeCode = null;
+        String staticTypeCode = null;
+        String localTypeCode = null;
 
         if (type == Predefined.integerType) {
-            typeCode = "I";
+            staticTypeCode = "I";
+            localTypeCode = "i";
         }
         else if (type == Predefined.realType) {
-            typeCode = "F";
+            staticTypeCode = "I";
+            localTypeCode = "f";
         }
         else if (type == Predefined.charType) {
-            typeCode = "Ljava/lang/String;";
+            staticTypeCode = "I";
+            localTypeCode = "Ljava/lang/String;"; // TODO: How to load a local variable string?
         }
 
         // Emit the appropriate load instruction.
-        CodeGenerator.objectFile.println("    getstatic " + programName +
-                "/" + fieldName + " " + typeCode);
+        if (id.getSymTab().getNestingLevel() == 1) {
+            CodeGenerator.objectFile.println("    getstatic " + "Input" +
+                    "/" + fieldName + " " + staticTypeCode);
+        }
+        else {
+            CodeGenerator.objectFile.println("    " + localTypeCode + "load " + id.getIndex());
+        }
+
         CodeGenerator.objectFile.flush();
 
         return data;
@@ -206,7 +233,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
         // If the data is not the programName, that means I overwrote the data, so use it.
         // The data is always the programName unless you choose to send a child something else.
-        if (data != programName) {
+        if (data != programName && functionName == null) {
             String label = (String) data;
             CodeGenerator.objectFile.println("    goto " + label);
             CodeGenerator.objectFile.flush();

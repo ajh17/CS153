@@ -13,4 +13,10 @@ printStuff(i);
 i = 10;
 printStuff(i);
 Println(i);
-Println("Finished");
+
+if i == 10 {
+    Println("i = 10");
+}
+else {
+    Println("i != 10");
+}
