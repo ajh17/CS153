@@ -210,6 +210,7 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
 void functionDeclaration(HashSet syncSet):
 {
     SimpleNode variableNode;
+    SimpleNode returnTypeNode;
     syncSet.add(FUNC); // skip to next function declaration
 }
 {
@@ -225,7 +226,7 @@ void functionDeclaration(HashSet syncSet):
         variableNode.setAttribute(ID, functionID);
         jjtThis.setAttribute(ID, functionID);
     }
-    <OPEN_PAREN> parameterList(syncSet) <CLOSE_PAREN> (type() | <VOID>) {
+    <OPEN_PAREN> parameterList(syncSet) <CLOSE_PAREN> returnType() {
         counter = 0;
         syncSet = new HashSet(); // New reference used only by the new function scope
         syncSet.add(EOF);
@@ -536,6 +537,15 @@ void interpretedString() : {}
 void type() #void : {}
 {
     <INT> | <FLOAT> | <STRING> | <BOOL>
+}
+
+void returnType() : {}
+{
+    (<INT> | <FLOAT> | <STRING> | <BOOL> | <VOID>) {
+        SymTabEntry typeId = symTabStack.enterLocal(token.image);
+        typeId.setDefinition(DefinitionImpl.TYPE);
+        jjtThis.setAttribute(ID, typeId);
+    }
 }
 
 /********************s

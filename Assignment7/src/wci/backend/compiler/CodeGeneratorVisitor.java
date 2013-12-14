@@ -115,6 +115,10 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         return data;
     }
 
+    public Object visit(ASTreturnType node, Object data) {
+        return data;
+    }
+
     public Object visit(ASTfunctionCall node, Object data) {
         String functionId = (String) node.getAttribute(ID);
         String returnType = "V"; // TODO: Need to dynamically check this
@@ -348,6 +352,8 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
             nodes.add((SimpleNode) node.jjtGetChild(i));
         }
 
+        /*
+
         ArrayList<ASTcaseGroup> cases = new ArrayList<ASTcaseGroup>();
         ASTdefaultCase defaultCase = null;
         // Not sure if this the way to do it yet.
@@ -361,6 +367,8 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
                 defaultCase = (ASTdefaultCase) aNode;
             }
         }
+
+        */
 
         return data;
     }
