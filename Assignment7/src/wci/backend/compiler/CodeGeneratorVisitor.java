@@ -3,6 +3,7 @@ package wci.backend.compiler;
 import wci.frontend.*;
 import wci.intermediate.*;
 import wci.intermediate.icodeimpl.ICodeKeyImpl;
+import wci.intermediate.icodeimpl.ICodeNodeImpl;
 import wci.intermediate.symtabimpl.Predefined;
 import wci.intermediate.symtabimpl.SymTabImpl;
 import wci.intermediate.symtabimpl.SymTabKeyImpl;
@@ -121,7 +122,6 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
     public Object visit(ASTfunctionCall node, Object data) {
         SymTabEntry functionId = (SymTabEntry) node.getAttribute(ID);
-        SymTabImpl scope = (SymTabImpl) functionId.getAttribute(SymTabKeyImpl.ROUTINE_SYMTAB);
         TypeSpec returnType = node.getTypeSpec();
         String returnTypeCode = null;
         StringBuilder parameters = new StringBuilder();
@@ -142,8 +142,10 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
             returnTypeCode = "V";
         }
 
-        for (SymTabEntry entry : scope.values()) {
-            TypeSpec parameterType = entry.getTypeSpec();
+        for (int i = 1; i < node.jjtGetNumChildren(); i++) {
+            SimpleNode parameterNode = (SimpleNode) node.jjtGetChild(i);
+            SymTabEntry parameterEntry = (SymTabEntry) parameterNode.getAttribute(ID);
+            TypeSpec parameterType = parameterNode.getTypeSpec();
             String staticTypeCode = null;
             String localTypeCode = null;
 
@@ -167,16 +169,13 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
                 staticTypeCode = "Z";
                 localTypeCode = "z";
             }
-            else if (parameterType == Predefined.voidType) {
-                parameters.append("V");
-            }
 
             if (functionId.getSymTab().getNestingLevel() == 1) {
                 CodeGenerator.objectFile.println("    getstatic " + "Input" +
-                        "/" + entry.getName() + " " + staticTypeCode);
+                        "/" + parameterEntry.getName() + " " + staticTypeCode);
             }
             else {
-                CodeGenerator.objectFile.println("    " + localTypeCode + "load " + entry.getIndex());
+                CodeGenerator.objectFile.println("    " + localTypeCode + "load " + parameterEntry.getIndex());
             }
 
             CodeGenerator.objectFile.flush();
