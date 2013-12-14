@@ -1,12 +1,10 @@
 package main
-x int;
 
 func getDollarPermutations() void {
     i int;
+    i = 5 + 5;
 
-    for i = 0; i < 5; i++ {
-        Println(i);
-    }
+    Println(i);
 }
 
 getDollarPermutations();
