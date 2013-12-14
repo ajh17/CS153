@@ -17,14 +17,6 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
     private static String programName = null;
     private static int tagNumber = 0;
 
-    private String functionName;
-
-    public CodeGeneratorVisitor() {}
-
-    public CodeGeneratorVisitor(String functionName) {
-        this.functionName = functionName;
-    }
-
     public String getCurrentLabel() { return "label" + tagNumber; }
     public String getNextLabel() { return "label" + ++tagNumber; }
 
@@ -307,11 +299,11 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
     public Object visit(ASTblock node, Object data)
     {
-        node.childrenAccept(this, programName);
+        node.childrenAccept(this, data);
 
         // If the data is not the programName, that means I overwrote the data, so use it.
         // The data is always the programName unless you choose to send a child something else.
-        if (data != programName && functionName == null) {
+        if (data != programName) {
             String label = (String) data;
             CodeGenerator.objectFile.println("    goto " + label);
             CodeGenerator.objectFile.flush();

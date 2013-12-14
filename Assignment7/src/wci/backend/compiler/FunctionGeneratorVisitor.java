@@ -45,12 +45,9 @@ public class FunctionGeneratorVisitor extends GoParserVisitorAdapter
         CodeGenerator.objectFile.flush();
         CodeGenerator.objectFile.println(initBuffer.toString()); // Initialize local variables
 
-        GoParserVisitor codeGenerator = new CodeGeneratorVisitor(functionId.getName());
-        for (int i = 1; i < node.jjtGetNumChildren(); i++) { // Start at 1 to skip the function identifier
-            if (i != 2) {
-                node.jjtGetChild(i).jjtAccept(codeGenerator, data);
-            }
-        }
+        GoParserVisitor codeGenerator = new CodeGeneratorVisitor();
+        node.jjtGetChild(1).jjtAccept(codeGenerator, data); // Process parameter list
+        node.jjtGetChild(3).jjtAccept(codeGenerator, data); // Process function body
 
         CodeGenerator.objectFile.println();
         CodeGenerator.objectFile.println("    return");
