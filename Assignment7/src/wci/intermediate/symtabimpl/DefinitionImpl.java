@@ -14,8 +14,8 @@ public enum DefinitionImpl implements Definition
 {
     CONSTANT, ENUMERATION_CONSTANT("enumeration constant"),
     TYPE, VARIABLE, FIELD("record field"),
-    VALUE_PARM("value parameter"), VAR_PARM("VAR parameter"),
-    PROGRAM_PARM("program parameter"),
+    VALUE_PARAMETER("value parameter"), REFERENCE_PARAMETER("reference parameter"),
+    PROGRAM_PARAMETER("program parameter"),
     PACKAGE,
     PROGRAM, PROCEDURE, FUNCTION,
     UNDEFINED;

@@ -25,6 +25,7 @@ PARSER_BEGIN(GoParser)
 
 public class GoParser
 {
+    private static boolean definingParameters = false;
     private static int counter = 0;
     private static final String SOURCE_SUFFIX = ".go";
     private static final String OUTPUT_SUFFIX = ".j";
@@ -183,9 +184,6 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
         variableNode = identifier(true) {
             SymTabEntry variableId = (SymTabEntry) variableNode.getAttribute(ID);
             variableNode.setAttribute(ID, variableId);
-
-            SymTabImpl routineSymTab = (SymTabImpl) programId.getAttribute(ROUTINE_SYMTAB);
-            routineSymTab.put(variableId.getName(), variableId);
         }
         (
             type()
@@ -251,7 +249,13 @@ void functionDeclaration(HashSet syncSet):
         variableNode.setAttribute(ID, functionId);
         jjtThis.setAttribute(ID, functionId);
     }
-    <OPEN_PAREN> parameterList(syncSet) <CLOSE_PAREN> returnTypeNode = returnType() {
+    <OPEN_PAREN> {
+        definingParameters = true;
+    }
+    parameterList(syncSet) {
+        definingParameters = false;
+    }
+    <CLOSE_PAREN> returnTypeNode = returnType() {
         functionId.setTypeSpec(returnTypeNode.getTypeSpec());
         jjtThis.setTypeSpec(functionId.getTypeSpec());
         syncSet = new HashSet(); // New reference used only by the new function scope
@@ -490,21 +494,29 @@ SimpleNode identifier(boolean declaring) : {}
 
             variableId = symTabStack.enterLocal(token.image);
             variableId.appendLineNumber(token.beginLine);
-            variableId.setDefinition(DefinitionImpl.VARIABLE);
             jjtThis.setAttribute(ID, variableId);
+
+            if (definingParameters) {
+                // TODO: Somehow check if we are passing by VALUE_PARAMETER or REFERENCE_PARAMETER
+                variableId.setDefinition(DefinitionImpl.VALUE_PARAMETER);
+            }
+            else {
+                variableId.setDefinition(DefinitionImpl.VARIABLE);
+            }
 
             if (symTabStack.getCurrentNestingLevel() > 1) {
                 variableId.setIndex(counter++);
             }
         }
-        else {
+        else if (variableId != null) {
             variableId.appendLineNumber(token.beginLine);
             TypeSpec type = variableId.getTypeSpec();
             jjtThis.setTypeSpec(type);
             jjtThis.setAttribute(ID, variableId);
         }
-
-        // TODO: Error handling if trying to retrieve variable that doesn't exist.
+        else {
+            // TODO: Error handling if trying to retrieve variable that doesn't exist.
+        }
 
         return jjtThis;
     }

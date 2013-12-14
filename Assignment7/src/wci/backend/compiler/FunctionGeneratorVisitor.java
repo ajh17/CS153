@@ -12,27 +12,29 @@ public class FunctionGeneratorVisitor extends GoParserVisitorAdapter
         SymTabEntry functionId = (SymTabEntry) node.getAttribute(ID);
         SymTabImpl scope = (SymTabImpl) functionId.getAttribute(SymTabKeyImpl.ROUTINE_SYMTAB);
         StringBuilder typeBuffer = new StringBuilder(); // Used to store list of parameter types
-        StringBuilder initBuffer = new StringBuilder(); // Used to store local variable intialization code
+        StringBuilder initBuffer = new StringBuilder(); // Used to store local variable initialization code
 
         for (SymTabEntry entry : scope.values()) {
-            TypeSpec type = entry.getTypeSpec();
-            initBuffer.append("    .var " + entry.getIndex() + " is " + entry.getName() + " ");
+            if (entry.getDefinition() != DefinitionImpl.VARIABLE) {
+                TypeSpec type = entry.getTypeSpec();
+                initBuffer.append("    .var " + entry.getIndex() + " is " + entry.getName() + " ");
 
-            if (type == Predefined.integerType) {
-                typeBuffer.append("I");
-                initBuffer.append("I\n");
-            }
-            else if (type == Predefined.realType) {
-                typeBuffer.append("F");
-                initBuffer.append("F\n");
-            }
-            else if (type == Predefined.charType) {
-                typeBuffer.append("Ljava/lang/String;");
-                initBuffer.append("Ljava/lang/String;\n");
-            }
-            else if (type == Predefined.booleanType) {
-                typeBuffer.append("Z");
-                initBuffer.append("Z\n");
+                if (type == Predefined.integerType) {
+                    typeBuffer.append("I");
+                    initBuffer.append("I\n");
+                }
+                else if (type == Predefined.realType) {
+                    typeBuffer.append("F");
+                    initBuffer.append("F\n");
+                }
+                else if (type == Predefined.charType) {
+                    typeBuffer.append("Ljava/lang/String;");
+                    initBuffer.append("Ljava/lang/String;\n");
+                }
+                else if (type == Predefined.booleanType) {
+                    typeBuffer.append("Z");
+                    initBuffer.append("Z\n");
+                }
             }
         }
 

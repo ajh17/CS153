@@ -1,18 +1,9 @@
 package main
-x int;
-y int;
-x = 1;
-y = 2;
 
 // Need to work on parameter passing
-func printOne(first int) void {
-    Println(first);
-}
+func printOne(z int) void {
+    x int;
+    x = 5;
 
-func printXY(first int, second int) void {
-    Println(first);
-    Println(second);
+    Println(x);
 }
-
-printOne(x);
-printXY(x, y);
