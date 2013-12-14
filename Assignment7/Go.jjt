@@ -180,7 +180,7 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
        // Our implementation of Go's variable declaration will be either these forms:
        // x int; OR x = 5 (provided that they also used the first form to declare the variable)
 
-        variableNode = identifier()
+        variableNode = identifier(true)
         {
             SymTabEntry variableId = symTabStack.enterLocal(token.image);
             variableId.appendLineNumber(token.beginLine);
@@ -194,7 +194,7 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
         (
             // TODO: An Array in Go. Not sure how to do this yet, but I have a few ideas.
             // TODO: THE FOLLOWING IS ONLY TEMPORARY.
-            (<OPEN_BRACKET> ((<INTEGER_NUMBER>) | identifier()) <CLOSE_BRACKET> type()) #array {
+            (<OPEN_BRACKET> ((<INTEGER_NUMBER>) | identifier(false)) <CLOSE_BRACKET> type()) #array {
                 SymTabEntry typeId = symTabStack.lookup(token.image);
                 TypeSpec type = typeId.getTypeSpec();
                 variableId.setTypeSpec(type);
@@ -225,7 +225,7 @@ void functionDeclaration(HashSet syncSet):
     <FUNC> {
         syncSet.remove(FUNC);
     }
-    variableNode = identifier() {
+    variableNode = identifier(true) {
         // TODO: Not yet complete. We need to think about nesting, variable scoping and
         // TODO: how to properly set function attributes.
         SymTabEntry functionID = symTabStack.enterLocal(token.image);
@@ -247,18 +247,16 @@ void functionDeclaration(HashSet syncSet):
     }
 }
 
-SimpleNode parameterList(HashSet syncSet) : {}
+void parameterList(HashSet syncSet) : {}
 {
-    (variableDeclaration(syncSet) ( < COMMA > variableDeclaration(syncSet))*)? {
-        return jjtThis;
-    }
+    (variableDeclaration(syncSet) ( < COMMA > variableDeclaration(syncSet))*)?
 }
 
 // TODO: Not complete yet.
 // Will work on it after I take a look at function declaration.
 void functionCall(HashSet syncSet) #functionCall: {}
 {
-    identifier() {
+    identifier(false) {
         SymTabEntry id = symTabStack.lookup(token.image);
 
         if (id != null) {
@@ -359,7 +357,7 @@ void caseGroup() :
 
 void assignmentStatement(HashSet syncSet) : { SimpleNode variableNode; }
 {
-    variableNode = identifier()
+    variableNode = identifier(false)
     {
         SymTabEntry variableId = symTabStack.lookup(token.image);
         TypeSpec typeId = variableId.getTypeSpec();
@@ -370,12 +368,12 @@ void assignmentStatement(HashSet syncSet) : { SimpleNode variableNode; }
 
 void increment() : {}
 {
-    <INCREMENT> identifier() | identifier() <INCREMENT>
+    <INCREMENT> identifier(false) | identifier(false) <INCREMENT>
 }
 
 void decrement() : {}
 {
-    <DECREMENT> identifier() | identifier() <DECREMENT>
+    <DECREMENT> identifier(false) | identifier(false) <DECREMENT>
 }
 
 void forStatement(HashSet syncSet) : {}
@@ -411,7 +409,7 @@ void operand() #void : {}
 {
     (
         (
-            identifier() | LOOKAHEAD(2) integerConstant() | LOOKAHEAD(2) realConstant()
+            identifier(false) | LOOKAHEAD(2) integerConstant() | LOOKAHEAD(2) realConstant()
             | booleanConstant() | interpretedString()
         )
         | <OPEN_PAREN> expression() <CLOSE_PAREN>
@@ -459,7 +457,8 @@ void printStatement(HashSet syncSet) #printStatement : {}
     "Println" <OPEN_PAREN> expression() <CLOSE_PAREN>
 }
 
-SimpleNode identifier() : {}
+// Depending on whether we are declaring a new variable or searching for one, perform the expected behavior
+SimpleNode identifier(boolean declaring) : {}
 {
     < IDENTIFIER >
     {

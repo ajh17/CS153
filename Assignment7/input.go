@@ -6,6 +6,7 @@ func printStuff(x int) void {
     Println("Inside function");
     x = 20;
     Println(x);
+    Println(i);
 }
 
 printStuff(i);
