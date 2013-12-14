@@ -131,15 +131,16 @@ void statement() #void :
     try
     {
           LOOKAHEAD(2) declarationStatement(syncSet)
+        | LOOKAHEAD(2) arrayDeclaration(syncSet) < SEMICOLON >
         | LOOKAHEAD(2) assignmentStatement(syncSet) < SEMICOLON >
+        | LOOKAHEAD(2) arrayAssignmentStatement(syncSet) < SEMICOLON >
         | LOOKAHEAD(2) increment() < SEMICOLON >
         | LOOKAHEAD(2) decrement() < SEMICOLON >
-        | LOOKAHEAD(2) arrayAssignmentStatement(syncSet) < SEMICOLON >
         | switchStatement(syncSet)
         | ifStatement(syncSet)
         | forStatement(syncSet)
         | printStatement(syncSet) < SEMICOLON >
-        | functionCall(syncSet) < SEMICOLON >
+        | LOOKAHEAD(2) functionCall(syncSet) < SEMICOLON >
     }
     catch (ParseException ex)
     {
@@ -162,7 +163,6 @@ void declarationStatement(HashSet syncSet) #void :
     try
     {
         LOOKAHEAD(2) variableDeclaration(syncSet) < SEMICOLON > | functionDeclaration(syncSet)
-      | LOOKAHEAD(2) arrayDeclaration(syncSet) < SEMICOLON >
     }
     catch (ParseException ex)
     {
@@ -204,6 +204,7 @@ void arrayDeclaration(HashSet syncSet) #array : {
     SimpleNode arrayNode;
 }
 {
+    <VAR>
     arrayNode = identifier(true) {
         SymTabEntry arrayId = (SymTabEntry) arrayNode.getAttribute(ID);
         arrayNode.setAttribute(ID, arrayId);
@@ -218,10 +219,7 @@ void arrayDeclaration(HashSet syncSet) #array : {
     }
 }
 
-void arrayAssignmentStatement(HashSet syncSet) :
-{
-    SimpleNode arrayNode;
-}
+void arrayAssignmentStatement(HashSet syncSet) : { SimpleNode arrayNode; }
 {
     arrayNode = identifier(false)
     {
@@ -626,6 +624,8 @@ TOKEN: {
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
       | <BOOL: "bool">
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <VAR: "var">
+        {debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
       | <VOID: "void">
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
 }
