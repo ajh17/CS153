@@ -160,7 +160,8 @@ void declarationStatement(HashSet syncSet) #void :
 {
     try
     {
-        variableDeclaration(syncSet) < SEMICOLON > | functionDeclaration(syncSet)
+        LOOKAHEAD(2) variableDeclaration(syncSet) < SEMICOLON > | functionDeclaration(syncSet)
+      | LOOKAHEAD(2) arrayDeclaration(syncSet) < SEMICOLON >
     }
     catch (ParseException ex)
     {
@@ -184,15 +185,13 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
             variableNode.setAttribute(ID, variableId);
         }
         (
-            (arrayDeclaration(variableId, variableNode))
-            |
-            (type()
+            type()
             {
                 SymTabEntry typeId = symTabStack.lookup(token.image);
                 TypeSpec type = typeId.getTypeSpec();
                 variableId.setTypeSpec(type);
                 variableNode.setTypeSpec(type);
-            })
+            }
         )
     }
     catch (ParseException ex) {
@@ -200,13 +199,21 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
     }
 }
 
-void arrayDeclaration(SymTabEntry variableId, SimpleNode variableNode) #array : {}
+void arrayDeclaration(HashSet syncSet) #array : {
+    SimpleNode arrayNode;
+}
 {
-    (<OPEN_BRACKET> ((<INTEGER_NUMBER>) | identifier(false)) <CLOSE_BRACKET> type()) #array {
+    arrayNode = identifier(true) {
+        SymTabEntry variableId = (SymTabEntry) arrayNode.getAttribute(ID);
+        arrayNode.setAttribute(ID, variableId);
+    }
+    <OPEN_BRACKET> <INTEGER_NUMBER> <CLOSE_BRACKET>
+    type()
+    {
         SymTabEntry typeId = symTabStack.lookup(token.image);
         TypeSpec type = typeId.getTypeSpec();
         variableId.setTypeSpec(type);
-        variableNode.setTypeSpec(type);
+        arrayNode.setTypeSpec(type);
     }
 }
 
