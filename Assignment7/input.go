@@ -12,14 +12,10 @@ func getDollarPermutations() void {
                 for penny = 0; penny <= 100; penny = penny + 1 {
                     if quarter * 25 + dime * 10 + nickel * 5 + penny == 100 {
                         Println("These make up a dollar");
-                        Println("Quarters:");
-                        Println(quarter);
-                        Println("Dimes:");
-                        Println(dime);
-                        Println("Nickels:");
-                        Println(nickel);
-                        Println("Pennies:");
-                        Println(penny);
+                        Println("Quarters: " + quarter);
+                        Println("Dimes: " + dime);
+                        Println("Nickels: "  + nickel);
+                        Println("Pennies: " + penny);
                     }
                 }
             }
