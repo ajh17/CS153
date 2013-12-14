@@ -215,6 +215,20 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         return data;
     }
 
+    public Object visit(ASTswitchBlock node, Object data)
+    {
+        // For now, a clone of the block visit method.
+        // Looking to see if it needs any change at all.
+        node.childrenAccept(this, programName);
+        if (data != programName) {
+            String label = (String) data;
+            CodeGenerator.objectFile.println("    goto " + label);
+            CodeGenerator.objectFile.flush();
+        }
+
+        return data;
+    }
+
     public Object visit(ASTforStatement node, Object data)
     {
         SimpleNode forClause = (SimpleNode) node.jjtGetChild(0);
@@ -295,6 +309,19 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
     public Object visit(ASTswitchStatement node, Object data)
     {
+        SimpleNode switchVar = (SimpleNode) node.jjtGetChild(0);
+        SimpleNode block = (SimpleNode) node.jjtGetChild(1);
+        SimpleNode caseGroup = (SimpleNode) block.jjtGetChild(0);
+
+        String label = (String) switchVar.jjtAccept(this, data);
+
+        CodeGenerator.objectFile.println(switchVar.toString());
+        CodeGenerator.objectFile.println(block.toString());
+        CodeGenerator.objectFile.println(caseGroup.toString());
+        CodeGenerator.objectFile.println(label.toString());
+        CodeGenerator.objectFile.println(getNextLabel());
+        CodeGenerator.objectFile.flush();
+
         return data;
     }
 
