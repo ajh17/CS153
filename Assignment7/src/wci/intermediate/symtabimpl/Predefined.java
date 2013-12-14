@@ -29,6 +29,7 @@ public class Predefined
     public static TypeSpec realType;
     public static TypeSpec booleanType;
     public static TypeSpec charType;
+    public static TypeSpec voidType;
     public static TypeSpec undefinedType;
 
     // TODO: Predefined identifiers.
@@ -36,6 +37,7 @@ public class Predefined
     public static SymTabEntry realId;
     public static SymTabEntry booleanId;
     public static SymTabEntry charId;
+    public static SymTabEntry voidId;
     public static SymTabEntry falseId;
     public static SymTabEntry trueId;
     public static SymTabEntry printId;
@@ -84,6 +86,13 @@ public class Predefined
         charType.setIdentifier(charId);
         charId.setDefinition(DefinitionImpl.TYPE);
         charId.setTypeSpec(charType);
+
+        // Type void.
+        voidId = symTabStack.enterLocal("void");
+        voidType = TypeFactory.createType(SCALAR);
+        voidType.setIdentifier(voidId);
+        voidId.setDefinition(DefinitionImpl.TYPE);
+        voidId.setTypeSpec(voidType);
 
         // Undefined type.
         undefinedType = TypeFactory.createType(SCALAR);

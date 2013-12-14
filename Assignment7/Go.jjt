@@ -25,7 +25,7 @@ PARSER_BEGIN(GoParser)
 
 public class GoParser
 {
-    private static boolean definingFunction = false;
+    private static boolean definingFunctionParameters = false;
     private static int counter = 0;
     private static final String SOURCE_SUFFIX = ".go";
     private static final String OUTPUT_SUFFIX = ".j";
@@ -180,16 +180,9 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
        // Our implementation of Go's variable declaration will be either these forms:
        // x int; OR x = 5 (provided that they also used the first form to declare the variable)
 
-        variableNode = identifier(true)
-        {
-            SymTabEntry variableId = symTabStack.enterLocal(token.image);
-            variableId.appendLineNumber(token.beginLine);
-            variableId.setDefinition(DefinitionImpl.VARIABLE);
+        variableNode = identifier(true) {
+            SymTabEntry variableId = (SymTabEntry) variableNode.getAttribute(ID);
             variableNode.setAttribute(ID, variableId);
-
-            if (definingFunction) {
-                variableId.setIndex(counter++);
-            }
         }
         (
             // TODO: An Array in Go. Not sure how to do this yet, but I have a few ideas.
@@ -219,7 +212,6 @@ void functionDeclaration(HashSet syncSet):
 {
     SimpleNode variableNode;
     syncSet.add(FUNC); // skip to next function declaration
-    definingFunction = true;
 }
 {
     <FUNC> {
@@ -228,22 +220,22 @@ void functionDeclaration(HashSet syncSet):
     variableNode = identifier(true) {
         // TODO: Not yet complete. We need to think about nesting, variable scoping and
         // TODO: how to properly set function attributes.
-        SymTabEntry functionID = symTabStack.enterLocal(token.image);
-        functionID.appendLineNumber(token.beginLine);
+        SymTabEntry functionID = (SymTabEntry) variableNode.getAttribute(ID);
         functionID.setDefinition(DefinitionImpl.FUNCTION);
         functionID.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
         variableNode.setAttribute(ID, functionID);
         jjtThis.setAttribute(ID, functionID);
+        definingFunctionParameters = true;
     }
     <OPEN_PAREN> parameterList(syncSet) <CLOSE_PAREN> (type() | <VOID>) {
+        definingFunctionParameters = false;
+        counter = 0;
         syncSet = new HashSet(); // New reference used only by the new function scope
         syncSet.add(EOF);
         syncSet.add(SEMICOLON);
     }
     block(syncSet) {
         symTabStack.pop();
-        definingFunction = false;
-        counter = 0;
     }
 }
 
@@ -464,12 +456,28 @@ SimpleNode identifier(boolean declaring) : {}
     {
         SymTabEntry variableId = symTabStack.lookup(token.image);
 
-        if (variableId != null) {
+        if (declaring) {
+            if (variableId != null) {
+                // TODO: Error handling if trying to declare a variable that already exists.
+            }
+
+            variableId = symTabStack.enterLocal(token.image);
+            variableId.appendLineNumber(token.beginLine);
+            variableId.setDefinition(DefinitionImpl.VARIABLE);
+            jjtThis.setAttribute(ID, variableId);
+
+            if (definingFunctionParameters) {
+                variableId.setIndex(counter++);
+            }
+        }
+        else {
             variableId.appendLineNumber(token.beginLine);
             TypeSpec type = variableId.getTypeSpec();
             jjtThis.setTypeSpec(type);
             jjtThis.setAttribute(ID, variableId);
         }
+
+        // TODO: Error handling if trying to retrieve variable that doesn't exist.
 
         return jjtThis;
     }
