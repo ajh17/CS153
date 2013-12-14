@@ -313,15 +313,6 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         SimpleNode block = (SimpleNode) node.jjtGetChild(1);
         SimpleNode caseGroup = (SimpleNode) block.jjtGetChild(0);
 
-        String label = (String) switchVar.jjtAccept(this, data);
-
-        CodeGenerator.objectFile.println(switchVar.toString());
-        CodeGenerator.objectFile.println(block.toString());
-        CodeGenerator.objectFile.println(caseGroup.toString());
-        CodeGenerator.objectFile.println(label.toString());
-        CodeGenerator.objectFile.println(getNextLabel());
-        CodeGenerator.objectFile.flush();
-
         return data;
     }
 
