@@ -25,7 +25,6 @@ PARSER_BEGIN(GoParser)
 
 public class GoParser
 {
-    private static boolean definingFunctionParameters = false;
     private static int counter = 0;
     private static final String SOURCE_SUFFIX = ".go";
     private static final String OUTPUT_SUFFIX = ".j";
@@ -225,10 +224,8 @@ void functionDeclaration(HashSet syncSet):
         functionID.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
         variableNode.setAttribute(ID, functionID);
         jjtThis.setAttribute(ID, functionID);
-        definingFunctionParameters = true;
     }
     <OPEN_PAREN> parameterList(syncSet) <CLOSE_PAREN> (type() | <VOID>) {
-        definingFunctionParameters = false;
         counter = 0;
         syncSet = new HashSet(); // New reference used only by the new function scope
         syncSet.add(EOF);
@@ -470,7 +467,7 @@ SimpleNode identifier(boolean declaring) : {}
             variableId.setDefinition(DefinitionImpl.VARIABLE);
             jjtThis.setAttribute(ID, variableId);
 
-            if (definingFunctionParameters) {
+            if (symTabStack.getCurrentNestingLevel() > 1) {
                 variableId.setIndex(counter++);
             }
         }
