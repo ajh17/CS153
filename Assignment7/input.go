@@ -2,9 +2,12 @@ package main
 i int;
 i = 5;
 
-func printStuff(i int) {
+func printStuff(x int) {
     Println("Inside function");
-    Println(i);
+    x = 20;
+    Println(x);
 }
 
+printStuff(i);
+i = 10;
 printStuff(i);
