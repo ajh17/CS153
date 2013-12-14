@@ -442,7 +442,14 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         CodeGenerator.objectFile.println("    " + typePrefix + "add");
         CodeGenerator.objectFile.flush();
 
-        CodeGenerator.objectFile.println("    " + "putstatic " + data + "/" + fieldName + " " + typePrefix2);
+        if (id.getSymTab().getNestingLevel() == 1) {
+            CodeGenerator.objectFile.println("    putstatic " + programName +
+                    "/" + fieldName + " " + typePrefix2);
+        }
+        else {
+            CodeGenerator.objectFile.println("    " + typePrefix + "store " + id.getIndex());
+        }
+
         CodeGenerator.objectFile.flush();
 
         return data;
@@ -466,7 +473,14 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         CodeGenerator.objectFile.println("    " + typePrefix + "add");
         CodeGenerator.objectFile.flush();
 
-        CodeGenerator.objectFile.println("    " + "putstatic " + data + "/" + fieldName + " " + typePrefix2);
+        if (id.getSymTab().getNestingLevel() == 1) {
+            CodeGenerator.objectFile.println("    putstatic " + programName +
+                    "/" + fieldName + " " + typePrefix2);
+        }
+        else {
+            CodeGenerator.objectFile.println("    " + typePrefix + "store " + id.getIndex());
+        }
+
         CodeGenerator.objectFile.flush();
 
         return data;

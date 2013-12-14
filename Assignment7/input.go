@@ -6,7 +6,11 @@ func printStuff(x int) void {
     Println("Inside function");
     x = 20;
     Println(x);
-    Println(i); // Need to fix this. If i is not declared locally, look in static variables.
+    Println(i);
+
+
+
+    Println("Leaving function");
 }
 
 printStuff(i);
