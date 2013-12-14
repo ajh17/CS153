@@ -235,7 +235,7 @@ void functionDeclaration(HashSet syncSet):
         variableNode.setAttribute(ID, functionID);
         jjtThis.setAttribute(ID, functionID);
     }
-    <OPEN_PAREN> parameterList(syncSet) <CLOSE_PAREN> type() {
+    <OPEN_PAREN> parameterList(syncSet) <CLOSE_PAREN> (type() | <VOID>) {
         syncSet = new HashSet(); // New reference used only by the new function scope
         syncSet.add(EOF);
         syncSet.add(SEMICOLON);
@@ -485,6 +485,14 @@ void integerConstant() : {}
     }
 }
 
+void voidConstant() : {}
+{
+    <VOID>
+    {
+        jjtThis.setTypeSpec(Predefined.undefinedType);
+    }
+}
+
 void booleanConstant() : {}
 {
     < BOOL_CONSTANT >
@@ -559,6 +567,8 @@ TOKEN: {
       | <STRING: "string">
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
       | <BOOL: "bool">
+        { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
+      | <VOID: "void">
         { debugStream.println("RESERVED_WORD token: " + matchedToken.image); }
 }
 
