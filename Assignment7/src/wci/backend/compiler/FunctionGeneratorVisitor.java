@@ -13,7 +13,6 @@ public class FunctionGeneratorVisitor extends GoParserVisitorAdapter
         SymTabImpl scope = (SymTabImpl) functionId.getAttribute(SymTabKeyImpl.ROUTINE_SYMTAB);
         StringBuilder typeBuffer = new StringBuilder(); // Used to store list of parameter types
         StringBuilder initBuffer = new StringBuilder(); // Used to store local variable intialization code
-        Character returnType = 'V';
 
         for (SymTabEntry entry : scope.values()) {
             TypeSpec type = entry.getTypeSpec();
@@ -37,11 +36,12 @@ public class FunctionGeneratorVisitor extends GoParserVisitorAdapter
             }
         }
 
-
+        String returnType = (String) node.jjtGetChild(2).jjtAccept(this, data); // Get return type
 
         CodeGenerator.objectFile.println(".method private static "
                 + functionId.getName() + "(" + typeBuffer.toString() + ")" + returnType + "\n");
-        CodeGenerator.objectFile.println(initBuffer.toString());
+        CodeGenerator.objectFile.flush();
+        CodeGenerator.objectFile.println(initBuffer.toString()); // Initialize local variables
 
         GoParserVisitor codeGenerator = new CodeGeneratorVisitor(functionId.getName());
         for (int i = 1; i < node.jjtGetNumChildren(); i++) { // Start at 1 to skip the function identifier
@@ -59,5 +59,28 @@ public class FunctionGeneratorVisitor extends GoParserVisitorAdapter
         CodeGenerator.objectFile.flush();
 
         return data;
+    }
+
+    public Object visit(ASTreturnType node, Object data) {
+        TypeSpec type = node.getTypeSpec();
+        String typeCode = null;
+
+        if (type == Predefined.integerType) {
+            typeCode ="I";
+        }
+        else if (type == Predefined.realType) {
+            typeCode = "F";
+        }
+        else if (type == Predefined.charType) {
+            typeCode = "Ljava/lang/String;";
+        }
+        else if (type == Predefined.booleanType) {
+            typeCode = "Z";
+        }
+        else if (type == Predefined.voidType) {
+            typeCode = "V";
+        }
+
+        return typeCode;
     }
 }

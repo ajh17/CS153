@@ -115,10 +115,6 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         return data;
     }
 
-    public Object visit(ASTreturnType node, Object data) {
-        return data;
-    }
-
     public Object visit(ASTfunctionCall node, Object data) {
         String functionId = (String) node.getAttribute(ID);
         String returnType = "V"; // TODO: Need to dynamically check this
