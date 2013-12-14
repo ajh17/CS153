@@ -107,7 +107,7 @@ public class CodeGenerator extends Backend
         objectFile.println();
 
         // Generate user defined methods
-        GoParserVisitor methodGenerator = new MethodGeneratorVisitor();
+        GoParserVisitor methodGenerator = new FunctionGeneratorVisitor();
         iCode.getRoot().jjtAccept(methodGenerator, programName);
         objectFile.println();
 

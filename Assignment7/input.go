@@ -11,3 +11,4 @@ func printStuff(x int) void {
 printStuff(i);
 i = 10;
 printStuff(i);
+Println(i);

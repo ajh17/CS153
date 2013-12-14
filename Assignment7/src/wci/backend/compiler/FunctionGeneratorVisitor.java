@@ -1,13 +1,12 @@
 package wci.backend.compiler;
 
-import wci.backend.compiler.CodeGenerator;
 import wci.frontend.*;
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.*;
 
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.ID;
 
-public class MethodGeneratorVisitor extends GoParserVisitorAdapter
+public class FunctionGeneratorVisitor extends GoParserVisitorAdapter
 {
     public Object visit(ASTfunctionDeclaration node, Object data) {
         SymTabEntry functionId = (SymTabEntry) node.getAttribute(ID);
@@ -42,7 +41,7 @@ public class MethodGeneratorVisitor extends GoParserVisitorAdapter
                 + functionId.getName() + "(" + typeBuffer.toString() + ")" + returnType + "\n");
         CodeGenerator.objectFile.println(initBuffer.toString());
 
-        GoParserVisitor methodBodyGenerator = new MethodBodyGeneratorVisitor(functionId.getName());
+        GoParserVisitor methodBodyGenerator = new FunctionBodyGeneratorVisitor(functionId.getName());
         for (int i = 1; i < node.jjtGetNumChildren(); i++) { // Start at 1 to skip the function identifier
             node.jjtGetChild(i).jjtAccept(methodBodyGenerator, data);
         }

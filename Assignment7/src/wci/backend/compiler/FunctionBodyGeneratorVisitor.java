@@ -7,12 +7,12 @@ import wci.intermediate.symtabimpl.Predefined;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.ID;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.VALUE;
 
-public class MethodBodyGeneratorVisitor extends GoParserVisitorAdapter
+public class FunctionBodyGeneratorVisitor extends GoParserVisitorAdapter
 {
     private String functionName;
     private int tagNumber = 0;
 
-    public MethodBodyGeneratorVisitor(String functionName) {
+    public FunctionBodyGeneratorVisitor(String functionName) {
         this.functionName = functionName;
     }
 
@@ -20,6 +20,49 @@ public class MethodBodyGeneratorVisitor extends GoParserVisitorAdapter
     public String getNextLabel() { return "methodlabel" + ++tagNumber; }
 
     public Object visit(ASTfunctionDeclaration node, Object data) {
+        return data;
+    }
+
+    public Object visit(ASTassignmentStatement node, Object data)
+    {
+        String programName        = (String) data;
+        SimpleNode variableNode   = (SimpleNode) node.jjtGetChild(0);
+        SimpleNode expressionNode = (SimpleNode) node.jjtGetChild(1);
+
+        // Emit code for the expression.
+        expressionNode.jjtAccept(this, data);
+        TypeSpec expressionType = expressionNode.getTypeSpec();
+
+        // Get the assignment target type.
+        TypeSpec targetType = node.getTypeSpec();
+
+        // Convert an integer value to float if necessary.
+        if ((targetType == Predefined.realType) &&
+                (expressionType == Predefined.integerType))
+        {
+            CodeGenerator.objectFile.println("    i2f");
+            CodeGenerator.objectFile.flush();
+        }
+
+        SymTabEntry id = (SymTabEntry) variableNode.getAttribute(ID);
+        String fieldName = id.getName();
+        TypeSpec type = id.getTypeSpec();
+        String typeCode = null;
+
+        if (type == Predefined.integerType) {
+            typeCode = "i";
+        }
+        else if (type == Predefined.realType) {
+            typeCode = "f";
+        }
+        else if (type == Predefined.charType) {
+            typeCode = "Ljava/lang/String;"; // TODO: Is this correct for local variables?
+        }
+
+        // Emit the appropriate store instruction.
+        CodeGenerator.objectFile.println("    " + typeCode + "store " + id.getIndex());
+        CodeGenerator.objectFile.flush();
+
         return data;
     }
 
