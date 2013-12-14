@@ -2,7 +2,7 @@ package main
 i int;
 i = 5;
 
-func printStuff(x int) {
+func printStuff(x int) void {
     Println("Inside function");
     x = 20;
     Println(x);
