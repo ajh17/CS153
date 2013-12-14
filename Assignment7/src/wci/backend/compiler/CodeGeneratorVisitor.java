@@ -144,8 +144,8 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
         for (int i = 1; i < node.jjtGetNumChildren(); i++) {
             SimpleNode parameterNode = (SimpleNode) node.jjtGetChild(i);
-            SymTabEntry parameterEntry = (SymTabEntry) parameterNode.getAttribute(ID);
             TypeSpec parameterType = parameterNode.getTypeSpec();
+            SymTabEntry parameterEntry = (SymTabEntry) parameterNode.getAttribute(ID);
             String staticTypeCode = null;
             String localTypeCode = null;
 
@@ -170,7 +170,10 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
                 localTypeCode = "z";
             }
 
-            if (functionId.getSymTab().getNestingLevel() == 1) {
+            if (parameterEntry == null) {
+                parameterNode.jjtAccept(this, data);
+            }
+            else if (functionId.getSymTab().getNestingLevel() == 1) {
                 CodeGenerator.objectFile.println("    getstatic " + "Input" +
                         "/" + parameterEntry.getName() + " " + staticTypeCode);
             }

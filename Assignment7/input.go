@@ -16,3 +16,7 @@ func printXY(first int, second int) void {
 
 printOne(x);
 printXY(x, y);
+printOne(1);
+printXY(100, 200);
+printOne(1 * 3 + 4 / 2);
+printXY(1 * 3 + 4 / 2, x);
