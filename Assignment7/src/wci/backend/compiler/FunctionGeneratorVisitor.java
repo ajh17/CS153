@@ -13,7 +13,7 @@ public class FunctionGeneratorVisitor extends GoParserVisitorAdapter
         SymTabImpl scope = (SymTabImpl) functionId.getAttribute(SymTabKeyImpl.ROUTINE_SYMTAB);
         StringBuilder typeBuffer = new StringBuilder(); // Used to store list of parameter types
         StringBuilder initBuffer = new StringBuilder(); // Used to store local variable intialization code
-        Character returnType = 'V'; // TODO: Need to implement dynamic checking of return type
+        Character returnType = 'V';
 
         for (SymTabEntry entry : scope.values()) {
             TypeSpec type = entry.getTypeSpec();
@@ -37,13 +37,17 @@ public class FunctionGeneratorVisitor extends GoParserVisitorAdapter
             }
         }
 
+
+
         CodeGenerator.objectFile.println(".method private static "
                 + functionId.getName() + "(" + typeBuffer.toString() + ")" + returnType + "\n");
         CodeGenerator.objectFile.println(initBuffer.toString());
 
         GoParserVisitor codeGenerator = new CodeGeneratorVisitor(functionId.getName());
         for (int i = 1; i < node.jjtGetNumChildren(); i++) { // Start at 1 to skip the function identifier
-            node.jjtGetChild(i).jjtAccept(codeGenerator, data);
+            if (i != 2) {
+                node.jjtGetChild(i).jjtAccept(codeGenerator, data);
+            }
         }
 
         CodeGenerator.objectFile.println();

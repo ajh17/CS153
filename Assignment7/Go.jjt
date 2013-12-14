@@ -542,9 +542,8 @@ void type() #void : {}
 void returnType() : {}
 {
     (<INT> | <FLOAT> | <STRING> | <BOOL> | <VOID>) {
-        SymTabEntry typeId = symTabStack.enterLocal(token.image);
-        typeId.setDefinition(DefinitionImpl.TYPE);
-        jjtThis.setAttribute(ID, typeId);
+        SymTabEntry typeId = symTabStack.lookup(token.image);
+        jjtThis.setTypeSpec(typeId.getTypeSpec());
     }
 }
 
