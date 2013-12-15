@@ -215,7 +215,8 @@ void arrayDeclaration(HashSet syncSet) #array : {
     <OPEN_BRACKET> <INTEGER_NUMBER> <CLOSE_BRACKET>
     type()
     {
-        // TODO: Figure out how to set the type form of the array to an ARRAY
+        // TODO: Figure out how to set the type form of the array to 'array'
+        // TODO: instead of 'scalar'
         SymTabEntry typeId = symTabStack.lookup(token.image);
         TypeSpec arrayType = TypeFactory.createType(TypeFormImpl.ARRAY);
         TypeSpec elementType = typeId.getTypeSpec();
