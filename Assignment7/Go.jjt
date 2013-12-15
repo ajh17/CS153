@@ -280,9 +280,6 @@ void functionDeclaration(HashSet syncSet):
     catch (ParseException ex) {
         handleError(ex, syncSet, true);
     }
-    finally {
-        syncSet.remove(FUNC);
-    }
 }
 
 void parameterList(HashSet syncSet) : {}
