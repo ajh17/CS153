@@ -204,19 +204,22 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
 
 void arrayDeclaration(HashSet syncSet) #array : {
     SimpleNode arrayNode;
+    SymTabEntry arrayId;
 }
 {
     <VAR>
     arrayNode = identifier(true) {
-        SymTabEntry arrayId = (SymTabEntry) arrayNode.getAttribute(ID);
+        arrayId = (SymTabEntry) arrayNode.getAttribute(ID);
         arrayNode.setAttribute(ID, arrayId);
     }
     <OPEN_BRACKET> <INTEGER_NUMBER> <CLOSE_BRACKET>
     type()
     {
+        // TODO: Figure out how to set the type form of the array to an ARRAY
         SymTabEntry typeId = symTabStack.lookup(token.image);
         TypeSpec arrayType = TypeFactory.createType(TypeFormImpl.ARRAY);
         TypeSpec elementType = typeId.getTypeSpec();
+        // Set the element type of the array to ARRAY_ELEMENT_TYPE
         elementType.setAttribute(ARRAY_ELEMENT_TYPE, arrayType);
         arrayNode.setTypeSpec(elementType);
         arrayId.setTypeSpec(elementType);
