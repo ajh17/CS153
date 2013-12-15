@@ -17,6 +17,8 @@ PARSER_BEGIN(GoParser)
     import wci.intermediate.symtabimpl.*;
     import wci.backend.*;
     import wci.util.*;
+    import static wci.intermediate.typeimpl.TypeKeyImpl.*;
+    import wci.intermediate.typeimpl.TypeFormImpl;
     import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
     import static wci.intermediate.symtabimpl.DefinitionImpl.*;
     import static wci.intermediate.symtabimpl.RoutineCodeImpl.*;
@@ -213,9 +215,11 @@ void arrayDeclaration(HashSet syncSet) #array : {
     type()
     {
         SymTabEntry typeId = symTabStack.lookup(token.image);
-        TypeSpec type = typeId.getTypeSpec();
-        arrayId.setTypeSpec(type);
-        arrayNode.setTypeSpec(type);
+        TypeSpec arrayType = TypeFactory.createType(TypeFormImpl.ARRAY);
+        TypeSpec elementType = typeId.getTypeSpec();
+        elementType.setAttribute(ARRAY_ELEMENT_TYPE, arrayType);
+        arrayNode.setTypeSpec(elementType);
+        arrayId.setTypeSpec(elementType);
     }
 }
 
