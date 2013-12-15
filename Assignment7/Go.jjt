@@ -248,32 +248,40 @@ void functionDeclaration(HashSet syncSet):
     syncSet.add(FUNC); // skip to next function declaration
 }
 {
-    <FUNC> {
+    try {
+        <FUNC> {
+            syncSet.remove(FUNC);
+        }
+        variableNode = identifier(true) {
+            SymTabEntry functionId = (SymTabEntry) variableNode.getAttribute(ID);
+            functionId.setDefinition(DefinitionImpl.FUNCTION);
+            functionId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
+            variableNode.setAttribute(ID, functionId);
+            jjtThis.setAttribute(ID, functionId);
+        }
+        <OPEN_PAREN> {
+            definingParameters = true;
+        }
+        parameterList(syncSet) {
+            definingParameters = false;
+        }
+        <CLOSE_PAREN> returnTypeNode = returnType() {
+            functionId.setTypeSpec(returnTypeNode.getTypeSpec());
+            jjtThis.setTypeSpec(functionId.getTypeSpec());
+            syncSet = new HashSet(); // New reference used only by the new function scope
+            syncSet.add(EOF);
+            syncSet.add(SEMICOLON);
+            counter = 0;
+        }
+        block(syncSet) {
+            symTabStack.pop();
+        }
+    }
+    catch (ParseException ex) {
+        handleError(ex, syncSet, true);
+    }
+    finally {
         syncSet.remove(FUNC);
-    }
-    variableNode = identifier(true) {
-        SymTabEntry functionId = (SymTabEntry) variableNode.getAttribute(ID);
-        functionId.setDefinition(DefinitionImpl.FUNCTION);
-        functionId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
-        variableNode.setAttribute(ID, functionId);
-        jjtThis.setAttribute(ID, functionId);
-    }
-    <OPEN_PAREN> {
-        definingParameters = true;
-    }
-    parameterList(syncSet) {
-        definingParameters = false;
-    }
-    <CLOSE_PAREN> returnTypeNode = returnType() {
-        functionId.setTypeSpec(returnTypeNode.getTypeSpec());
-        jjtThis.setTypeSpec(functionId.getTypeSpec());
-        syncSet = new HashSet(); // New reference used only by the new function scope
-        syncSet.add(EOF);
-        syncSet.add(SEMICOLON);
-        counter = 0;
-    }
-    block(syncSet) {
-        symTabStack.pop();
     }
 }
 
@@ -282,18 +290,26 @@ void parameterList(HashSet syncSet) : {}
     (variableDeclaration(syncSet) ( < COMMA > variableDeclaration(syncSet))*)?
 }
 
-void functionCall(HashSet syncSet) : { SimpleNode functionNode; }
+void functionCall(HashSet syncSet) :
 {
-    functionNode = identifier(false) {
-        SymTabEntry functionId = (SymTabEntry) functionNode.getAttribute(ID);
-        jjtThis.setTypeSpec(functionNode.getTypeSpec());
+    SimpleNode functionNode;
+}
+{
+    try {
+        functionNode = identifier(false) {
+            SymTabEntry functionId = (SymTabEntry) functionNode.getAttribute(ID);
+            jjtThis.setTypeSpec(functionNode.getTypeSpec());
 
-        if (functionId != null) {
-            jjtThis.setAttribute(ID, functionId);
+            if (functionId != null) {
+                jjtThis.setAttribute(ID, functionId);
+            }
+            // If it's null, then the function has not been declared. Need to let the user know some how.
         }
-        // If it's null, then the function has not been declared. Need to let the user know some how.
+        <OPEN_PAREN> (expression() (<COMMA> expression())*)? <CLOSE_PAREN>
     }
-    <OPEN_PAREN> (expression() (<COMMA> expression())*)? <CLOSE_PAREN>
+    catch (ParseException ex) {
+        handleError(ex, syncSet, true);
+    }
 }
 
 void block(HashSet syncSet) : {}
@@ -308,6 +324,9 @@ void block(HashSet syncSet) : {}
     catch (ParseException ex)
     {
         handleError(ex, syncSet, true);
+    }
+    finally {
+        syncSet.remove(CLOSE_BRACE);
     }
 }
 
