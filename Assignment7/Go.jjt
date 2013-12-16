@@ -136,8 +136,8 @@ void statement() #void :
         | LOOKAHEAD(2) arrayDeclaration(syncSet) < SEMICOLON >
         | LOOKAHEAD(2) assignmentStatement(syncSet) < SEMICOLON >
         | LOOKAHEAD(2) arrayAssignmentStatement(syncSet) < SEMICOLON >
-        | LOOKAHEAD(2) increment() < SEMICOLON >
-        | LOOKAHEAD(2) decrement() < SEMICOLON >
+        | LOOKAHEAD(2) increment(syncSet) < SEMICOLON >
+        | LOOKAHEAD(2) decrement(syncSet) < SEMICOLON >
         | switchStatement(syncSet)
         | ifStatement(syncSet)
         | forStatement(syncSet)
@@ -183,7 +183,7 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
        // Our implementation of Go's variable declaration will be either these forms:
        // x int; OR x = 5 (provided that they also used the first form to declare the variable)
 
-        variableNode = identifier(true) {
+        variableNode = identifier(syncSet, true) {
             SymTabEntry variableId = (SymTabEntry) variableNode.getAttribute(ID);
             variableNode.setAttribute(ID, variableId);
 
@@ -214,7 +214,7 @@ void arrayDeclaration(HashSet syncSet) #array : {
 }
 {
     <VAR>
-    arrayNode = identifier(true) {
+    arrayNode = identifier(syncSet, true) {
         arrayId = (SymTabEntry) arrayNode.getAttribute(ID);
         arrayNode.setAttribute(ID, arrayId);
     }
@@ -229,7 +229,7 @@ void arrayDeclaration(HashSet syncSet) #array : {
 
 void arrayAssignmentStatement(HashSet syncSet) : { SimpleNode arrayNode; }
 {
-    arrayNode = identifier(false)
+    arrayNode = identifier(syncSet, false)
     {
         SymTabEntry arrayId = symTabStack.lookup(token.image);
         TypeSpec typeId = arrayId.getTypeSpec();
@@ -238,7 +238,7 @@ void arrayAssignmentStatement(HashSet syncSet) : { SimpleNode arrayNode; }
     <OPEN_BRACKET>
     <INTEGER_NUMBER> // do something with ARRAY_ELEMENT_NUMBER
     <CLOSE_BRACKET>
-    <EQUALS> operand()
+    <EQUALS> operand(syncSet)
 }
 
 void functionDeclaration(HashSet syncSet):
@@ -252,7 +252,7 @@ void functionDeclaration(HashSet syncSet):
         <FUNC> {
             syncSet.remove(FUNC);
         }
-        variableNode = identifier(true) {
+        variableNode = identifier(syncSet, true) {
             SymTabEntry functionId = (SymTabEntry) variableNode.getAttribute(ID);
             functionId.setDefinition(DefinitionImpl.FUNCTION);
             functionId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
@@ -293,7 +293,7 @@ void parameter(HashSet syncSet) throws ParseException :
        // Our implementation of Go's variable declaration will be either these forms:
        // x int; OR x = 5 (provided that they also used the first form to declare the variable)
 
-        variableNode = identifier(true) {
+        variableNode = identifier(syncSet, true) {
             SymTabEntry variableId = (SymTabEntry) variableNode.getAttribute(ID);
             variableId.setDefinition(DefinitionImpl.VALUE_PARAMETER); // Default definition
             variableNode.setAttribute(ID, variableId);
@@ -324,7 +324,7 @@ void functionCall(HashSet syncSet) :
 }
 {
     try {
-        functionNode = identifier(false) {
+        functionNode = identifier(syncSet, false) {
             SymTabEntry functionId = (SymTabEntry) functionNode.getAttribute(ID);
             jjtThis.setTypeSpec(functionNode.getTypeSpec());
 
@@ -333,7 +333,7 @@ void functionCall(HashSet syncSet) :
             }
             // If it's null, then the function has not been declared. Need to let the user know some how.
         }
-        <OPEN_PAREN> (expression() (<COMMA> expression())*)? <CLOSE_PAREN>
+        <OPEN_PAREN> (expression(syncSet) (<COMMA> expression(syncSet))*)? <CLOSE_PAREN>
     }
     catch (ParseException ex) {
         handleError(ex, syncSet, true);
@@ -362,7 +362,7 @@ void ifStatement(HashSet syncSet) : { syncSet.add(IF); }
 {
     try
     {
-        <IF> expression() block(syncSet) (elseStatement(syncSet))?
+        <IF> expression(syncSet) block(syncSet) (elseStatement(syncSet))?
     }
     catch (ParseException ex)
     {
@@ -400,7 +400,7 @@ void switchStatement(HashSet syncSet) :
 }
 {
     try {
-        <SWITCH> ( expression())?  switchBlock() {}
+        <SWITCH> ( expression(syncSet))?  switchBlock() {}
     }
     catch (ParseException ex) {
         handleError(ex, syncSet, true);
@@ -425,7 +425,7 @@ void caseGroup() :
     syncSet.add(CASE);
 }
 {
-    (<CASE> expressionList() ":" statementList())*
+    (<CASE> expressionList(syncSet) ":" statementList())*
     defaultCase()
 }
 
@@ -436,23 +436,23 @@ void defaultCase() #void : {}
 
 void assignmentStatement(HashSet syncSet) : { SimpleNode variableNode; }
 {
-    variableNode = identifier(false)
+    variableNode = identifier(syncSet, false)
     {
         SymTabEntry variableId = symTabStack.lookup(token.image);
         TypeSpec typeId = variableId.getTypeSpec();
         variableNode.setAttribute(ID, variableId);
     }
-    <EQUALS> expression()
+    <EQUALS> expression(syncSet)
 }
 
-void increment() : {}
+void increment(HashSet syncSet) : {}
 {
-    <INCREMENT> identifier(false) | identifier(false) <INCREMENT>
+    <INCREMENT> identifier(syncSet, false) | identifier(syncSet, false) <INCREMENT>
 }
 
-void decrement() : {}
+void decrement(HashSet syncSet) : {}
 {
-    <DECREMENT> identifier(false) | identifier(false) <DECREMENT>
+    <DECREMENT> identifier(syncSet, false) | identifier(syncSet, false) <DECREMENT>
 }
 
 void forStatement(HashSet syncSet) : {}
@@ -469,11 +469,11 @@ void forClause() : {
 {
     try {
         // A regular c-style for loop
-        (LOOKAHEAD(2) (assignmentStatement(syncSet) <SEMICOLON> expression() <SEMICOLON>
-                           (LOOKAHEAD(2) assignmentStatement(syncSet) | LOOKAHEAD(2) increment()
-                                                                      | LOOKAHEAD(2) decrement()))
+        (LOOKAHEAD(2) (assignmentStatement(syncSet) <SEMICOLON> expression(syncSet) <SEMICOLON>
+                           (LOOKAHEAD(2) assignmentStatement(syncSet) | LOOKAHEAD(2) increment(syncSet)
+                                                                      | LOOKAHEAD(2) decrement(syncSet)))
         |
-        expression())
+        expression(syncSet))
         // ^ a while loop
     }
     catch (ParseException ex) {
@@ -484,14 +484,14 @@ void forClause() : {
     }
 }
 
-void operand() #void : {}
+void operand(HashSet syncSet) #void : {}
 {
     (
         (
-            identifier(false) | LOOKAHEAD(2) integerConstant() | LOOKAHEAD(2) realConstant()
+            identifier(syncSet, false) | LOOKAHEAD(2) integerConstant() | LOOKAHEAD(2) realConstant()
             | booleanConstant() | interpretedString()
         )
-        | <OPEN_PAREN> expression() <CLOSE_PAREN>
+        | <OPEN_PAREN> expression(syncSet) <CLOSE_PAREN>
     )
 }
 
@@ -500,70 +500,75 @@ void relationalOperators() #void : {}
     < EQUAL_EQUAL > | < NOT_EQUAL > | < LESS_THAN > | < LESS_EQUAL > | < GREATER_THAN > | < GREATER_EQUAL >
 }
 
-void expression() #void : {}
+void expression(HashSet syncSet) #void : {}
 {
-    term() (
-          < EQUAL_EQUAL > term() #equalEqual(2)
-        | < NOT_EQUAL > term() #notEqual(2)
-        | < LESS_THAN > term() #lessThan(2)
-        | < LESS_EQUAL > term() #lessEqual(2)
-        | < GREATER_THAN > term() #greaterThan(2)
-        | < GREATER_EQUAL > term() #greaterEqual(2)
-        | < PLUS > term() #add(2)
-        | < MINUS > term() #subtract(2)
+    term(syncSet) (
+          < EQUAL_EQUAL > term(syncSet) #equalEqual(2)
+        | < NOT_EQUAL > term(syncSet) #notEqual(2)
+        | < LESS_THAN > term(syncSet) #lessThan(2)
+        | < LESS_EQUAL > term(syncSet) #lessEqual(2)
+        | < GREATER_THAN > term(syncSet) #greaterThan(2)
+        | < GREATER_EQUAL > term(syncSet) #greaterEqual(2)
+        | < PLUS > term(syncSet) #add(2)
+        | < MINUS > term(syncSet) #subtract(2)
     )*
 }
 
-void term() #void : {}
+void term(HashSet syncSet) #void : {}
 {
-    operand() (
-          < MULTIPLY > operand() #multiply(2)
-        | < DIVIDE > operand() #divide(2)
-        | < MODULO > operand() #modulo(2)
-        | < AMPERSAND > operand() #bitwiseAnd(2)
-        | < PIPE > operand() #bitwiseOr(2)
-        | < CARET > operand() #xor(2)
+    operand(syncSet) (
+          < MULTIPLY > operand(syncSet) #multiply(2)
+        | < DIVIDE > operand(syncSet) #divide(2)
+        | < MODULO > operand(syncSet) #modulo(2)
+        | < AMPERSAND > operand(syncSet) #bitwiseAnd(2)
+        | < PIPE > operand(syncSet) #bitwiseOr(2)
+        | < CARET > operand(syncSet) #xor(2)
     )*
 }
 
-void expressionList() : {}
+void expressionList(HashSet syncSet) : {}
 {
-    expression() ( < COMMA > expression())*
+    expression(syncSet) ( < COMMA > expression(syncSet))*
 }
 
 void printStatement(HashSet syncSet) #printStatement : {}
 {
-    "Println" <OPEN_PAREN> expression() <CLOSE_PAREN>
+    "Println" <OPEN_PAREN> expression(syncSet) <CLOSE_PAREN>
 }
 
 // Depending on whether we are declaring a new variable or searching for one, perform the expected behavior
-SimpleNode identifier(boolean declaring) : {}
+SimpleNode identifier(HashSet syncSet, boolean declaring) : {}
 {
-    < IDENTIFIER >
-    {
-        SymTabEntry variableId = symTabStack.lookup(token.image);
+    try {
+        < IDENTIFIER >
+        {
+            SymTabEntry variableId = symTabStack.lookup(token.image);
 
-        if (declaring) {
-            if (variableId != null) {
-                // TODO: Error handling if trying to declare a variable that already exists.
+            if (declaring) {
+                if (variableId != null) {
+                    throw new ParseException("ERROR: Variable already declared");
+                }
+
+                variableId = symTabStack.enterLocal(token.image);
+                variableId.appendLineNumber(token.beginLine);
+                variableId.setDefinition(DefinitionImpl.VARIABLE);
+                jjtThis.setAttribute(ID, variableId);
+            }
+            else if (variableId != null) {
+                variableId.appendLineNumber(token.beginLine);
+                TypeSpec type = variableId.getTypeSpec();
+                jjtThis.setTypeSpec(type);
+                jjtThis.setAttribute(ID, variableId);
+            }
+            else {
+                throw new ParseException("ERROR: Variable has not been declared.");
             }
 
-            variableId = symTabStack.enterLocal(token.image);
-            variableId.appendLineNumber(token.beginLine);
-            variableId.setDefinition(DefinitionImpl.VARIABLE);
-            jjtThis.setAttribute(ID, variableId);
+            return jjtThis;
         }
-        else if (variableId != null) {
-            variableId.appendLineNumber(token.beginLine);
-            TypeSpec type = variableId.getTypeSpec();
-            jjtThis.setTypeSpec(type);
-            jjtThis.setAttribute(ID, variableId);
-        }
-        else {
-            // TODO: Error handling if trying to retrieve variable that doesn't exist.
-        }
-
-        return jjtThis;
+    }
+    catch (ParseException ex) {
+        handleError(ex, syncSet, true);
     }
 }
 
@@ -806,3 +811,4 @@ JAVACODE String handleError(ParseException ex, HashSet syncSet, boolean doPop) #
     if (doPop) jjtree.popNode();
     return token.image;
 }
+
