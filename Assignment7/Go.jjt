@@ -113,6 +113,7 @@ SimpleNode start() #void :
         }
         rootNode = statementList() < EOF >
         {
+            programId.setAttribute(ROUTINE_LOCALS_COUNT, counter.get(0) + 1);
             return rootNode;
         }
     }
