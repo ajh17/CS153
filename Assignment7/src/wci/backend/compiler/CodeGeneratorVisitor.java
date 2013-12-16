@@ -200,7 +200,11 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
                     CodeGenerator.objectFile.flush();
                 }
                 else {
-                    CodeGenerator.objectFile.println("    " + lowerTypeCode + "load " + parameterEntry.getIndex());
+                    int slot = parameterEntry.getIndex();
+                    if (parameterEntry.getSymTab().getNestingLevel() == 1) {
+                        slot++;
+                    }
+                    CodeGenerator.objectFile.println("    " + lowerTypeCode + "load " + slot);
                     CodeGenerator.objectFile.flush();
                 }
 
@@ -208,7 +212,11 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
                     CodeGenerator.objectFile.println("    invokenonvirtual " + upperTypeCode
                             + "Wrap/<init>(" + upperTypeCode + ")" + returnTypeCode);
                     CodeGenerator.objectFile.println("    dup");
-                    CodeGenerator.objectFile.println("    astore " + parameterEntry.getIndex());
+                    int slot = parameterEntry.getIndex();
+                    if (parameterEntry.getSymTab().getNestingLevel() == 1) {
+                        slot++;
+                    }
+                    CodeGenerator.objectFile.println("    astore " + slot);
                     CodeGenerator.objectFile.flush();
                     unwrapReferences.add(parameterNode);
                 }
@@ -242,7 +250,12 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
                 lowerTypeCode = "z";
             }
 
-            CodeGenerator.objectFile.println("    aload " + parameterEntry.getIndex());
+            int slot = parameterEntry.getIndex();
+            if (parameterEntry.getSymTab().getNestingLevel() == 1) {
+                slot++;
+            }
+
+            CodeGenerator.objectFile.println("    aload " + slot);
             CodeGenerator.objectFile.println("    getfield " + upperTypeCode + "Wrap/value " + upperTypeCode);
 
             if (parameterEntry.getSymTab().getNestingLevel() == 1) {
@@ -250,7 +263,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
                         + parameterEntry.getName() + " " + upperTypeCode);
             }
             else {
-                CodeGenerator.objectFile.println("    " + lowerTypeCode + "load " + parameterEntry.getIndex());
+                CodeGenerator.objectFile.println("    " + lowerTypeCode + "load " + slot);
             }
         }
 
