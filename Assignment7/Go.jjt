@@ -223,13 +223,7 @@ void arrayDeclaration(HashSet syncSet) #array : {
     {
         // TODO: Figure out how to set the type form of the array to 'array'
         // TODO: instead of 'scalar'
-        SymTabEntry typeId = symTabStack.lookup(token.image);
-        TypeSpec arrayType = TypeFactory.createType(TypeFormImpl.ARRAY);
-        TypeSpec elementType = typeId.getTypeSpec();
-        // Set the element type of the array to ARRAY_ELEMENT_TYPE
-        elementType.setAttribute(ARRAY_ELEMENT_TYPE, arrayType);
-        arrayNode.setTypeSpec(elementType);
-        arrayId.setTypeSpec(elementType);
+        processArrayElementType(arrayNode, arrayId);
     }
 }
 
@@ -785,6 +779,18 @@ TOKEN :
 
 TOKEN: { /* Error token */
     <ERROR : ~["\r", "\n"]>
+}
+
+JAVACODE
+void processArrayElementType(SimpleNode arrayNode, SymTabEntry arrayId) #void
+{
+        SymTabEntry typeId = symTabStack.lookup(token.image);
+        TypeSpec arrayType = TypeFactory.createType(TypeFormImpl.ARRAY);
+        TypeSpec elementType = typeId.getTypeSpec();
+        // Set the element type of the array to ARRAY_ELEMENT_TYPE
+        elementType.setAttribute(ARRAY_ELEMENT_TYPE, arrayType);
+        arrayNode.setTypeSpec(elementType);
+        arrayId.setTypeSpec(elementType);
 }
 
 JAVACODE String handleError(ParseException ex, HashSet syncSet, boolean doPop) #void
