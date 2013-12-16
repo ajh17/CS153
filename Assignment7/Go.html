@@ -249,12 +249,17 @@
 <TR>
 <TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod20">parameterList</A></TD>
 <TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
-<TD ALIGN=LEFT VALIGN=BASELINE>( <A HREF="#prod15">variableDeclaration</A> ( &lt;COMMA&gt; <A HREF="#prod15">variableDeclaration</A> )* )?</TD>
+<TD ALIGN=LEFT VALIGN=BASELINE>( <A HREF="#prod23">parameter</A> ( &lt;COMMA&gt; <A HREF="#prod23">parameter</A> )* )?</TD>
+</TR>
+<TR>
+<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod23">parameter</A></TD>
+<TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
+<TD ALIGN=LEFT VALIGN=BASELINE><A HREF="#prod17">identifier</A> ( &lt;MULTIPLY&gt; )? ( <A HREF="#prod18">type</A> )</TD>
 </TR>
 <TR>
 <TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod14">functionCall</A></TD>
 <TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
-<TD ALIGN=LEFT VALIGN=BASELINE><A HREF="#prod17">identifier</A> &lt;OPEN_PAREN&gt; ( <A HREF="#prod23">expression</A> ( &lt;COMMA&gt; <A HREF="#prod23">expression</A> )* )? &lt;CLOSE_PAREN&gt;</TD>
+<TD ALIGN=LEFT VALIGN=BASELINE><A HREF="#prod17">identifier</A> &lt;OPEN_PAREN&gt; ( <A HREF="#prod24">expression</A> ( &lt;COMMA&gt; <A HREF="#prod24">expression</A> )* )? &lt;CLOSE_PAREN&gt;</TD>
 </TR>
 <TR>
 <TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod22">block</A></TD>
@@ -264,37 +269,37 @@
 <TR>
 <TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod11">ifStatement</A></TD>
 <TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
-<TD ALIGN=LEFT VALIGN=BASELINE>&lt;IF&gt; <A HREF="#prod23">expression</A> <A HREF="#prod22">block</A> ( <A HREF="#prod24">elseStatement</A> )?</TD>
+<TD ALIGN=LEFT VALIGN=BASELINE>&lt;IF&gt; <A HREF="#prod24">expression</A> <A HREF="#prod22">block</A> ( <A HREF="#prod25">elseStatement</A> )?</TD>
 </TR>
 <TR>
-<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod24">elseStatement</A></TD>
+<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod25">elseStatement</A></TD>
 <TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
 <TD ALIGN=LEFT VALIGN=BASELINE>&lt;ELSE&gt; ( <A HREF="#prod11">ifStatement</A> | <A HREF="#prod22">block</A> )</TD>
 </TR>
 <TR>
 <TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod10">switchStatement</A></TD>
 <TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
-<TD ALIGN=LEFT VALIGN=BASELINE>&lt;SWITCH&gt; ( <A HREF="#prod23">expression</A> )? <A HREF="#prod25">switchBlock</A></TD>
+<TD ALIGN=LEFT VALIGN=BASELINE>&lt;SWITCH&gt; ( <A HREF="#prod24">expression</A> )? <A HREF="#prod26">switchBlock</A></TD>
 </TR>
 <TR>
-<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod25">switchBlock</A></TD>
+<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod26">switchBlock</A></TD>
 <TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
-<TD ALIGN=LEFT VALIGN=BASELINE>&lt;OPEN_BRACE&gt; <A HREF="#prod26">caseGroup</A> &lt;CLOSE_BRACE&gt;</TD>
+<TD ALIGN=LEFT VALIGN=BASELINE>&lt;OPEN_BRACE&gt; <A HREF="#prod27">caseGroup</A> &lt;CLOSE_BRACE&gt;</TD>
 </TR>
 <TR>
-<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod26">caseGroup</A></TD>
+<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod27">caseGroup</A></TD>
 <TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
-<TD ALIGN=LEFT VALIGN=BASELINE>( &lt;CASE&gt; <A HREF="#prod27">expressionList</A> ":" <A HREF="#prod2">statementList</A> )* <A HREF="#prod28">defaultCase</A></TD>
+<TD ALIGN=LEFT VALIGN=BASELINE>( &lt;CASE&gt; <A HREF="#prod28">expressionList</A> ":" <A HREF="#prod2">statementList</A> )* <A HREF="#prod29">defaultCase</A></TD>
 </TR>
 <TR>
-<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod28">defaultCase</A></TD>
+<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod29">defaultCase</A></TD>
 <TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
 <TD ALIGN=LEFT VALIGN=BASELINE>( &lt;DEFAULT_TOKEN&gt; ":" <A HREF="#prod2">statementList</A> )?</TD>
 </TR>
 <TR>
 <TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod6">assignmentStatement</A></TD>
 <TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
-<TD ALIGN=LEFT VALIGN=BASELINE><A HREF="#prod17">identifier</A> &lt;EQUALS&gt; <A HREF="#prod23">expression</A></TD>
+<TD ALIGN=LEFT VALIGN=BASELINE><A HREF="#prod17">identifier</A> &lt;EQUALS&gt; <A HREF="#prod24">expression</A></TD>
 </TR>
 <TR>
 <TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod8">increment</A></TD>
@@ -309,20 +314,20 @@
 <TR>
 <TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod12">forStatement</A></TD>
 <TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
-<TD ALIGN=LEFT VALIGN=BASELINE>&lt;FOR&gt; <A HREF="#prod29">forClause</A> <A HREF="#prod22">block</A></TD>
+<TD ALIGN=LEFT VALIGN=BASELINE>&lt;FOR&gt; <A HREF="#prod30">forClause</A> <A HREF="#prod22">block</A></TD>
 </TR>
 <TR>
-<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod29">forClause</A></TD>
+<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod30">forClause</A></TD>
 <TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
-<TD ALIGN=LEFT VALIGN=BASELINE>( ( <A HREF="#prod6">assignmentStatement</A> &lt;SEMICOLON&gt; <A HREF="#prod23">expression</A> &lt;SEMICOLON&gt; ( <A HREF="#prod6">assignmentStatement</A> | <A HREF="#prod8">increment</A> | <A HREF="#prod9">decrement</A> ) ) | <A HREF="#prod23">expression</A> )</TD>
+<TD ALIGN=LEFT VALIGN=BASELINE>( ( <A HREF="#prod6">assignmentStatement</A> &lt;SEMICOLON&gt; <A HREF="#prod24">expression</A> &lt;SEMICOLON&gt; ( <A HREF="#prod6">assignmentStatement</A> | <A HREF="#prod8">increment</A> | <A HREF="#prod9">decrement</A> ) ) | <A HREF="#prod24">expression</A> )</TD>
 </TR>
 <TR>
 <TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod19">operand</A></TD>
 <TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
-<TD ALIGN=LEFT VALIGN=BASELINE>( ( <A HREF="#prod17">identifier</A> | <A HREF="#prod30">integerConstant</A> | <A HREF="#prod31">realConstant</A> | <A HREF="#prod32">booleanConstant</A> | <A HREF="#prod33">interpretedString</A> ) | &lt;OPEN_PAREN&gt; <A HREF="#prod23">expression</A> &lt;CLOSE_PAREN&gt; )</TD>
+<TD ALIGN=LEFT VALIGN=BASELINE>( ( <A HREF="#prod17">identifier</A> | <A HREF="#prod31">integerConstant</A> | <A HREF="#prod32">realConstant</A> | <A HREF="#prod33">booleanConstant</A> | <A HREF="#prod34">interpretedString</A> ) | &lt;OPEN_PAREN&gt; <A HREF="#prod24">expression</A> &lt;CLOSE_PAREN&gt; )</TD>
 </TR>
 <TR>
-<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod34">relationalOperators</A></TD>
+<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod35">relationalOperators</A></TD>
 <TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
 <TD ALIGN=LEFT VALIGN=BASELINE>&lt;EQUAL_EQUAL&gt;</TD>
 </TR>
@@ -352,30 +357,31 @@
 <TD ALIGN=LEFT VALIGN=BASELINE>&lt;GREATER_EQUAL&gt;</TD>
 </TR>
 <TR>
-<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod23">expression</A></TD>
+<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod24">expression</A></TD>
 <TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
-<TD ALIGN=LEFT VALIGN=BASELINE><A HREF="#prod35">term</A> ( &lt;EQUAL_EQUAL&gt; <A HREF="#prod35">term</A> | &lt;NOT_EQUAL&gt; <A HREF="#prod35">term</A> | &lt;LESS_THAN&gt; <A HREF="#prod35">term</A> | &lt;LESS_EQUAL&gt; <A HREF="#prod35">term</A> | &lt;GREATER_THAN&gt; <A HREF="#prod35">term</A> | &lt;GREATER_EQUAL&gt; <A HREF="#prod35">term</A> | &lt;PLUS&gt; <A HREF="#prod35">term</A> | &lt;MINUS&gt; <A HREF="#prod35">term</A> )*</TD>
+<TD ALIGN=LEFT VALIGN=BASELINE><A HREF="#prod36">term</A> ( &lt;EQUAL_EQUAL&gt; <A HREF="#prod36">term</A> | &lt;NOT_EQUAL&gt; <A HREF="#prod36">term</A> | &lt;LESS_THAN&gt; <A HREF="#prod36">term</A> | &lt;LESS_EQUAL&gt; <A HREF="#prod36">term</A> | &lt;GREATER_THAN&gt; <A HREF="#prod36">term</A> | &lt;GREATER_EQUAL&gt; <A HREF="#prod36">term</A> | &lt;PLUS&gt; <A HREF="#prod36">term</A> | &lt;MINUS&gt; <A HREF="#prod36">term</A> )*</TD>
 </TR>
 <TR>
-<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod35">term</A></TD>
+<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod36">term</A></TD>
 <TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
 <TD ALIGN=LEFT VALIGN=BASELINE><A HREF="#prod19">operand</A> ( &lt;MULTIPLY&gt; <A HREF="#prod19">operand</A> | &lt;DIVIDE&gt; <A HREF="#prod19">operand</A> | &lt;MODULO&gt; <A HREF="#prod19">operand</A> | &lt;AMPERSAND&gt; <A HREF="#prod19">operand</A> | &lt;PIPE&gt; <A HREF="#prod19">operand</A> | &lt;CARET&gt; <A HREF="#prod19">operand</A> )*</TD>
 </TR>
 <TR>
-<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod27">expressionList</A></TD>
+<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod28">expressionList</A></TD>
 <TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
-<TD ALIGN=LEFT VALIGN=BASELINE><A HREF="#prod23">expression</A> ( &lt;COMMA&gt; <A HREF="#prod23">expression</A> )*</TD>
+<TD ALIGN=LEFT VALIGN=BASELINE><A HREF="#prod24">expression</A> ( &lt;COMMA&gt; <A HREF="#prod24">expression</A> )*</TD>
 </TR>
 <TR>
 <TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod13">printStatement</A></TD>
 <TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
-<TD ALIGN=LEFT VALIGN=BASELINE>"Println" &lt;OPEN_PAREN&gt; <A HREF="#prod23">expression</A> &lt;CLOSE_PAREN&gt;</TD>
+<TD ALIGN=LEFT VALIGN=BASELINE>"Println" &lt;OPEN_PAREN&gt; <A HREF="#prod24">expression</A> &lt;CLOSE_PAREN&gt;</TD>
 </TR>
  <!-- Special token -->
  <TR>
   <TD>
 <PRE>
-// Depending on whether we are declaring a new variable or searching for one, perform the expected behavior
+// Depending on whether we are declaring a new variable
+// or searching for one, perform the expected behavior
 </PRE>
   </TD>
  </TR>
@@ -385,27 +391,27 @@
 <TD ALIGN=LEFT VALIGN=BASELINE>&lt;IDENTIFIER&gt;</TD>
 </TR>
 <TR>
-<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod30">integerConstant</A></TD>
+<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod31">integerConstant</A></TD>
 <TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
 <TD ALIGN=LEFT VALIGN=BASELINE>&lt;INTEGER_NUMBER&gt;</TD>
 </TR>
 <TR>
-<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod36">voidConstant</A></TD>
+<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod37">voidConstant</A></TD>
 <TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
 <TD ALIGN=LEFT VALIGN=BASELINE>&lt;VOID&gt;</TD>
 </TR>
 <TR>
-<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod32">booleanConstant</A></TD>
+<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod33">booleanConstant</A></TD>
 <TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
 <TD ALIGN=LEFT VALIGN=BASELINE>&lt;BOOL_CONSTANT&gt;</TD>
 </TR>
 <TR>
-<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod31">realConstant</A></TD>
+<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod32">realConstant</A></TD>
 <TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
 <TD ALIGN=LEFT VALIGN=BASELINE>&lt;REAL_NUMBER&gt;</TD>
 </TR>
 <TR>
-<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod33">interpretedString</A></TD>
+<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod34">interpretedString</A></TD>
 <TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
 <TD ALIGN=LEFT VALIGN=BASELINE>&lt;INTERPRETED_STRING&gt;</TD>
 </TR>
@@ -435,7 +441,11 @@
 <TD ALIGN=LEFT VALIGN=BASELINE>( &lt;INT&gt; | &lt;FLOAT&gt; | &lt;STRING&gt; | &lt;BOOL&gt; | &lt;VOID&gt; )</TD>
 </TR>
 <TR>
-<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod37">handleError</A></TD>
+<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod38">processArrayElementType</A></TD>
+<TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
+<TD ALIGN=LEFT VALIGN=BASELINE><I>java code</I></TD></TR>
+<TR>
+<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME="prod39">handleError</A></TD>
 <TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>
 <TD ALIGN=LEFT VALIGN=BASELINE><I>java code</I></TD></TR>
 </TABLE>
