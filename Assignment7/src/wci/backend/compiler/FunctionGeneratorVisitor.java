@@ -14,12 +14,32 @@ public class FunctionGeneratorVisitor extends GoParserVisitorAdapter
         StringBuilder typeBuffer = new StringBuilder(); // Used to store list of parameter types
         StringBuilder initBuffer = new StringBuilder(); // Used to store local variable initialization code
 
-        for (SymTabEntry entry : scope.values()) {
-            if (entry.getDefinition() != DefinitionImpl.VARIABLE && entry.getDefinition() != DefinitionImpl.FUNCTION) {
-                TypeSpec type = entry.getTypeSpec();
-                initBuffer.append("    .var " + entry.getIndex() + " is " + entry.getName() + " ");
+        for (SymTabEntry parameter : scope.values()) {
+            Definition parameterDefinition = parameter.getDefinition();
 
-                if (type == Predefined.integerType) {
+            if (parameterDefinition != DefinitionImpl.VARIABLE && parameterDefinition != DefinitionImpl.FUNCTION) {
+                TypeSpec type = parameter.getTypeSpec();
+                initBuffer.append("    .var " + parameter.getIndex() + " is " + parameter.getName() + " ");
+
+                if (parameterDefinition == DefinitionImpl.REFERENCE_PARAMETER) {
+                    if (type == Predefined.integerType) {
+                        typeBuffer.append("LIWrap;");
+                        initBuffer.append("LIWrap;\n");
+                    }
+                    else if (type == Predefined.realType) {
+                        typeBuffer.append("LRWrap;");
+                        initBuffer.append("LRWrap;\n");
+                    }
+                    else if (type == Predefined.charType) {
+                        typeBuffer.append("Ljava/lang/String;");
+                        initBuffer.append("Ljava/lang/String;\n");
+                    }
+                    else if (type == Predefined.booleanType) {
+                        typeBuffer.append("LBWrap;");
+                        initBuffer.append("LBWrap;\n");
+                    }
+                }
+                else if (type == Predefined.integerType) {
                     typeBuffer.append("I");
                     initBuffer.append("I\n");
                 }
