@@ -187,7 +187,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
                 if (parameterDefinition == DefinitionImpl.REFERENCE_PARAMETER) {
                     // TODO: Generate wrapper class here
-                    CodeGenerator.objectFile.println("    new " + lowerTypeCode + "Wrap ");
+                    CodeGenerator.objectFile.println("    new " + upperTypeCode + "Wrap ");
                     CodeGenerator.objectFile.flush();
                 }
 
