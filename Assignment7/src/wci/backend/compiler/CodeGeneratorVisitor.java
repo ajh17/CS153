@@ -63,11 +63,9 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         String lowerTypeCode = null;
         String wrapCode = null;
 
-        // Emit code for the expression.
         if (variableDefinition != DefinitionImpl.REFERENCE_PARAMETER) {
             expressionNode.jjtAccept(this, data);
         }
-
         // Convert an integer value to float if necessary.
         if ((targetType == Predefined.realType) &&
                 (expressionType == Predefined.integerType))
