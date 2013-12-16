@@ -1,6 +1,8 @@
 package main
-var dsind int int;
-var int abc;
-var var asjd12;
-var y int;
-var int y; // wrong way to declare variables in Go.
+
+dsind int int;
+int abc;
+var asjd12; // no var keyword except for in arrays
+y int;
+int y; // wrong way to declare variables in Go.
+y = 9;
