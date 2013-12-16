@@ -4,9 +4,7 @@ import wci.frontend.*;
 import wci.intermediate.*;
 import wci.intermediate.icodeimpl.ICodeKeyImpl;
 import wci.intermediate.icodeimpl.ICodeNodeImpl;
-import wci.intermediate.symtabimpl.Predefined;
-import wci.intermediate.symtabimpl.SymTabImpl;
-import wci.intermediate.symtabimpl.SymTabKeyImpl;
+import wci.intermediate.symtabimpl.*;
 
 import java.util.ArrayList;
 
@@ -113,7 +111,8 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
     }
 
     public Object visit(ASTfunctionCall node, Object data) {
-        SymTabEntry functionId = (SymTabEntry) node.getAttribute(ID);
+        SymTabEntryImpl functionId = (SymTabEntryImpl) node.getAttribute(ID);
+        SymTabImpl scope = (SymTabImpl) functionId.getAttribute(SymTabKeyImpl.ROUTINE_SYMTAB);
         TypeSpec returnType = node.getTypeSpec();
         String returnTypeCode = null;
         StringBuilder parameters = new StringBuilder();
@@ -134,46 +133,56 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
             returnTypeCode = "V";
         }
 
-        for (int i = 1; i < node.jjtGetNumChildren(); i++) {
-            SimpleNode parameterNode = (SimpleNode) node.jjtGetChild(i);
-            TypeSpec parameterType = parameterNode.getTypeSpec();
-            SymTabEntry parameterEntry = (SymTabEntry) parameterNode.getAttribute(ID);
-            String staticTypeCode = null;
-            String localTypeCode = null;
+        for (SymTabEntry parameter : scope.values()) {
+            Definition parameterDefinition = parameter.getDefinition();
 
-            if (parameterType == Predefined.integerType) {
-                parameters.append("I");
-                staticTypeCode = "I";
-                localTypeCode = "i";
-            }
-            else if (parameterType == Predefined.realType) {
-                parameters.append("F");
-                staticTypeCode = "F";
-                localTypeCode = "f";
-            }
-            else if (parameterType == Predefined.charType) {
-                parameters.append("Ljava/lang/String;"); // TODO: How to load a local variable string?
-                staticTypeCode = "Ljava/lang/String;";
-                localTypeCode = "Ljava/lang/String;";
-            }
-            else if (parameterType == Predefined.booleanType) {
-                parameters.append("Z");
-                staticTypeCode = "Z";
-                localTypeCode = "z";
-            }
+            if (parameterDefinition != DefinitionImpl.FUNCTION) {
+                int index = parameter.getIndex();
+                SimpleNode parameterNode = (SimpleNode) node.jjtGetChild(index + 1);
+                TypeSpec parameterType = parameterNode.getTypeSpec();
+                SymTabEntry parameterEntry = (SymTabEntry) parameterNode.getAttribute(ID);
 
-            if (parameterEntry == null) {
-                parameterNode.jjtAccept(this, data);
-            }
-            else if (functionId.getSymTab().getNestingLevel() == 1) {
-                CodeGenerator.objectFile.println("    getstatic " + "Input" +
-                        "/" + parameterEntry.getName() + " " + staticTypeCode);
-            }
-            else {
-                CodeGenerator.objectFile.println("    " + localTypeCode + "load " + parameterEntry.getIndex());
-            }
+                String upperTypeCode = null;
+                String lowerTypeCode = null;
 
-            CodeGenerator.objectFile.flush();
+                if (parameterType == Predefined.integerType) {
+                    parameters.append("I");
+                    upperTypeCode = "I";
+                    lowerTypeCode = "i";
+                }
+                else if (parameterType == Predefined.realType) {
+                    parameters.append("F");
+                    upperTypeCode = "F";
+                    lowerTypeCode = "f";
+                }
+                else if (parameterType == Predefined.charType) {
+                    parameters.append("Ljava/lang/String;"); // TODO: How to load a local variable string?
+                    upperTypeCode = "Ljava/lang/String;";
+                    lowerTypeCode = "Ljava/lang/String;";
+                }
+                else if (parameterType == Predefined.booleanType) {
+                    parameters.append("Z");
+                    upperTypeCode = "Z";
+                    lowerTypeCode = "z";
+                }
+
+                if (parameterDefinition == DefinitionImpl.REFERENCE_PARAMETER) {
+                    // TODO: Generate wrapper class here
+                }
+
+                if (parameterEntry == null) {
+                    parameterNode.jjtAccept(this, data);
+                }
+                else if (functionId.getSymTab().getNestingLevel() == 1) {
+                    CodeGenerator.objectFile.println("    getstatic " + "Input" +
+                            "/" + parameterEntry.getName() + " " + upperTypeCode);
+                }
+                else {
+                    CodeGenerator.objectFile.println("    " + lowerTypeCode + "load " + parameterEntry.getIndex());
+                }
+
+                CodeGenerator.objectFile.flush();
+            }
         }
 
         CodeGenerator.objectFile.println("    invokestatic  " + programName + "/"
