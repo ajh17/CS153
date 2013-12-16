@@ -114,6 +114,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         SymTabEntryImpl functionId = (SymTabEntryImpl) node.getAttribute(ID);
         SymTabImpl scope = (SymTabImpl) functionId.getAttribute(SymTabKeyImpl.ROUTINE_SYMTAB);
         TypeSpec returnType = node.getTypeSpec();
+        ArrayList<SimpleNode> unwrapReferences = new ArrayList<SimpleNode>();
         String returnTypeCode = null;
         StringBuilder parameters = new StringBuilder();
 
@@ -204,17 +205,55 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
                 }
 
                 if (parameterDefinition == DefinitionImpl.REFERENCE_PARAMETER) {
-                    // TODO: Generate wrapper class here
                     CodeGenerator.objectFile.println("    invokenonvirtual " + upperTypeCode
                             + "Wrap/<init>(" + upperTypeCode + ")" + returnTypeCode);
                     CodeGenerator.objectFile.println("    dup");
+                    CodeGenerator.objectFile.println("    astore " + parameterEntry.getIndex());
                     CodeGenerator.objectFile.flush();
+                    unwrapReferences.add(parameterNode);
                 }
             }
         }
 
         CodeGenerator.objectFile.println("    invokestatic  " + programName + "/"
                 + functionId.getName() + "(" + parameters.toString() + ")" + returnTypeCode);
+
+        for (SimpleNode unwrappingNode : unwrapReferences) {
+            TypeSpec parameterType = unwrappingNode.getTypeSpec();
+            SymTabEntry parameterEntry = (SymTabEntry) unwrappingNode.getAttribute(ID);
+
+            String upperTypeCode = null;
+            String lowerTypeCode = null;
+
+            if (parameterType == Predefined.integerType) {
+                upperTypeCode = "I";
+                lowerTypeCode = "i";
+            }
+            else if (parameterType == Predefined.realType) {
+                upperTypeCode = "F";
+                lowerTypeCode = "f";
+            }
+            else if (parameterType == Predefined.charType) {
+                upperTypeCode = "Ljava/lang/String;";
+                lowerTypeCode = "Ljava/lang/String;";
+            }
+            else if (parameterType == Predefined.booleanType) {
+                upperTypeCode = "Z";
+                lowerTypeCode = "z";
+            }
+
+            CodeGenerator.objectFile.println("    aload " + parameterEntry.getIndex());
+            CodeGenerator.objectFile.println("    getfield " + upperTypeCode + "Wrap/value " + upperTypeCode);
+
+            if (parameterEntry.getSymTab().getNestingLevel() == 1) {
+                CodeGenerator.objectFile.println("    putstatic " + programName + "/"
+                        + parameterEntry.getName() + " " + upperTypeCode);
+            }
+            else {
+                CodeGenerator.objectFile.println("    " + lowerTypeCode + "load " + parameterEntry.getIndex());
+            }
+        }
+
         CodeGenerator.objectFile.flush();
 
         return data;

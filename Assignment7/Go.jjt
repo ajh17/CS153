@@ -186,12 +186,9 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
         variableNode = identifier(syncSet, true) {
             SymTabEntry variableId = (SymTabEntry) variableNode.getAttribute(ID);
             variableNode.setAttribute(ID, variableId);
-
-            if (symTabStack.getCurrentNestingLevel() > 1) {
-                int count = counter.get(counter.size() - 1);
-                variableId.setIndex(count++);
-                counter.add(counter.size() - 1, count);
-            }
+            int count = counter.get(counter.size() - 1);
+            variableId.setIndex(count++);
+            counter.add(counter.size() - 1, count);
         }
         (
             type()
