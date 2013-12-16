@@ -193,6 +193,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
                 if (parameterDefinition == DefinitionImpl.REFERENCE_PARAMETER) {
                     // TODO: Generate wrapper class here
                     CodeGenerator.objectFile.println("    new " + wrapTypeCode + "Wrap ");
+                    CodeGenerator.objectFile.println("    dup");
                     CodeGenerator.objectFile.flush();
                 }
 
