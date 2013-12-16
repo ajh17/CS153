@@ -794,7 +794,7 @@ JAVACODE String handleError(ParseException ex, HashSet syncSet, boolean doPop) #
 
     // Consume tokens up to but not including a token in the sync set.
     while (!syncSet.contains(getToken(1).kind)) {
-            token = getNextToken();
+        token = getNextToken();
     }
 
     if (doPop) jjtree.popNode();
