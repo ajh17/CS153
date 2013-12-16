@@ -15,7 +15,7 @@ public class FunctionGeneratorVisitor extends GoParserVisitorAdapter
         StringBuilder initBuffer = new StringBuilder(); // Used to store local variable initialization code
 
         for (SymTabEntry entry : scope.values()) {
-            if (entry.getDefinition() != DefinitionImpl.VARIABLE) {
+            if (entry.getDefinition() != DefinitionImpl.VARIABLE && entry.getDefinition() != DefinitionImpl.FUNCTION) {
                 TypeSpec type = entry.getTypeSpec();
                 initBuffer.append("    .var " + entry.getIndex() + " is " + entry.getName() + " ");
 
@@ -39,6 +39,13 @@ public class FunctionGeneratorVisitor extends GoParserVisitorAdapter
         }
 
         String returnType = (String) node.jjtGetChild(2).jjtAccept(this, data); // Get return type
+        int localCount = 0;
+
+        for (SymTabEntry entry : scope.values()) {
+            if (entry.getDefinition() != DefinitionImpl.FUNCTION) {
+                localCount++;
+            }
+        }
 
         CodeGenerator.objectFile.println(".method private static "
                 + functionId.getName() + "(" + typeBuffer.toString() + ")" + returnType + "\n");
@@ -52,7 +59,7 @@ public class FunctionGeneratorVisitor extends GoParserVisitorAdapter
         CodeGenerator.objectFile.println();
         CodeGenerator.objectFile.println("    return");
         CodeGenerator.objectFile.println();
-        CodeGenerator.objectFile.println(".limit locals " + scope.size());
+        CodeGenerator.objectFile.println(".limit locals " + localCount);
         CodeGenerator.objectFile.println(".limit stack  " + 16);
         CodeGenerator.objectFile.println(".end method\n");
         CodeGenerator.objectFile.flush();

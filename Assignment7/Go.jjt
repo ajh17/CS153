@@ -27,7 +27,7 @@ PARSER_BEGIN(GoParser)
 
 public class GoParser
 {
-    private static int counter = 0;
+    private static ArrayList<Integer> counter = new ArrayList<Integer>();
     private static final String SOURCE_SUFFIX = ".go";
     private static final String OUTPUT_SUFFIX = ".j";
     private static SymTabStack symTabStack;
@@ -38,6 +38,7 @@ public class GoParser
         // Create and initialize the symbol table stack.
         symTabStack = SymTabFactory.createSymTabStack();
         Predefined.initialize(symTabStack);
+        counter.add(0);
         // Process the source file path which ends in .go
         // and create the output file path which ends in .j
         String sourceFilePath = args [0];
@@ -185,6 +186,12 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
         variableNode = identifier(true) {
             SymTabEntry variableId = (SymTabEntry) variableNode.getAttribute(ID);
             variableNode.setAttribute(ID, variableId);
+
+            if (symTabStack.getCurrentNestingLevel() > 1) {
+                int count = counter.get(counter.size() - 1);
+                variableId.setIndex(count++);
+                counter.add(counter.size() - 1, count);
+            }
         }
         (
             type()
@@ -257,6 +264,7 @@ void functionDeclaration(HashSet syncSet):
             functionId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
             variableNode.setAttribute(ID, functionId);
             jjtThis.setAttribute(ID, functionId);
+            counter.add(0);
         }
         <OPEN_PAREN> parameterList(syncSet) <CLOSE_PAREN> returnTypeNode = returnType() {
             functionId.setTypeSpec(returnTypeNode.getTypeSpec());
@@ -264,7 +272,7 @@ void functionDeclaration(HashSet syncSet):
             syncSet = new HashSet(); // New reference used only by the new function scope
             syncSet.add(EOF);
             syncSet.add(SEMICOLON);
-            counter = 0;
+            counter.remove(counter.size() - 1);
         }
         block(syncSet) {
             symTabStack.pop();
@@ -550,10 +558,6 @@ SimpleNode identifier(boolean declaring) : {}
             variableId.appendLineNumber(token.beginLine);
             variableId.setDefinition(DefinitionImpl.VARIABLE);
             jjtThis.setAttribute(ID, variableId);
-
-            if (symTabStack.getCurrentNestingLevel() > 1) {
-                variableId.setIndex(counter++);
-            }
         }
         else if (variableId != null) {
             variableId.appendLineNumber(token.beginLine);
