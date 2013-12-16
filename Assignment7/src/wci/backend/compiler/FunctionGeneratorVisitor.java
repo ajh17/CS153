@@ -64,6 +64,8 @@ public class FunctionGeneratorVisitor extends GoParserVisitorAdapter
         CodeGenerator.objectFile.println(".end method\n");
         CodeGenerator.objectFile.flush();
 
+        node.jjtGetChild(3).jjtAccept(this, data); // Process functions declared inside this function
+
         return data;
     }
 
