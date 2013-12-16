@@ -168,6 +168,9 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
                 if (parameterDefinition == DefinitionImpl.REFERENCE_PARAMETER) {
                     // TODO: Generate wrapper class here
+                    CodeGenerator.objectFile.println("    new " + lowerTypeCode + "Wrap ");
+                    CodeGenerator.objectFile.println("    dup");
+                    CodeGenerator.objectFile.flush();
                 }
 
                 if (parameterEntry == null) {
@@ -176,12 +179,20 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
                 else if (functionId.getSymTab().getNestingLevel() == 1) {
                     CodeGenerator.objectFile.println("    getstatic " + "Input" +
                             "/" + parameterEntry.getName() + " " + upperTypeCode);
+                    CodeGenerator.objectFile.flush();
                 }
                 else {
                     CodeGenerator.objectFile.println("    " + lowerTypeCode + "load " + parameterEntry.getIndex());
+                    CodeGenerator.objectFile.flush();
                 }
 
-                CodeGenerator.objectFile.flush();
+                if (parameterDefinition == DefinitionImpl.REFERENCE_PARAMETER) {
+                    // TODO: Generate wrapper class here
+                    CodeGenerator.objectFile.println("    invokenonvirtual " + upperTypeCode
+                            + "Wrap/<init>(" + upperTypeCode + ")" + returnTypeCode);
+                    CodeGenerator.objectFile.println("    dup");
+                    CodeGenerator.objectFile.flush();
+                }
             }
         }
 
