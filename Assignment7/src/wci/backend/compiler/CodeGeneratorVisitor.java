@@ -324,6 +324,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
         // Emit the appropriate load instruction.
         if (id.getDefinition() == DefinitionImpl.REFERENCE_PARAMETER) {
+            CodeGenerator.objectFile.println("    aload " + id.getIndex());
             CodeGenerator.objectFile.println("    getfield " + wrapTypeCode + "Wrap/value " + upperTypeCode);
         }
         else if (id.getSymTab().getNestingLevel() == 1) {
