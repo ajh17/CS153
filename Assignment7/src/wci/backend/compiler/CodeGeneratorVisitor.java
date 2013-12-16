@@ -145,13 +145,15 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
                 String upperTypeCode = null;
                 String lowerTypeCode = null;
+                String wrapTypeCode = null;
 
                 if (parameterType == Predefined.integerType) {
                     upperTypeCode = "I";
                     lowerTypeCode = "i";
 
                     if (parameterDefinition == DefinitionImpl.REFERENCE_PARAMETER) {
-                        parameters.append("L" + upperTypeCode + "Wrap;");
+                        wrapTypeCode = "I";
+                        parameters.append("LIWrap;");
                     }
                     else {
                         parameters.append("I");
@@ -162,13 +164,15 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
                     lowerTypeCode = "f";
 
                     if (parameterDefinition == DefinitionImpl.REFERENCE_PARAMETER) {
-                        parameters.append("L" + upperTypeCode + "Wrap;");
+                        wrapTypeCode = "R";
+                        parameters.append("LRWrap;");
                     }
                     else {
                         parameters.append("F");
                     }
                 }
                 else if (parameterType == Predefined.charType) {
+                    wrapTypeCode = "Ljava/lang/String;";
                     parameters.append("Ljava/lang/String;"); // TODO: How to load a local variable string?
                     upperTypeCode = "Ljava/lang/String;";
                     lowerTypeCode = "Ljava/lang/String;";
@@ -178,7 +182,8 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
                     lowerTypeCode = "z";
 
                     if (parameterDefinition == DefinitionImpl.REFERENCE_PARAMETER) {
-                        parameters.append("L" + upperTypeCode + "Wrap;");
+                        wrapTypeCode = "B";
+                        parameters.append("LBWrap;");
                     }
                     else {
                         parameters.append("Z");
@@ -187,7 +192,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
                 if (parameterDefinition == DefinitionImpl.REFERENCE_PARAMETER) {
                     // TODO: Generate wrapper class here
-                    CodeGenerator.objectFile.println("    new " + upperTypeCode + "Wrap ");
+                    CodeGenerator.objectFile.println("    new " + wrapTypeCode + "Wrap ");
                     CodeGenerator.objectFile.flush();
                 }
 
@@ -209,7 +214,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
                 }
 
                 if (parameterDefinition == DefinitionImpl.REFERENCE_PARAMETER) {
-                    CodeGenerator.objectFile.println("    invokenonvirtual " + upperTypeCode
+                    CodeGenerator.objectFile.println("    invokenonvirtual " + wrapTypeCode
                             + "Wrap/<init>(" + upperTypeCode + ")" + returnTypeCode);
                     CodeGenerator.objectFile.println("    dup");
                     int slot = parameterEntry.getIndex();
@@ -232,20 +237,25 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
             String upperTypeCode = null;
             String lowerTypeCode = null;
+            String wrapTypeCode = null;
 
             if (parameterType == Predefined.integerType) {
+                wrapTypeCode = "I";
                 upperTypeCode = "I";
                 lowerTypeCode = "i";
             }
             else if (parameterType == Predefined.realType) {
+                wrapTypeCode = "R";
                 upperTypeCode = "F";
                 lowerTypeCode = "f";
             }
             else if (parameterType == Predefined.charType) {
+                wrapTypeCode = "Ljava/lang/String;";
                 upperTypeCode = "Ljava/lang/String;";
                 lowerTypeCode = "Ljava/lang/String;";
             }
             else if (parameterType == Predefined.booleanType) {
+                wrapTypeCode = "B";
                 upperTypeCode = "Z";
                 lowerTypeCode = "z";
             }
@@ -256,7 +266,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
             }
 
             CodeGenerator.objectFile.println("    aload " + slot);
-            CodeGenerator.objectFile.println("    getfield " + upperTypeCode + "Wrap/value " + upperTypeCode);
+            CodeGenerator.objectFile.println("    getfield " + wrapTypeCode + "Wrap/value " + upperTypeCode);
 
             if (parameterEntry.getSymTab().getNestingLevel() == 1) {
                 CodeGenerator.objectFile.println("    putstatic " + programName + "/"
@@ -289,27 +299,32 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
         TypeSpec type = id.getTypeSpec();
         String upperTypeCode = null;
         String lowerTypeCode = null;
+        String wrapTypeCode = null;
 
         if (type == Predefined.integerType) {
+            wrapTypeCode = "I";
             upperTypeCode = "I";
             lowerTypeCode = "i";
         }
         else if (type == Predefined.realType) {
+            wrapTypeCode = "R";
             upperTypeCode = "F";
             lowerTypeCode = "f";
         }
         else if (type == Predefined.charType) {
+            wrapTypeCode = "Ljava/lang/String;";
             upperTypeCode = "Ljava/lang/String;";
             lowerTypeCode = "Ljava/lang/String;"; // TODO: How to load a local variable string?
         }
         else if (type == Predefined.booleanType) {
+            wrapTypeCode = "B";
             upperTypeCode = "Z";
             lowerTypeCode = "z";
         }
 
         // Emit the appropriate load instruction.
         if (id.getDefinition() == DefinitionImpl.REFERENCE_PARAMETER) {
-            CodeGenerator.objectFile.println("    getfield " + upperTypeCode + "Wrap/value " + upperTypeCode);
+            CodeGenerator.objectFile.println("    getfield " + wrapTypeCode + "Wrap/value " + upperTypeCode);
         }
         else if (id.getSymTab().getNestingLevel() == 1) {
             CodeGenerator.objectFile.println("    getstatic " + "Input" +

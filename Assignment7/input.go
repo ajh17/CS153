@@ -1,10 +1,10 @@
 package main
 
-x int;
+x float;
 x = 10;
 
 // Need to work on pass by reference
-func passByReference(y *int) void {
+func passByReference(y *float) void {
     Println(y);
 }
 
