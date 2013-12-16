@@ -331,7 +331,10 @@ void functionCall(HashSet syncSet) :
             if (functionId != null) {
                 jjtThis.setAttribute(ID, functionId);
             }
-            // If it's null, then the function has not been declared. Need to let the user know some how.
+            else {
+                // Function not declared yet.
+                throw new ParseException("ERROR: Function not declared in scope.");
+            }
         }
         <OPEN_PAREN> (expression(syncSet) (<COMMA> expression(syncSet))*)? <CLOSE_PAREN>
     }
@@ -546,7 +549,7 @@ SimpleNode identifier(HashSet syncSet, boolean declaring) : {}
 
             if (declaring) {
                 if (variableId != null) {
-                    throw new ParseException("ERROR: Variable already declared");
+                    throw new ParseException("ERROR: Variable already declared in scope.");
                 }
 
                 variableId = symTabStack.enterLocal(token.image);
@@ -561,7 +564,7 @@ SimpleNode identifier(HashSet syncSet, boolean declaring) : {}
                 jjtThis.setAttribute(ID, variableId);
             }
             else {
-                throw new ParseException("ERROR: Variable has not been declared.");
+                throw new ParseException("ERROR: Variable has not been declared in scope.");
             }
 
             return jjtThis;
