@@ -27,7 +27,6 @@ PARSER_BEGIN(GoParser)
 
 public class GoParser
 {
-    private static boolean definingParameters = false;
     private static int counter = 0;
     private static final String SOURCE_SUFFIX = ".go";
     private static final String OUTPUT_SUFFIX = ".j";
@@ -259,13 +258,7 @@ void functionDeclaration(HashSet syncSet):
             variableNode.setAttribute(ID, functionId);
             jjtThis.setAttribute(ID, functionId);
         }
-        <OPEN_PAREN> {
-            definingParameters = true;
-        }
-        parameterList(syncSet) {
-            definingParameters = false;
-        }
-        <CLOSE_PAREN> returnTypeNode = returnType() {
+        <OPEN_PAREN> parameterList(syncSet) <CLOSE_PAREN> returnTypeNode = returnType() {
             functionId.setTypeSpec(returnTypeNode.getTypeSpec());
             jjtThis.setTypeSpec(functionId.getTypeSpec());
             syncSet = new HashSet(); // New reference used only by the new function scope
@@ -284,7 +277,43 @@ void functionDeclaration(HashSet syncSet):
 
 void parameterList(HashSet syncSet) : {}
 {
-    (variableDeclaration(syncSet) ( < COMMA > variableDeclaration(syncSet))*)?
+    (parameter(syncSet) ( < COMMA > parameter(syncSet))*)?
+}
+
+void parameter(HashSet syncSet) throws ParseException :
+{
+    SimpleNode variableNode;
+    syncSet.add(EOF);
+    syncSet.add(SEMICOLON);
+}
+{
+    try {
+       // Our implementation of Go's variable declaration will be either these forms:
+       // x int; OR x = 5 (provided that they also used the first form to declare the variable)
+
+        variableNode = identifier(true) {
+            SymTabEntry variableId = (SymTabEntry) variableNode.getAttribute(ID);
+            variableId.setDefinition(DefinitionImpl.VALUE_PARAMETER); // Default definition
+            variableNode.setAttribute(ID, variableId);
+        }
+        (
+            < MULTIPLY > {
+                variableId.setDefinition(DefinitionImpl.REFERENCE_PARAMETER); // If star seen, make it a reference
+            }
+        )?
+        (
+            type()
+            {
+                SymTabEntry typeId = symTabStack.lookup(token.image);
+                TypeSpec type = typeId.getTypeSpec();
+                variableId.setTypeSpec(type);
+                variableNode.setTypeSpec(type);
+            }
+        )
+    }
+    catch (ParseException ex) {
+        handleError(ex, syncSet, true);
+    }
 }
 
 void functionCall(HashSet syncSet) :
@@ -519,15 +548,8 @@ SimpleNode identifier(boolean declaring) : {}
 
             variableId = symTabStack.enterLocal(token.image);
             variableId.appendLineNumber(token.beginLine);
+            variableId.setDefinition(DefinitionImpl.VARIABLE);
             jjtThis.setAttribute(ID, variableId);
-
-            if (definingParameters) {
-                // TODO: Somehow check if we are passing by VALUE_PARAMETER or REFERENCE_PARAMETER
-                variableId.setDefinition(DefinitionImpl.VALUE_PARAMETER);
-            }
-            else {
-                variableId.setDefinition(DefinitionImpl.VARIABLE);
-            }
 
             if (symTabStack.getCurrentNestingLevel() > 1) {
                 variableId.setIndex(counter++);

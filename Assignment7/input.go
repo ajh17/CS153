@@ -4,9 +4,9 @@ x int;
 x = 10;
 
 // Need to work on pass by reference
-func passByReference(x int) void {
-    x = 5;
-    Println(x);
+func passByReference(y *int) void {
+    y = 5;
+    Println(y);
 }
 
 passByReference(x);
