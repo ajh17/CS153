@@ -54,7 +54,6 @@ public class CodeGenerator extends Backend
                 programName.substring(1);
 
         SymTabEntry programId = symTabStack.getProgramId();
-        int localsCount = (Integer) programId.getAttribute(ROUTINE_LOCALS_COUNT);
         SymTab routineSymTab = (SymTab) programId.getAttribute(ROUTINE_SYMTAB);
         ArrayList<SymTabEntry> locals = routineSymTab.sortedEntries();
 
@@ -132,7 +131,7 @@ public class CodeGenerator extends Backend
         objectFile.println();
         objectFile.println("    return");
         objectFile.println();
-        objectFile.println(".limit locals " + localsCount);
+        objectFile.println(".limit locals 1");
         objectFile.println(".limit stack  " + STACK_LIMIT);
         objectFile.println(".end method");
         objectFile.flush();
