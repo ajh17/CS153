@@ -113,6 +113,7 @@ SimpleNode start() #void :
         }
         rootNode = statementList() < EOF >
         {
+            programId.setAttribute(ROUTINE_LOCALS_COUNT, counter.get(0) + 1);
             return rootNode;
         }
     }
@@ -186,12 +187,9 @@ void variableDeclaration(HashSet syncSet) throws ParseException :
         variableNode = identifier(syncSet, true) {
             SymTabEntry variableId = (SymTabEntry) variableNode.getAttribute(ID);
             variableNode.setAttribute(ID, variableId);
-
-            if (symTabStack.getCurrentNestingLevel() > 1) {
-                int count = counter.get(counter.size() - 1);
-                variableId.setIndex(count++);
-                counter.add(counter.size() - 1, count);
-            }
+            int count = counter.get(counter.size() - 1);
+            variableId.setIndex(count++);
+            counter.set(counter.size() - 1, count);
         }
         (
             type()
@@ -297,6 +295,9 @@ void parameter(HashSet syncSet) throws ParseException :
             SymTabEntry variableId = (SymTabEntry) variableNode.getAttribute(ID);
             variableId.setDefinition(DefinitionImpl.VALUE_PARAMETER); // Default definition
             variableNode.setAttribute(ID, variableId);
+            int count = counter.get(counter.size() - 1);
+            variableId.setIndex(count++);
+            counter.set(counter.size() - 1, count);
         }
         (
             < MULTIPLY > {
@@ -550,6 +551,7 @@ SimpleNode identifier(HashSet syncSet, boolean declaring) : {}
             SymTabEntry variableId = symTabStack.lookup(token.image);
 
             if (declaring) {
+                variableId = symTabStack.lookupLocal(token.image);
                 if (variableId != null) {
                     throw new ParseException("ERROR: Variable already declared in scope.");
                 }
