@@ -177,7 +177,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
                     parameterNode.jjtAccept(this, data);
                 }
                 else if (functionId.getSymTab().getNestingLevel() == 1) {
-                    CodeGenerator.objectFile.println("    getstatic " + "Input" +
+                    CodeGenerator.objectFile.println("    getstatic " + programName +
                             "/" + parameterEntry.getName() + " " + upperTypeCode);
                     CodeGenerator.objectFile.flush();
                 }
@@ -240,7 +240,7 @@ public class CodeGeneratorVisitor extends GoParserVisitorAdapter implements GoPa
 
         // Emit the appropriate load instruction.
         if (id.getSymTab().getNestingLevel() == 1) {
-            CodeGenerator.objectFile.println("    getstatic " + "Input" +
+            CodeGenerator.objectFile.println("    getstatic " + programName +
                     "/" + fieldName + " " + staticTypeCode);
         }
         else {
