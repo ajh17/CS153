@@ -309,3 +309,5 @@ i                002 003 003 003 004 006 010
         </block>
     </forStatement>
 </statementList>
+
+Process finished with exit code 0

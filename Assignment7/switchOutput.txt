@@ -221,3 +221,5 @@ i                002 003 005
         </switchBlock>
     </switchStatement>
 </statementList>
+
+Process finished with exit code 0

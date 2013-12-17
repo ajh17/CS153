@@ -78,3 +78,5 @@ arr              004 007
         <integerConstant value="1" type_id="int" />
     </arrayAssignmentStatement>
 </statementList>
+
+Process finished with exit code 0
